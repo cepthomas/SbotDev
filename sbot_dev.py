@@ -73,7 +73,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     def on_done(self, text):
         cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
         sout = cp.stdout
-        create_new_view(self.window, sout)
+#        create_new_view(self.window, sout)
 
 
 #-----------------------------------------------------------------------------------

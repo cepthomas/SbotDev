@@ -135,3 +135,25 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
         # on_navigate is an optional callback that should accept a single string parameter,
         # that is the href attribute of the link clicked.
         print(f"href:{href}")
+
+
+#-----------------------------------------------------------------------------------
+class SbotShowEolCommand(sublime_plugin.TextCommand):
+    ''' Show line ends. '''
+
+    def run(self, edit):
+        if not self.view.get_regions("eols"):
+            eols = []
+            ind = 0
+            while 1:
+                freg = self.view.find('[\n\r]', ind)  # TODO this doesn't work as ST normalizes endings. See what hexviewer does?
+                if freg is not None and not freg.empty():  # second condition is not documented!!
+                    eols.append(freg)
+                    ind = freg.end() + 1
+                else:
+                    break
+            if eols:
+                settings = sublime.load_settings("SbotSignet.sublime-settings")
+                self.view.add_regions("eols", eols, settings.get('eol_scope'))
+        else:
+            self.view.erase_regions("eols")

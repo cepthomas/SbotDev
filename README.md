@@ -17,12 +17,12 @@ First attempt was to hook the console stdout but it was not very cooperative. So
 ST callback functions and this works to catch runtime errors and pop up a message box. Import/parse errors still go to the
 console so you have to keep an eye open there while developing but they should resolve quickly.
 
-
 ## Event Handling
 There are some idiosyncrasies with ST event generation.
 
 ### ViewEventListener
 Is instantiated once per view and:
+
 - `on_load()` is normally called when the file is loaded. However it is not called if ST startup shows previously opened files,
   or if it is shown as a (single-click) preview.
 - `on_close()` is normally called when a view is closed but it does not appear to be consistent. Perhaps if ST is closed
@@ -31,12 +31,14 @@ Is instantiated once per view and:
 Why does it matter? Highlighting and signets persist their state per file and the application needs to hook the open/close
 events in order to do so. Because the two obvious events don't work as expected (by me at least), some
 less-than-beautiful hacks happen:
+
 - `on_activated()` is normally called when the view gets focus. This is reliable so is used instead of on_load(), along with
   some stuff to track if it's been initialized.
 - `on_deactivated()` is used in place of `on_close()` to save the persistence file every time the view loses focus. Good enough.
 
 ### EventListener
 Is instantiated once per window (ST instance):
+
 - `on_load_project()` doesn't fire on startup (last) project load.
 - `on_exit()` called once after the API has shut down, immediately before the plugin_host process exits.
 - `on_pre_close_window()` seems to work.
@@ -44,7 +46,6 @@ Is instantiated once per window (ST instance):
 ### Global
 ST says `plugin_loaded()` fires only once for all instances of sublime. However you can add this to 
 each module and they all get called. Safest is to only use it once.
-
 
 ## Module Loading
 ST doesn't load modules like plain python and can cause some surprises. The problem is that sbot_common

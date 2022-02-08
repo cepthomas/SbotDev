@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0c4c78da-4a9f-4ff6-a2f1-9b2599edcac7}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>test_format.py</StartupFile>
+    <StartupFile>test_dev.py</StartupFile>
     <SearchPath>st_emul;..\..\SbotClean;..\..\SbotFormat;..\..\SbotHighlight;..\..\SbotJunkDrawer;..\..\SbotRender;..\..\SbotSidebar;..\..\SbotSignet</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -36,7 +36,7 @@
     <Compile Include="..\sbot_dev.py" />
     <Compile Include="st_emul\sublime.py" />
     <Compile Include="st_emul\sublime_plugin.py" />
-    <Compile Include="test_common.py" />
+    <Compile Include="test_dev.py" />
     <Compile Include="test_format.py" />
   </ItemGroup>
   <ItemGroup>

@@ -7,11 +7,11 @@ import sbot_format
 
 class TestFormat(unittest.TestCase):
 
-    #def setUp(self):
-    #    sbot.plugin_loaded()
+    def setUp(self):
+        pass
 
-    #def tearDown(self):
-    #    sbot.plugin_unloaded()
+    def tearDown(self):
+        pass
 
     def test_format_json(self):
         v = sublime.View(601)
@@ -42,7 +42,7 @@ class TestFormat(unittest.TestCase):
             # Make it a bad file.
             s = s.replace('ColumnType=', '')
             res = cmd._do_one(s)
-            self.assertEqual(res, "Error: ('not well-formed (invalid token): line 6, column 4',)")
+            self.assertEqual(res, "Error: not well-formed (invalid token): line 6, column 4")
 
 
 if __name__ == '__main__':

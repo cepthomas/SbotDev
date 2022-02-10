@@ -4,8 +4,6 @@ The focus is not on code development but rather general text processing.
 
 No support as yet for PackageControl.
 
-Built for Windows and ST4. Other OSes and ST versions will require some hacking.
-
 ![logo](./mark1.bmp)
 
 

@@ -29,11 +29,11 @@
     <Compile Include="..\..\SbotClean\sbot_clean.py" />
     <Compile Include="..\..\SbotFormat\sbot_format.py" />
     <Compile Include="..\..\SbotHighlight\sbot_highlight.py" />
-    <Compile Include="..\..\SbotJunkDrawer\sbot_junk_drawer.py" />
     <Compile Include="..\..\SbotRender\sbot_render.py" />
     <Compile Include="..\..\SbotSidebar\sbot_sidebar.py" />
     <Compile Include="..\..\SbotSignet\sbot_signet.py" />
     <Compile Include="..\sbot_dev.py" />
+    <Compile Include="sbot_utils.py" />
     <Compile Include="st_emul\sublime.py" />
     <Compile Include="st_emul\sublime_plugin.py" />
     <Compile Include="test_dev.py" />

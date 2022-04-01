@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 import sublime
-import sbot_junk_drawer
+import sbot_utils
 
 
 class TestDev(unittest.TestCase):
@@ -22,7 +22,7 @@ class TestDev(unittest.TestCase):
         sel.add(sublime.Region(10, 20, 101))
         view.sel = MagicMock(return_value = sel)
 
-        evt = sbot_junk_drawer.SbotEvent()
+        evt = sbot_utils.SbotEvent()
         evt.on_selection_modified(view)
 
         #self.assertEqual(1, 2, 'just a test test')

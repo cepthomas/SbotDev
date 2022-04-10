@@ -11,7 +11,7 @@ LITERAL = 1
 
 def _etrace(*args):
     s = ' | '.join(map(str, args))
-    print('EMUL', s)
+    print(f'EMUL {s}')
 
 # Current window.
 _window = None # Window(909)
@@ -33,7 +33,7 @@ def version():
 #     return sublime_api.executable_path()
 
 def packages_path():
-    return r'C:\Users\cepth\AppData\Roaming\Sublime Text\Packages'
+    return 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
 
 # def installed_packages_path():
 #     return sublime_api.installed_packages_path()

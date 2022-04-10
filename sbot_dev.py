@@ -4,6 +4,11 @@ import sublime
 import sublime_plugin
 
 
+# TODO packages? Make docs shinier.
+# TODO Sublime environment updates for linux.
+# TODO make csv and hex viewer menus directly accessible?
+# TODO generic Decorator for tracing function entry. More logging stuff? def trace_func(func):
+
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(">>> SbotDev plugin_loaded()")
@@ -18,14 +23,14 @@ def plugin_unloaded():
 
 #-----------------------------------------------------------------------------------
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
-    ''' Run a simple command in the project dir. '''
+    ''' blabla. '''
 
     def run(self):
         directions = ["north", "south", "east", "west"]
 
         items = []
-        for l in directions:
-            items.append(sublime.QuickPanelItem(l, details=["<i>details</i>", "<b>more</b>"], annotation=f"look_{l}", kind=sublime.KIND_NAVIGATION))
+        for dir in directions:
+            items.append(sublime.QuickPanelItem(dir, details=["<i>details</i>", "<b>more</b>"], annotation=f"look_{dir}", kind=sublime.KIND_NAVIGATION))
 
             # trigger - A unicode string of the text to match against the user's input.
             # details - An optional unicode string, or list of unicode strings, containing limited inline HTML. Displayed below the trigger.
@@ -42,16 +47,16 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
             # sublime.KIND_VARIABLE When the item represents a variable, member, attribute, constant or parameter. Letter: v, theme class: kind_variable
             # sublime.KIND_SNIPPET When the item contains a snippet. Letter: s, theme class: kind_snippet
 
-
             # sublime.MONOSPACE_FONT - use a monospace font
             # sublime.KEEP_OPEN_ON_FOCUS_LOST - keep the quick panel open if the window loses input focus
             # sublime.WANT_EVENT - pass a second parameter to on_done, an event Dict
 
-        self.window.show_quick_panel(items, self.on_done,
-            flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT | sublime.MONOSPACE_FONT,
-            selected_index=2,
-            on_highlight=self.on_highlight,
-            placeholder="place-xxx")
+        self.window.show_quick_panel(items,
+                                     self.on_done,
+                                     flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT | sublime.MONOSPACE_FONT,
+                                     selected_index=2,
+                                     on_highlight=self.on_highlight,
+                                     placeholder="place-xxx")
 
     def on_done(self, *args, **kwargs):
         print(f"SEL:{args[0]}")
@@ -64,7 +69,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
 #-----------------------------------------------------------------------------------
 class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
-    ''' Run a simple command in the project dir. '''
+    ''' blabla. '''
 
     def run(self):
         # Bottom input area.
@@ -73,7 +78,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     def on_done(self, text):
         cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
         sout = cp.stdout
-#        create_new_view(self.window, sout)
+        # create_new_view(self.window, sout)
 
 
 #-----------------------------------------------------------------------------------
@@ -157,3 +162,19 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
                 self.view.add_regions("eols", eols, settings.get('eol_scope'))
         else:
             self.view.erase_regions("eols")
+
+
+# #-----------------------------------------------------------------------------------
+# class SbotCmdLineCommand(sublime_plugin.WindowCommand):
+#     ''' Run a simple command in the project dir. '''
+
+#     def run(self):
+#         # Bottom input area.
+#         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
+
+#     def on_done(self, text):
+#         cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, capture_output=True, shell=True)
+#         sout = cp.stdout
+#         vnew = self.window.new_file()
+#         vnew.set_scratch(True)
+#         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation

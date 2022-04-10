@@ -131,3 +131,7 @@ dmypy.json
 # Project files
 /temp/
 /store/
+
+
+# VS
+.vs/

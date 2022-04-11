@@ -4,10 +4,14 @@ import sublime
 import sublime_plugin
 
 
-# TODO packages? Make docs shinier.
 # TODO Sublime environment updates for linux.
 # TODO make csv and hex viewer menus directly accessible?
 # TODO generic Decorator for tracing function entry. More logging stuff? def trace_func(func):
+# TODO Migrate SbotUtils somewhere.
+# TODO? Files containing null bytes are opened as hexadecimal by default:
+# •   "enable_hexadecimal_encoding": true
+# •   File -> Reopen with Encoding and select UTF-8 - will bring back the normal text view.
+
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():

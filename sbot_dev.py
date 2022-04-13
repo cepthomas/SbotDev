@@ -4,13 +4,41 @@ import sublime
 import sublime_plugin
 
 
-# TODO Sublime environment updates for linux.
-# TODO make csv and hex viewer menus directly accessible?
-# TODO generic Decorator for tracing function entry. More logging stuff? def trace_func(func):
-# TODO Migrate SbotUtils somewhere.
-# TODO? Files containing null bytes are opened as hexadecimal by default:
-# •   "enable_hexadecimal_encoding": true
-# •   File -> Reopen with Encoding and select UTF-8 - will bring back the normal text view.
+# TODO Sublime environment updates for linux. Packages?
+
+# TODO generic/common?
+#   - Decorator for tracing function entry.
+
+# TODO more debugging tools for plugins:
+#   - extension to logger print?
+        # print(f'*** {fn}')
+
+
+# You can only import modules from the Python Standard Library and use the ones provided by Sublime Text.
+# If you want to import a third-party module, e.g. memoized, you need to include it as a dependency.
+# So you find the module source, copy it and publish via PackageControl.
+# Then add it to your project using dependencies.json file.
+
+# TODO remove from Default context menu:
+# [
+#     { "command": "open_context_url" },
+#     { "command": "goto_definition", "caption": "Goto Definition" },
+#     { "caption": "-", "id": "diff" },
+#     { "command": "toggle_inline_diff" },
+#     { "command": "revert_hunk", "caption": "Revert Diff Hunk" },
+#     { "caption": "-", "id": "clipboard" },
+#     { "command": "cut" },
+#     { "command": "copy" },
+#     { "command": "paste" },
+#     { "caption": "-", "id": "selection" },
+#     { "command": "select_all" },
+#     { "caption": "-", "id": "file" },
+#     { "command": "open_in_browser", "caption": "Open in Browser" },
+#     { "command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"}, "caption": "Open Containing Folder…" },
+#     { "command": "copy_path", "caption": "Copy File Path" },
+#     { "command": "reveal_in_side_bar", "caption": "Reveal in Side Bar" },
+#     { "caption": "-", "id": "end" }
+# ]
 
 
 #-----------------------------------------------------------------------------------
@@ -98,7 +126,7 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         # image = f"C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SublimeBagOfTricks\\test\\files\\mark64.bmp"
-        image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg")
+        image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg") #TODO get from common.
         img_html = '<img src="file://' + image + '" width="16" height="16">'
 
         # Old way works too:
@@ -182,3 +210,37 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
 #         vnew = self.window.new_file()
 #         vnew.set_scratch(True)
 #         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
+
+
+
+#-----------------------------------------------------------------------------------
+class SbotGeneralEvent(sublime_plugin.EventListener):
+    ''' Listener for window events of interest. '''
+
+    def on_selection_modified(self, view):
+        ''' Show the abs position in the status bar. '''
+        pos = view.sel()[0].begin()
+        view.set_status("position", f'Pos {pos}')
+
+
+#-----------------------------------------------------------------------------------
+class SbotSplitViewCommand(sublime_plugin.WindowCommand):
+    ''' Toggles between split file views.'''
+
+    def run(self):
+        window = self.window
+
+        if len(window.layout()['rows']) > 2:
+            # Remove split.
+            window.run_command("focus_group", {"group": 1})
+            window.run_command("close_file")
+            window.run_command("set_layout", {"cols": [0.0, 1.0], "rows": [0.0, 1.0], "cells": [[0, 0, 1, 1]]})
+        else:
+            # Add split.
+            sel_row, _ = window.active_view().rowcol(window.active_view().sel()[0].a)  # current sel
+            window.run_command("set_layout", {"cols": [0.0, 1.0], "rows": [0.0, 0.5, 1.0], "cells": [[0, 0, 1, 1], [0, 1, 1, 2]]})
+            window.run_command("focus_group", {"group": 0})
+            window.run_command("clone_file")
+            window.run_command("move_to_group", {"group": 1})
+            window.active_view().run_command("goto_line", {"line": sel_row})
+

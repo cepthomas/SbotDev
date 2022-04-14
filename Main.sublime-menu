@@ -5,6 +5,10 @@
         "children":
         [
             {
+                "caption": "Debug",
+                "command": "sbot_debug"
+            },
+            {
                 "caption": "Panel",
                 "command": "sbot_test_panel"
             },

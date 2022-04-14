@@ -1,17 +1,30 @@
+import sys
 import os
 import subprocess
 import sublime
 import sublime_plugin
 
+try:
+    from SbotCommon.sbot_common import trace_function, trace_method, get_store_fn
+except ModuleNotFoundError as e:
+    sublime.message_dialog('SbotDev plugin requires SbotCommon plugin')
+
 
 # TODO Sublime environment updates for linux. Packages?
+
 
 # TODO generic/common?
 #   - Decorator for tracing function entry.
 
+
 # TODO more debugging tools for plugins:
 #   - extension to logger print?
-        # print(f'*** {fn}')
+# print(f'*** {fn}')
+# log_commands(flag) - Controls command logging. If enabled, all commands run from key bindings and the menu will be logged to the console.    
+# log_input(flag) - Controls input logging. If enabled, all key presses will be logged to the console.  
+# log_result_regex(flag) - Controls result regex logging. This is useful for debugging regular expressions used in build systems.  
+# log_control_tree(flag) - When enabled, clicking with Ctrl+Alt will log the control tree under the mouse to the console.  4064
+# log_fps(flag) - When enabled, logs the number of frames per second being rendered for the user interface
 
 
 # You can only import modules from the Python Standard Library and use the ones provided by Sublime Text.
@@ -19,29 +32,48 @@ import sublime_plugin
 # So you find the module source, copy it and publish via PackageControl.
 # Then add it to your project using dependencies.json file.
 
-# TODO remove from Default context menu:
-# [
-#     { "command": "open_context_url" },
-#     { "command": "goto_definition", "caption": "Goto Definition" },
-#     { "caption": "-", "id": "diff" },
-#     { "command": "toggle_inline_diff" },
-#     { "command": "revert_hunk", "caption": "Revert Diff Hunk" },
-#     { "caption": "-", "id": "clipboard" },
-#     { "command": "cut" },
-#     { "command": "copy" },
-#     { "command": "paste" },
-#     { "caption": "-", "id": "selection" },
-#     { "command": "select_all" },
-#     { "caption": "-", "id": "file" },
-#     { "command": "open_in_browser", "caption": "Open in Browser" },
-#     { "command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"}, "caption": "Open Containing Folder…" },
-#     { "command": "copy_path", "caption": "Copy File Path" },
-#     { "command": "reveal_in_side_bar", "caption": "Reveal in Side Bar" },
-#     { "caption": "-", "id": "end" }
-# ]
+
+
+# class LintAndPanel(sublime_plugin.WindowCommand):
+#     def run(self):
+#         self.window.run_command("sublime_linter_lint")
+#         self.window.run_command("sublime_linter_panel_toggle")
+
+
+# Then in your keybindings you can now set something for the new lint_and_panel (the camel case class translates to cool_hacker_case here) like so:
+# { "keys": ["super+p"], "command": "lint_and_panel" },
+
+
+# You should be able to put a startup.py in your Packages/User directory with contents like:
+# import sublime
+# import sublime_plugin
+# class ShowPanel(sublime_plugin.EventListener):
+#     def on_activated_async(self, view):
+#         view.window().run_command("show_panel", {"panel": "output.SublimeLinter"})
+# You probably have to fiddle with what events to use though, this example isn’t that nice. Anyway, hope that gets you started in the right direction.
+
+# create_output_panel(name, <unlisted>)   View    
+# Returns the view associated with the named output panel, creating it if required. The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix.
+# The optional unlisted parameter is a boolean to control if the output panel should be listed in the panel switcher.
+
+# find_output_panel(name) View or None    Returns the view associated with the named output panel, or None if the output panel does not exist.    
+
+# destroy_output_panel(name)  None    Destroys the named output panel, hiding it if currently open.   
+
+# active_panel()  str or None    Returns the name of the currently open panel, or None if no panel is open. Will return built-in panel names (e.g. "console", "find", etc) in addition to output panels. 
+
+# panels()    [str]   Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
+
+# TODO remove some from Default context menu?
+
+
+# print(f'>>>>{test_func(6)}')
+
+# print(f'*** {trace_method}')
 
 
 #-----------------------------------------------------------------------------------
+@trace_function
 def plugin_loaded():
     # print(">>> SbotDev plugin_loaded()")
     pass
@@ -51,6 +83,19 @@ def plugin_loaded():
 def plugin_unloaded():
     # print("SbotDev plugin_unloaded()")
     pass
+
+
+#-----------------------------------------------------------------------------------
+class SbotDebugCommand(sublime_plugin.WindowCommand):
+    @trace_method
+    def run(self):
+        modules = dir()
+        modules = sys.modules#.keys()
+        # 'SbotFormat.sbot_format', 'SbotHighlight', 'SbotHighlight.sbot_highlight', 'SbotLogger', 'SbotLogger.sbot_logger',
+        # 'SbotRender', 'SbotRender.sbot_render', 'SbotScope', 'SbotScope.sbot_scope', 'SbotSidebar', 'SbotSidebar.sbot_sidebar',
+        # 'SbotSignet', 'SbotSignet.sbot_signet', '_bootlocale', 'SbotDev.sbot_dev'
+
+        print(f'modules:{modules}')
 
 
 #-----------------------------------------------------------------------------------
@@ -197,6 +242,23 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
 
 
 # #-----------------------------------------------------------------------------------
+# class SbotSidebarOpenFileCommand(sublime_plugin.WindowCommand):
+#     ''' Simple file opener using default application, like you double clicked it.
+#
+#     def run(self, paths):
+#         if len(paths) > 0:
+#             if platform.system() == 'Windows':
+#                 os.startfile(paths[0])
+#             elif platform.system() == 'Linux':
+#                 subprocess.run(('xdg-open', paths[0]))
+#
+#     def is_visible(self, paths):
+#         vis = (platform.system() == 'Windows' or platform.system() == 'Linux') and len(paths) > 0
+#         return vis
+
+
+
+# #-----------------------------------------------------------------------------------
 # class SbotCmdLineCommand(sublime_plugin.WindowCommand):
 #     ''' Run a simple command in the project dir. '''
 
@@ -213,14 +275,14 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
 
 
 
-#-----------------------------------------------------------------------------------
-class SbotGeneralEvent(sublime_plugin.EventListener):
-    ''' Listener for window events of interest. '''
+# #-----------------------------------------------------------------------------------
+# class SbotGeneralEvent(sublime_plugin.EventListener):
+#     ''' Listener for window events of interest. '''
 
-    def on_selection_modified(self, view):
-        ''' Show the abs position in the status bar. '''
-        pos = view.sel()[0].begin()
-        view.set_status("position", f'Pos {pos}')
+#     def on_selection_modified(self, view):
+#         ''' Show the abs position in the status bar. '''
+#         pos = view.sel()[0].begin()
+#         view.set_status("position", f'Pos {pos}')
 
 
 #-----------------------------------------------------------------------------------

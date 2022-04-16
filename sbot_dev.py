@@ -3,85 +3,35 @@ import os
 import subprocess
 import sublime
 import sublime_plugin
+import sublime_api
 
 try:
     from SbotCommon.sbot_common import trace_function, trace_method, get_store_fn
 except ModuleNotFoundError as e:
-    sublime.message_dialog('SbotDev plugin requires SbotCommon plugin')
+    raise ImportError('SbotDev plugin requires SbotCommon plugin')
 
 
 # TODO Sublime environment updates for linux. Packages?
 
-
-# TODO generic/common?
-#   - Decorator for tracing function entry.
-
-
-# TODO more debugging tools for plugins:
-#   - extension to logger print?
-# print(f'*** {fn}')
-# log_commands(flag) - Controls command logging. If enabled, all commands run from key bindings and the menu will be logged to the console.    
-# log_input(flag) - Controls input logging. If enabled, all key presses will be logged to the console.  
-# log_result_regex(flag) - Controls result regex logging. This is useful for debugging regular expressions used in build systems.  
-# log_control_tree(flag) - When enabled, clicking with Ctrl+Alt will log the control tree under the mouse to the console.  4064
-# log_fps(flag) - When enabled, logs the number of frames per second being rendered for the user interface
-
-
-# You can only import modules from the Python Standard Library and use the ones provided by Sublime Text.
-# If you want to import a third-party module, e.g. memoized, you need to include it as a dependency.
-# So you find the module source, copy it and publish via PackageControl.
-# Then add it to your project using dependencies.json file.
-
-
-
-# class LintAndPanel(sublime_plugin.WindowCommand):
-#     def run(self):
-#         self.window.run_command("sublime_linter_lint")
-#         self.window.run_command("sublime_linter_panel_toggle")
-
-
-# Then in your keybindings you can now set something for the new lint_and_panel (the camel case class translates to cool_hacker_case here) like so:
-# { "keys": ["super+p"], "command": "lint_and_panel" },
-
-
-# You should be able to put a startup.py in your Packages/User directory with contents like:
-# import sublime
-# import sublime_plugin
-# class ShowPanel(sublime_plugin.EventListener):
-#     def on_activated_async(self, view):
-#         view.window().run_command("show_panel", {"panel": "output.SublimeLinter"})
-# You probably have to fiddle with what events to use though, this example isn’t that nice. Anyway, hope that gets you started in the right direction.
-
-# create_output_panel(name, <unlisted>)   View    
-# Returns the view associated with the named output panel, creating it if required. The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix.
-# The optional unlisted parameter is a boolean to control if the output panel should be listed in the panel switcher.
-
-# find_output_panel(name) View or None    Returns the view associated with the named output panel, or None if the output panel does not exist.    
-
-# destroy_output_panel(name)  None    Destroys the named output panel, hiding it if currently open.   
-
-# active_panel()  str or None    Returns the name of the currently open panel, or None if no panel is open. Will return built-in panel names (e.g. "console", "find", etc) in addition to output panels. 
-
-# panels()    [str]   Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
-
 # TODO remove some from Default context menu?
 
 
-# print(f'>>>>{test_func(6)}')
 
-# print(f'*** {trace_method}')
+
 
 
 #-----------------------------------------------------------------------------------
 @trace_function
 def plugin_loaded():
-    # print(">>> SbotDev plugin_loaded()")
+    # print("DEV SbotDev plugin_loaded()")
+    # sublime.log_commands(True)
+    sublime_api.log_message('+++++++++++++++ sublime_api.log_message +++++++++++++++++++++++++++\n')
     pass
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    # print("SbotDev plugin_unloaded()")
+    # print("DEV SbotDev plugin_unloaded()")
     pass
 
 
@@ -90,30 +40,46 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
     @trace_method
     def run(self):
         modules = dir()
-        modules = sys.modules#.keys()
-        # 'SbotFormat.sbot_format', 'SbotHighlight', 'SbotHighlight.sbot_highlight', 'SbotLogger', 'SbotLogger.sbot_logger',
-        # 'SbotRender', 'SbotRender.sbot_render', 'SbotScope', 'SbotScope.sbot_scope', 'SbotSidebar', 'SbotSidebar.sbot_sidebar',
-        # 'SbotSignet', 'SbotSignet.sbot_signet', '_bootlocale', 'SbotDev.sbot_dev'
-
-        print(f'modules:{modules}')
+        # modules = sys.modules.keys()
+        # sublime.error_message('xyz')
 
 
 #-----------------------------------------------------------------------------------
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     ''' blabla. '''
 
+    # Panel iterate stuff.
+    # create_output_panel(name, <unlisted>) Returns the view associated with the named output panel, creating it if required.
+    #   The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix.
+    #   The optional unlisted parameter is a boolean to control if the output panel should be listed in the panel switcher.
+    # find_output_panel(name) Returns the view associated with the named output panel, or None if the output panel does not exist.    
+    # destroy_output_panel(name)  Destroys the named output panel, hiding it if currently open.   
+    # active_panel()  Returns the name of the currently open panel, or None if no panel is open. Will return built-in panel names (e.g. "console", "find", etc) in addition to output panels. 
+    # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
+
+    # You should be able to put a startup.py in your Packages/User directory with contents like:
+    # import sublime
+    # import sublime_plugin
+    # class ShowPanel(sublime_plugin.EventListener):
+    #     def on_activated_async(self, view):
+    #         view.window().run_command("show_panel", {"panel": "output.SublimeLinter"})
+    # You probably have to fiddle with what events to use though, this example isn’t that nice.
+
+
     def run(self):
         directions = ["north", "south", "east", "west"]
 
         items = []
         for dir in directions:
-            items.append(sublime.QuickPanelItem(dir, details=["<i>details</i>", "<b>more</b>"], annotation=f"look_{dir}", kind=sublime.KIND_NAVIGATION))
-
+            items.append(sublime.QuickPanelItem(
+                trigger=dir,
+                details=["<i>details</i>", "<b>more</b>"],
+                annotation=f"look_{dir}",
+                kind=sublime.KIND_NAVIGATION))
             # trigger - A unicode string of the text to match against the user's input.
             # details - An optional unicode string, or list of unicode strings, containing limited inline HTML. Displayed below the trigger.
             # annotation - An optional unicode string of a hint to draw to the right-hand side of the row.
             # kind - An optional kind tuple – defaults to sublime.KIND_AMBIGUOUS.
-
             # sublime.KIND_AMBIGUOUS When there source of the item is unknown – the default. Letter: none, theme class: kind_ambiguous
             # sublime.KIND_KEYWORD When the item represents a keyword. Letter: k, theme class: kind_keyword
             # sublime.KIND_TYPE When the item represents a data type, class, struct, interface, enum, trait, etc. Letter: t, theme class: kind_type
@@ -124,24 +90,18 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
             # sublime.KIND_VARIABLE When the item represents a variable, member, attribute, constant or parameter. Letter: v, theme class: kind_variable
             # sublime.KIND_SNIPPET When the item contains a snippet. Letter: s, theme class: kind_snippet
 
-            # sublime.MONOSPACE_FONT - use a monospace font
-            # sublime.KEEP_OPEN_ON_FOCUS_LOST - keep the quick panel open if the window loses input focus
-            # sublime.WANT_EVENT - pass a second parameter to on_done, an event Dict
-
         self.window.show_quick_panel(items,
                                      self.on_done,
-                                     flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT | sublime.MONOSPACE_FONT,
+                                     flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT,
                                      selected_index=2,
                                      on_highlight=self.on_highlight,
                                      placeholder="place-xxx")
 
     def on_done(self, *args, **kwargs):
-        print(f"SEL:{args[0]}")
-        # print(f"on_done args:{args} kwargs:{kwargs}")
+        print(f"DEV sel:{args[0]}")
 
     def on_highlight(self, *args, **kwargs):
-        print(f"HLT:{args[0]}")
-        # print(f"on_highlight args:{args} kwargs:{kwargs}")
+        print(f"DEV hlt:{args[0]}")
 
 
 #-----------------------------------------------------------------------------------
@@ -171,7 +131,7 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         # image = f"C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SublimeBagOfTricks\\test\\files\\mark64.bmp"
-        image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg") #TODO get from common.
+        image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg")
         img_html = '<img src="file://' + image + '" width="16" height="16">'
 
         # Old way works too:
@@ -216,7 +176,7 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
     def nav(self, href):
         # on_navigate is an optional callback that should accept a single string parameter,
         # that is the href attribute of the link clicked.
-        print(f"href:{href}")
+        print(f"DEV href:{href}")
 
 
 #-----------------------------------------------------------------------------------
@@ -229,7 +189,7 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
             ind = 0
             while 1:
                 freg = self.view.find('[\n\r]', ind)  # this doesn't work as ST normalizes endings. See what hexviewer does?
-                if freg is not None and not freg.empty():  # second condition is not documented!!
+                if freg is not None and not freg.empty():  # second condition is not documented.
                     eols.append(freg)
                     ind = freg.end() + 1
                 else:
@@ -272,37 +232,4 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
 #         vnew = self.window.new_file()
 #         vnew.set_scratch(True)
 #         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
-
-
-
-# #-----------------------------------------------------------------------------------
-# class SbotGeneralEvent(sublime_plugin.EventListener):
-#     ''' Listener for window events of interest. '''
-
-#     def on_selection_modified(self, view):
-#         ''' Show the abs position in the status bar. '''
-#         pos = view.sel()[0].begin()
-#         view.set_status("position", f'Pos {pos}')
-
-
-#-----------------------------------------------------------------------------------
-class SbotSplitViewCommand(sublime_plugin.WindowCommand):
-    ''' Toggles between split file views.'''
-
-    def run(self):
-        window = self.window
-
-        if len(window.layout()['rows']) > 2:
-            # Remove split.
-            window.run_command("focus_group", {"group": 1})
-            window.run_command("close_file")
-            window.run_command("set_layout", {"cols": [0.0, 1.0], "rows": [0.0, 1.0], "cells": [[0, 0, 1, 1]]})
-        else:
-            # Add split.
-            sel_row, _ = window.active_view().rowcol(window.active_view().sel()[0].a)  # current sel
-            window.run_command("set_layout", {"cols": [0.0, 1.0], "rows": [0.0, 0.5, 1.0], "cells": [[0, 0, 1, 1], [0, 1, 1, 2]]})
-            window.run_command("focus_group", {"group": 0})
-            window.run_command("clone_file")
-            window.run_command("move_to_group", {"group": 1})
-            window.active_view().run_command("goto_line", {"line": sel_row})
 

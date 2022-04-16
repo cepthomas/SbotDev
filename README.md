@@ -47,6 +47,28 @@ Is instantiated once per window (ST instance):
 - `on_exit()` called once after the API has shut down, immediately before the plugin_host process exits.
 - `on_pre_close_window()` seems to work.
 
+
+Actual Sequence:
+'''
+- Open default/empty file.
+EventListener.on_init ([View(12)],)
+- Open real file with sigs.
+  - First closes current/default.
+EventListener.on_pre_close (View(12),) Window is valid!
+EventListener.on_close (View(12),)
+  - Then
+EventListener.on_load (View(15),)
+- Close real file.
+EventListener.on_pre_close (View(15),)
+EventListener.on_close (View(15),)
+- Shutdown.
+EventListener.on_pre_close_project (Window(2),)
+EventListener.on_pre_close_project (Window(2),)
+EventListener.on_pre_close (View(16),) Window is not valid!
+EventListener.on_close (View(16),)
+'''
+
+
 ### Global
 ST says `plugin_loaded()` fires only once for all instances of sublime. However you can add this to 
 each module and they all get called. Safest is to only use it once.

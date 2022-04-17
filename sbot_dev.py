@@ -25,7 +25,7 @@ except ModuleNotFoundError as e:
 def plugin_loaded():
     # print("DEV SbotDev plugin_loaded()")
     # sublime.log_commands(True)
-    sublime_api.log_message('+++++++++++++++ sublime_api.log_message +++++++++++++++++++++++++++\n')
+    # sublime_api.log_message('+++++++++++++++ sublime_api.log_message +++++++++++++++++++++++++++\n')
     pass
 
 

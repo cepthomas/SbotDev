@@ -6,7 +6,7 @@ import sublime_plugin
 import sublime_api
 
 try:
-    from SbotCommon.sbot_common import trace_function, trace_method, get_store_fn
+    from SbotCommon.sbot_common import log_message
 except ModuleNotFoundError as e:
     raise ImportError('SbotDev plugin requires SbotCommon plugin')
 
@@ -15,33 +15,104 @@ except ModuleNotFoundError as e:
 
 # TODO remove some from Default context menu?
 
+# TODO pdb?
 
-
-
+# These go directly to console via _LogWriter(). Our hooks don't intercept. Must be loaded before our stuff.
+#   sublime.log_commands(True/False)
+#   sublime.log_input(True/False)
+#   sublime.log_result_regex(True/False)
+#   sublime.log_control_tree(True/False)
+#   sublime.log_fps(True/False)
+#   sublime_api.log_message('Called sublime_api.log_message()\n')
+#   initial plugin loading messages: reloading ...  Package Control: ...
 
 
 #-----------------------------------------------------------------------------------
-@trace_function
 def plugin_loaded():
-    # print("DEV SbotDev plugin_loaded()")
-    # sublime.log_commands(True)
-    # sublime_api.log_message('+++++++++++++++ sublime_api.log_message +++++++++++++++++++++++++++\n')
-    pass
+
+    log_message('DEV', 'howdy')
+    # dump_stack()
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    # print("DEV SbotDev plugin_unloaded()")
-    pass
+    log_message('DEV')
+
+
+#-----------------------------------------------------------------------------------
+def dump_stack(cat):
+    depth = 0
+    try:
+        while True:
+            frame = sys._getframe(depth)
+            fn = os.path.basename(frame.f_code.co_filename)
+            func = frame.f_code.co_name
+
+            # smsg = f'{cat}{depth} __name__:{frame.f_globals["__name__"]} FILE:{fn}  LINE:{frame.f_lineno}  FUNCTION:{frame.f_code.co_name}'
+            smsg = f'{cat}{depth} FU:{func} FILE:{fn} LINE:{frame.f_lineno}  '
+            print(smsg)
+            depth += 1
+    except:
+        # End of stack.
+        return
 
 
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.WindowCommand):
-    @trace_method
+
     def run(self):
-        modules = dir()
+        log_message('DEV', 'doody')
+        # dump_stack()
+        # modules = dir()
         # modules = sys.modules.keys()
-        # sublime.error_message('xyz')
+        i = 999 / 0
+
+
+#-----------------------------------------------------------------------------------
+class SbotDebugEvent(sublime_plugin.EventListener):
+    ''' Listener for view specific events of interest. '''
+
+
+    def on_init(self, views):
+        ''' First thing that happens when plugin/window created. Views are valid.
+        Note that this also happens if this module is reloaded - like when editing this file. '''
+        log_message('DEV', f'{views}')
+
+    def on_load_project(self, window):
+        ''' This gets called for new windows but not for the first one. '''
+        log_message('DEV')
+
+    def on_pre_close_project(self, window):
+        ''' Save to file when closing window/project. Seems to be called twice. '''
+        log_message('DEV')
+
+    def on_load(self, view):
+        ''' Load a file. '''
+        log_message('DEV')
+
+    def on_deactivated(self, view):
+        # Window is still valid here.
+        log_message('DEV')
+
+    def on_pre_close(self, view):
+        ''' This happens after on_pre_close_project(). '''
+        log_message('DEV')
+
+    def on_close(self, view):
+        log_message('DEV')
+
+    def on_pre_save(self, view):
+        log_message('DEV')
+
+    def on_post_save(self, view):
+        log_message('DEV')
+
+    def on_pre_close_window(self, window):
+        log_message('DEV')
+
+    def on_new_window(self, window):
+        ''' Another window/instance has been created. Project has not been opened yet though. '''
+        log_message('DEV')
 
 
 #-----------------------------------------------------------------------------------
@@ -98,10 +169,10 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
                                      placeholder="place-xxx")
 
     def on_done(self, *args, **kwargs):
-        print(f"DEV sel:{args[0]}")
+        sel = args[0]
 
     def on_highlight(self, *args, **kwargs):
-        print(f"DEV hlt:{args[0]}")
+        hlt = args[0]
 
 
 #-----------------------------------------------------------------------------------
@@ -176,7 +247,7 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
     def nav(self, href):
         # on_navigate is an optional callback that should accept a single string parameter,
         # that is the href attribute of the link clicked.
-        print(f"DEV href:{href}")
+        pass
 
 
 #-----------------------------------------------------------------------------------
@@ -232,4 +303,5 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
 #         vnew = self.window.new_file()
 #         vnew.set_scratch(True)
 #         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
+
 

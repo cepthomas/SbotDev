@@ -11,7 +11,7 @@ LITERAL = 1
 
 def _etrace(*args):
     s = ' | '.join(map(str, args))
-    print(f'EMU {s}')
+    print(f'EMUL {s}')
 
 # Current window.
 _window = None # Window(909)

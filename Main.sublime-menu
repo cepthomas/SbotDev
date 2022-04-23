@@ -9,8 +9,16 @@
                 "command": "sbot_debug"
             },
             {
+                "caption": "Cmd",
+                "command": "sbot_cmd_line"
+            },
+            {
                 "caption": "Panel",
                 "command": "sbot_test_panel"
+            },
+            {
+                "caption": "Panel Input",
+                "command": "sbot_test_panel_input"
             },
             {
                 "caption": "Phantoms",

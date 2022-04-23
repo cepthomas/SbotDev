@@ -3,10 +3,10 @@ import os
 import subprocess
 import sublime
 import sublime_plugin
-import sublime_api
+import sublime_api # For undocumented internals.
 
 try:
-    from SbotCommon.sbot_common import log_message
+    from SbotCommon.sbot_common import slog, create_new_view
 except ModuleNotFoundError as e:
     raise ImportError('SbotDev plugin requires SbotCommon plugin')
 
@@ -17,30 +17,32 @@ except ModuleNotFoundError as e:
 
 # TODO pdb?
 
-# These go directly to console via _LogWriter(). Our hooks don't intercept. Must be loaded before our stuff.
+# These go directly to console via _LogWriter(). Our hooks don't intercept - must be loaded early.
 #   sublime.log_commands(True/False)
 #   sublime.log_input(True/False)
 #   sublime.log_result_regex(True/False)
 #   sublime.log_control_tree(True/False)
 #   sublime.log_fps(True/False)
 #   sublime_api.log_message('Called sublime_api.log_message()\n')
-#   initial plugin loading messages: reloading ...  Package Control: ...
+
 
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-
-    log_message('DEV', 'howdy')
+    slog('DEV')
     # dump_stack()
+    pass
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    log_message('DEV')
+    slog('DEV')
+    pass
 
 
 #-----------------------------------------------------------------------------------
 def dump_stack(cat):
+    ''' Diagnostics. '''
     depth = 0
     try:
         while True:
@@ -58,67 +60,96 @@ def dump_stack(cat):
 
 
 #-----------------------------------------------------------------------------------
+def dump_attrs(obj):
+    ''' Diagnostics. '''
+    for attr in dir(obj):
+        print("%s = %r" % (attr, getattr(obj, attr)))
+
+
+#-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        log_message('DEV', 'doody')
+        slog('DEV', '== before')
+
+        # print(os.environ)
+
         # dump_stack()
         # modules = dir()
         # modules = sys.modules.keys()
-        i = 999 / 0
+        
+
+        # Force a handled exception.
+        # try:
+        #     i = 111 / 0
+        # except Exception as e:
+        #     with open(r'C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\User\SbotStore\sbot_trace.log', 'a') as f:
+        #         import traceback
+        #         traceback.print_exc(file=f)
+
+        # Force an unhandled exception.
+        i = 222 / 0
+
+        slog('DEV', '== after')
+
+        ### stack stuff
+        # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
+        # frame = sys._getframe(0)
+        # fn = os.path.basename(frame.f_code.co_filename)
+        # func = frame.f_code.co_name
+        # line = frame.f_lineno
+
+        # dump_attrs(frame)
+        # >>> f_back, f_builtins, f_code, f_globals, f_lasti, f_lineno, f_locals, f_trace, f_trace_lines, f_trace_opcodes, False
+        # dump_attrs(frame.f_code)
+        # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
+        #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
 
 
-#-----------------------------------------------------------------------------------
-class SbotDebugEvent(sublime_plugin.EventListener):
-    ''' Listener for view specific events of interest. '''
+def start_interactive():
+    winid = sublime.active_window().id()
+    view = create_new_view(sublime.active_window(), '>>> howdy!')
+    slog('DEV', f'{self.view}  {winid}')
+    view.settings().set('interactive' , True)
 
+class SbotInteractive(sublime_plugin.ViewEventListener):
+    # def __init__(self, view):
+    #     # This gets called for every view.
+    #     slog('DEV', str(view))
+    #     super(sublime_plugin.ViewEventListener, self).__init__(view)
+    #     super().__init__(view)
 
-    def on_init(self, views):
-        ''' First thing that happens when plugin/window created. Views are valid.
-        Note that this also happens if this module is reloaded - like when editing this file. '''
-        log_message('DEV', f'{views}')
+    def on_selection_modified(self):
+        if self.view.settings().get('interactive'):
+            slog('DEV', '+++++++')
+            pass
 
-    def on_load_project(self, window):
-        ''' This gets called for new windows but not for the first one. '''
-        log_message('DEV')
+    # def on_init(self):
+    # def on_load(self):
+    # def on_activated(self):
+    # def on_deactivated(self):
+    # def on_pre_close(self):
+    # def on_close(self):
+    # def on_pre_save(self):
+    # def on_post_save(self):
+    # def on_modified(self): Called after changes have been made to the view.
+    # def on_text_changed(self, changes): Called once after changes has been made to a view. changes is a list of TextChange objects.
+    # def on_selection_modified(self): Called after the selection has been modified in the view.   
 
-    def on_pre_close_project(self, window):
-        ''' Save to file when closing window/project. Seems to be called twice. '''
-        log_message('DEV')
-
-    def on_load(self, view):
-        ''' Load a file. '''
-        log_message('DEV')
-
-    def on_deactivated(self, view):
-        # Window is still valid here.
-        log_message('DEV')
-
-    def on_pre_close(self, view):
-        ''' This happens after on_pre_close_project(). '''
-        log_message('DEV')
-
-    def on_close(self, view):
-        log_message('DEV')
-
-    def on_pre_save(self, view):
-        log_message('DEV')
-
-    def on_post_save(self, view):
-        log_message('DEV')
-
-    def on_pre_close_window(self, window):
-        log_message('DEV')
-
-    def on_new_window(self, window):
-        ''' Another window/instance has been created. Project has not been opened yet though. '''
-        log_message('DEV')
-
+    ### pdb? stuff
+    # import pdb
+    # mydb = pdb.Pdb(stdin=sys.stdin)
+    # mydb.set_trace()
+    # breakpoint()
+    
+    # New in version 3.7: The built-in breakpoint(), when called with defaults, can be used instead of import pdb; pdb.set_trace().
+    # The run* functions and set_trace() are aliases for instantiating the Pdb class and calling the method of the same name. 
+    # If you want to access further features, you have to do this yourself:
+    # pdb.Pdb(completekey='tab', stdin=None, stdout=None, skip=None, nosigint=False, readrc=True)
+    # sys.stderr = self
 
 #-----------------------------------------------------------------------------------
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
-    ''' blabla. '''
-
     # Panel iterate stuff.
     # create_output_panel(name, <unlisted>) Returns the view associated with the named output panel, creating it if required.
     #   The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix.
@@ -128,16 +159,8 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # active_panel()  Returns the name of the currently open panel, or None if no panel is open. Will return built-in panel names (e.g. "console", "find", etc) in addition to output panels. 
     # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
 
-    # You should be able to put a startup.py in your Packages/User directory with contents like:
-    # import sublime
-    # import sublime_plugin
-    # class ShowPanel(sublime_plugin.EventListener):
-    #     def on_activated_async(self, view):
-    #         view.window().run_command("show_panel", {"panel": "output.SublimeLinter"})
-    # You probably have to fiddle with what events to use though, this example isn’t that nice.
-
-
     def run(self):
+        slog('DEV', 'abra')
         directions = ["north", "south", "east", "west"]
 
         items = []
@@ -161,12 +184,8 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
             # sublime.KIND_VARIABLE When the item represents a variable, member, attribute, constant or parameter. Letter: v, theme class: kind_variable
             # sublime.KIND_SNIPPET When the item contains a snippet. Letter: s, theme class: kind_snippet
 
-        self.window.show_quick_panel(items,
-                                     self.on_done,
-                                     flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT,
-                                     selected_index=2,
-                                     on_highlight=self.on_highlight,
-                                     placeholder="place-xxx")
+        self.window.show_quick_panel(items, self.on_done, flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT,
+                                     selected_index=2, on_highlight=self.on_highlight, placeholder="place-xxx")
 
     def on_done(self, *args, **kwargs):
         sel = args[0]
@@ -180,13 +199,20 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     ''' blabla. '''
 
     def run(self):
+        slog('DEV', 'cadabra')
         # Bottom input area.
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
+        # show_input_panel(caption, initial_text, on_done, on_change, on_cancel)
+        # Shows the input panel, to collect a line of input from the user. on_done and on_change, if not None, should both
+        # be functions that expect a single string argument. on_cancel should be a function that expects no arguments. 
+        # The view used for the input widget is returned.
+
     def on_done(self, text):
-        cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
-        sout = cp.stdout
+        # cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
+        # sout = cp.stdout
         # create_new_view(self.window, sout)
+        slog('====', f'Got:{text}')
 
 
 #-----------------------------------------------------------------------------------
@@ -215,6 +241,10 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
         phantoms = []
         self.phantom_set.update(phantoms)
 
+        # sublime.LAYOUT_INLINE: Display in between the region and the point following.
+        # sublime.LAYOUT_BELOW: Display in space below the current line, left-aligned with the region.
+        # sublime.LAYOUT_BLOCK: Display in space below the current line, left-aligned with the beginning of the line.
+
         html = f'<div>|image LAYOUT_INLINE at 200:210|{img_html}|</div>'
         region = sublime.Region(200, 210)
         phantom = sublime.Phantom(region, html, sublime.LAYOUT_INLINE)
@@ -240,10 +270,6 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
 
         self.phantom_set.update(phantoms)
 
-        # sublime.LAYOUT_INLINE: Display in between the region and the point following.
-        # sublime.LAYOUT_BELOW: Display in space below the current line, left-aligned with the region.
-        # sublime.LAYOUT_BLOCK: Display in space below the current line, left-aligned with the beginning of the line.
-
     def nav(self, href):
         # on_navigate is an optional callback that should accept a single string parameter,
         # that is the href attribute of the link clicked.
@@ -251,28 +277,89 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
-class SbotShowEolCommand(sublime_plugin.TextCommand):
-    ''' Show line ends. '''
+class SbotCmdLineCommand(sublime_plugin.WindowCommand):
+    ''' Run a simple command in the project dir. '''
 
-    def run(self, edit):
-        if not self.view.get_regions("eols"):
-            eols = []
-            ind = 0
-            while 1:
-                freg = self.view.find('[\n\r]', ind)  # this doesn't work as ST normalizes endings. See what hexviewer does?
-                if freg is not None and not freg.empty():  # second condition is not documented.
-                    eols.append(freg)
-                    ind = freg.end() + 1
-                else:
-                    break
-            if eols:
-                settings = sublime.load_settings("SbotSignet.sublime-settings")
-                self.view.add_regions("eols", eols, settings.get('eol_scope'))
-        else:
-            self.view.erase_regions("eols")
+    def run(self):
+        # Bottom input area.
+        self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
+
+    def on_done(self, text):
+        cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, capture_output=True, shell=True)
+        sout = cp.stdout
+        vnew = self.window.new_file()
+        vnew.set_scratch(True)
+        vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
+
+#-----------------------------------------------------------------------------------
+# class SbotAllEvent(sublime_plugin.EventListener):
+#     ''' For tracing EventListener event sequence. '''
+
+#     def on_init(self, views):
+#         ''' First thing that happens when plugin/window created. Views are valid.
+#         Note that this also happens if this module is reloaded - like when editing this file. '''
+#         slog('DEV', f'{views}')
+
+#     def on_load_project(self, window):
+#         ''' This gets called for new windows but not for the first one. '''
+#         slog('DEV')
+
+#     def on_pre_close_project(self, window):
+#         ''' Save to file when closing window/project. Seems to be called twice. '''
+#         slog('DEV')
+
+#     def on_load(self, view):
+#         ''' Load a file. '''
+#         slog('DEV')
+
+#     def on_deactivated(self, view):
+#         # Window is still valid here.
+#         slog('DEV')
+
+#     def on_pre_close(self, view):
+#         ''' This happens after on_pre_close_project(). '''
+#         slog('DEV')
+
+#     def on_close(self, view):
+#         slog('DEV')
+
+#     def on_pre_save(self, view):
+#         slog('DEV')
+
+#     def on_post_save(self, view):
+#         slog('DEV')
+
+#     def on_pre_close_window(self, window):
+#         slog('DEV')
+
+#     def on_new_window(self, window):
+#         ''' Another window/instance has been created. Project has not been opened yet though. '''
+#         slog('DEV')
 
 
-# #-----------------------------------------------------------------------------------
+#-------------------------------- Graveyard ---------------------------------------------------
+# class SbotShowEolCommand(sublime_plugin.TextCommand):
+#     ''' Show line ends. '''
+
+#     def run(self, edit):
+#         if not self.view.get_regions("eols"):
+#             eols = []
+#             ind = 0
+#             while 1:
+#                 freg = self.view.find('[\n\r]', ind)  # this doesn't work as ST normalizes endings. See what hexviewer does?
+#                 if freg is not None and not freg.empty():  # second condition is not documented.
+#                     eols.append(freg)
+#                     ind = freg.end() + 1
+#                 else:
+#                     break
+#             if eols:
+#                 settings = sublime.load_settings("SbotSignet.sublime-settings")
+#                 self.view.add_regions("eols", eols, settings.get('eol_scope'))
+#         else:
+#             self.view.erase_regions("eols")
+
+
+#-------------------------------- Graveyard ---------------------------------------------------
 # class SbotSidebarOpenFileCommand(sublime_plugin.WindowCommand):
 #     ''' Simple file opener using default application, like you double clicked it.
 #
@@ -286,22 +373,3 @@ class SbotShowEolCommand(sublime_plugin.TextCommand):
 #     def is_visible(self, paths):
 #         vis = (platform.system() == 'Windows' or platform.system() == 'Linux') and len(paths) > 0
 #         return vis
-
-
-
-# #-----------------------------------------------------------------------------------
-# class SbotCmdLineCommand(sublime_plugin.WindowCommand):
-#     ''' Run a simple command in the project dir. '''
-
-#     def run(self):
-#         # Bottom input area.
-#         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
-
-#     def on_done(self, text):
-#         cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, capture_output=True, shell=True)
-#         sout = cp.stdout
-#         vnew = self.window.new_file()
-#         vnew.set_scratch(True)
-#         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
-
-

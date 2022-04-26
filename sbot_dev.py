@@ -83,7 +83,7 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # try:
         #     i = 111 / 0
         # except Exception as e:
-        #     with open(r'C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\User\SbotStore\sbot_trace.log', 'a') as f:
+        #     with open(r'somewhere\sbot_trace.log', 'a') as f:
         #         import traceback
         #         traceback.print_exc(file=f)
 

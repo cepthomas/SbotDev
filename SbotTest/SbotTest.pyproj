@@ -5,8 +5,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0c4c78da-4a9f-4ff6-a2f1-9b2599edcac7}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>test_dev.py</StartupFile>
-    <SearchPath>st_emul;..\..\SbotClean;..\..\SbotFormat;..\..\SbotHighlight;..\..\SbotJunkDrawer;..\..\SbotRender;..\..\SbotSidebar;..\..\SbotSignet</SearchPath>
+    <StartupFile>test_format.py</StartupFile>
+    <SearchPath>st_emul;..\..\SbotALogger;..\..\SbotBuilder;..\..\SbotClean;..\..\SbotCommon;..\..\SbotFormat;..\..\SbotHighlight;..\..\SbotRender;..\..\SbotScope;..\..\SbotSidebar;..\..\SbotSignet;..\..\SbotUtils</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
@@ -26,14 +26,18 @@
     <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\..\SbotALogger\sbot_logger.py" />
+    <Compile Include="..\..\SbotBuilder\sbot_builder.py" />
     <Compile Include="..\..\SbotClean\sbot_clean.py" />
+    <Compile Include="..\..\SbotCommon\sbot_common.py" />
     <Compile Include="..\..\SbotFormat\sbot_format.py" />
     <Compile Include="..\..\SbotHighlight\sbot_highlight.py" />
     <Compile Include="..\..\SbotRender\sbot_render.py" />
+    <Compile Include="..\..\SbotScope\sbot_scope.py" />
     <Compile Include="..\..\SbotSidebar\sbot_sidebar.py" />
     <Compile Include="..\..\SbotSignet\sbot_signet.py" />
+    <Compile Include="..\..\SbotUtils\sbot_utils.py" />
     <Compile Include="..\sbot_dev.py" />
-    <Compile Include="sbot_utils.py" />
     <Compile Include="st_emul\sublime.py" />
     <Compile Include="st_emul\sublime_plugin.py" />
     <Compile Include="test_dev.py" />

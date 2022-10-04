@@ -8,16 +8,17 @@ import sublime_api # For undocumented internals.
 try:
     from SbotCommon.sbot_common import slog, create_new_view
 except ModuleNotFoundError as e:
+    sublime.message_dialog('SbotDev plugin requires SbotCommon plugin')
     raise ImportError('SbotDev plugin requires SbotCommon plugin')
 
 
-# TODO Sublime environment updates for linux. Packages?
-
+# TODO Packages?
+# TODO Sublime environment updates for linux.
 # TODO remove some from Default context menu?
-
 # TODO pdb?
 
-# These go directly to console via _LogWriter(). Our hooks don't intercept - must be loaded early.
+
+# These go directly to console via _LogWriter(). Our hooks don't intercept.
 #   sublime.log_commands(True/False)
 #   sublime.log_input(True/False)
 #   sublime.log_result_regex(True/False)
@@ -29,14 +30,14 @@ except ModuleNotFoundError as e:
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    slog('DEV')
+    slog('X--X')
     # dump_stack()
     pass
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    slog('DEV')
+    slog('X--X')
     pass
 
 
@@ -63,14 +64,14 @@ def dump_stack(cat):
 def dump_attrs(obj):
     ''' Diagnostics. '''
     for attr in dir(obj):
-        print("%s = %r" % (attr, getattr(obj, attr)))
+        print(f'{attr} = {getattr(obj, attr)}')
 
 
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        slog('DEV', '== before')
+        slog('X--X', '== before')
 
         # print(os.environ)
 
@@ -90,7 +91,7 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # Force an unhandled exception.
         i = 222 / 0
 
-        slog('DEV', '== after')
+        slog('X--X', '== after')
 
         ### stack stuff
         # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
@@ -109,19 +110,19 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 def start_interactive():
     winid = sublime.active_window().id()
     view = create_new_view(sublime.active_window(), '>>> howdy!')
-    slog('DEV', f'{self.view}  {winid}')
+    slog('X--X', f'{self.view}  {winid}')
     view.settings().set('interactive' , True)
 
 class SbotInteractive(sublime_plugin.ViewEventListener):
     # def __init__(self, view):
     #     # This gets called for every view.
-    #     slog('DEV', str(view))
+    #     slog('X--X', str(view))
     #     super(sublime_plugin.ViewEventListener, self).__init__(view)
     #     super().__init__(view)
 
     def on_selection_modified(self):
         if self.view.settings().get('interactive'):
-            slog('DEV', '+++++++')
+            slog('X--X', '+++++++')
             pass
 
     # def on_init(self):
@@ -160,7 +161,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
 
     def run(self):
-        slog('DEV', 'abra')
+        slog('X--X', 'abra')
         directions = ["north", "south", "east", "west"]
 
         items = []
@@ -199,7 +200,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     ''' blabla. '''
 
     def run(self):
-        slog('DEV', 'cadabra')
+        slog('X--X', 'cadabra')
         # Bottom input area.
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
@@ -298,43 +299,43 @@ class SbotCmdLineCommand(sublime_plugin.WindowCommand):
 #     def on_init(self, views):
 #         ''' First thing that happens when plugin/window created. Views are valid.
 #         Note that this also happens if this module is reloaded - like when editing this file. '''
-#         slog('DEV', f'{views}')
+#         slog('X--X', f'{views}')
 
 #     def on_load_project(self, window):
 #         ''' This gets called for new windows but not for the first one. '''
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_pre_close_project(self, window):
 #         ''' Save to file when closing window/project. Seems to be called twice. '''
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_load(self, view):
 #         ''' Load a file. '''
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_deactivated(self, view):
 #         # Window is still valid here.
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_pre_close(self, view):
 #         ''' This happens after on_pre_close_project(). '''
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_close(self, view):
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_pre_save(self, view):
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_post_save(self, view):
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_pre_close_window(self, window):
-#         slog('DEV')
+#         slog('X--X')
 
 #     def on_new_window(self, window):
 #         ''' Another window/instance has been created. Project has not been opened yet though. '''
-#         slog('DEV')
+#         slog('X--X')
 
 
 #-------------------------------- Graveyard ---------------------------------------------------
@@ -353,7 +354,7 @@ class SbotCmdLineCommand(sublime_plugin.WindowCommand):
 #                 else:
 #                     break
 #             if eols:
-#                 settings = sublime.load_settings("SbotSignet.sublime-settings")
+#                 settings = sublime.load_settings("xxx.sublime-settings")
 #                 self.view.add_regions("eols", eols, settings.get('eol_scope'))
 #         else:
 #             self.view.erase_regions("eols")

@@ -4,8 +4,6 @@ import sublime
 
 #import sbot_common
 
-#from SbotCommon.sbot_common
-
 import sbot_utils
 
 

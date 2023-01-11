@@ -14,7 +14,7 @@ except ModuleNotFoundError as e:
 
 # TODO Packages?
 # TODO Sublime environment updates for linux.
-# TODO remove some from Default context menu?
+# TODO remove some from Default context menu? https://forum.sublimetext.com/t/altering-default-context-menu/28766/3
 # TODO pdb?
 
 

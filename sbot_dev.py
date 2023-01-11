@@ -71,7 +71,8 @@ def dump_attrs(obj):
 class SbotCheatsheetCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        self.window.open_file('../SbotDev/ST-commands.md')
+        fpath = os.path.join(sublime.packages_path(), 'SbotDev', 'ST-commands.md')
+        self.window.open_file(fpath)
 
 
 #-----------------------------------------------------------------------------------

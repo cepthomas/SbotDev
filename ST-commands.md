@@ -15,6 +15,7 @@
 | ctrl+break                 | kill                                                    |
 | ctrl++                     | font increase                                           |
 | ctrl+-                     | font decrease                                           |
+| ctrl+shift+T               | open last file                                          |
 | ctrl+shift+[               | fold                                                    |
 | ctrl+shift+]               | unfold                                                  |
 | ctrl+K ctrl+J              | unfold all                                              |

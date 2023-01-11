@@ -1,8 +1,5 @@
 [ 
-    // // My custom menu.
-    // { "caption": "-" },
-    // { "caption": "CSV Justify columns", "command": "csv_format_expand" },
-    // { "caption": "CSV Compact columns", "command": "csv_format_compact" },
-    // { "caption": "Toggle Hex View", "command": "hex_viewer" },
-    // { "caption": "Reopen as UTF-8", "command": "reopen", "args": { "encoding": "utf-8" } },
+    // My custom menu.
+    { "caption": "-" },
+    { "caption": "Cheatsheet", "command": "sbot_cheatsheet" },
 ]

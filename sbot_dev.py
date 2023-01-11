@@ -1,6 +1,7 @@
 import sys
 import os
 import subprocess
+import webbrowser
 import sublime
 import sublime_plugin
 import sublime_api # For undocumented internals.
@@ -25,7 +26,6 @@ except ModuleNotFoundError as e:
 #   sublime.log_control_tree(True/False)
 #   sublime.log_fps(True/False)
 #   sublime_api.log_message('Called sublime_api.log_message()\n')
-
 
 
 #-----------------------------------------------------------------------------------
@@ -65,6 +65,13 @@ def dump_attrs(obj):
     ''' Diagnostics. '''
     for attr in dir(obj):
         print(f'{attr} = {getattr(obj, attr)}')
+
+
+#-----------------------------------------------------------------------------------
+class SbotCheatsheetCommand(sublime_plugin.WindowCommand):
+
+    def run(self):
+        self.window.open_file('ST-commands.md')
 
 
 #-----------------------------------------------------------------------------------

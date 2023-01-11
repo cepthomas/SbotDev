@@ -6,17 +6,17 @@ import sublime
 import sublime_plugin
 import sublime_api # For undocumented internals.
 
+# TODO Packages?
+# TODO Sublime environment updates for linux.
+# TODO remove some from Default context menu? https://forum.sublimetext.com/t/altering-default-context-menu/28766/3
+# TODO pdb?
+
+
 try:
     from SbotCommon.sbot_common import slog, create_new_view
 except ModuleNotFoundError as e:
     sublime.message_dialog('SbotDev plugin requires SbotCommon plugin')
     raise ImportError('SbotDev plugin requires SbotCommon plugin')
-
-
-# TODO Packages?
-# TODO Sublime environment updates for linux.
-# TODO remove some from Default context menu? https://forum.sublimetext.com/t/altering-default-context-menu/28766/3
-# TODO pdb?
 
 
 # These go directly to console via _LogWriter(). Our hooks don't intercept.
@@ -71,7 +71,7 @@ def dump_attrs(obj):
 class SbotCheatsheetCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        self.window.open_file('ST-commands.md')
+        self.window.open_file('../SbotDev/ST-commands.md')
 
 
 #-----------------------------------------------------------------------------------

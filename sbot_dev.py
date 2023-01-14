@@ -10,7 +10,7 @@ import sublime_api # For undocumented internals.
 # TODO Sublime environment updates for linux.
 # TODO remove some from Default context menu? https://forum.sublimetext.com/t/altering-default-context-menu/28766/3
 # TODO pdb?
-
+# TODO autosense a file name under the cursor like Open http... OpenContextUrlCommand().
 
 try:
     from SbotCommon.sbot_common import slog, create_new_view

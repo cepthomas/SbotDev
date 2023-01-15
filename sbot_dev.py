@@ -12,6 +12,14 @@ import sublime_api # For undocumented internals.
 # TODO pdb?
 # TODO autosense a file name under the cursor like Open http... OpenContextUrlCommand().
 
+# http://xahlee.info/comp/unicode_computing_symbols.html
+# ⌘ ✲ ⎈ ^ ⌃ ❖ ⎇ ⌥ ⇮ ◆ ◇ ✦ ✧ ⇧ ⇪ 🄰 🅰 ⇪ ⇬ 🔠 🔡 ⇭ 🔢 🔤 ↩ ↵ ⏎ ⌤ ⎆ ▤ ☰ 𝌆 ⎄ ⭾ ↹ ⇄ ⇤ ⇥ ↤ ↦ ⎋ ⌫ ⟵
+# ⌦ ⎀ ⎚ ⌧ ↖ ↘ ⇤ ⇥ ⤒ ⤓ ⇞ ⇟ △ ▽ ▲ ▼ ⎗ ⎘ ↑ ↓ ← → ◀ ▶ ▲ ▼ ◁ ▷ △ ▽ ⇦ ⇨ ⇧ ⇩ ⬅ ➡ ⮕ ⬆ ⬇ ⎉ ⎊ ⎙ ⍰ ❓ ❔ ℹ 🛈
+# ☾ ⏏ ✉ 🏠 🏡 ⌂ ✂ ✄ ⎌ ↶ ↷ ⟲ ⟳ ↺ ↻ 🔍 🔎 🔅 🔆 🔇 🔈 🔉 🔊 🕨 🕩 🕪 ◼ ⏯ ⏮ ⏭ ⏪ ⏩ ⏫ ⏬ 🌐
+# alt  backspace  button1  button3  button4  button5  clk  ctrl  dbclk  del  down  end  enter  home
+# left  pagedown  pageup  right  shift  space  super/Windows  up  
+
+
 try:
     from SbotCommon.sbot_common import slog, create_new_view
 except ModuleNotFoundError as e:

@@ -1,5 +1,6 @@
 [ 
     // My custom menu.
-    { "caption": "-" },
-    { "caption": "Cheatsheet", "command": "sbot_cheatsheet" },
+    // { "caption": "-" },
+    // { "caption": "Dev???" },
+    // { "caption": "-" },
 ]

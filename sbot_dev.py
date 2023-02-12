@@ -2,22 +2,10 @@ import sys
 import os
 import subprocess
 import webbrowser
+import platform
 import sublime
 import sublime_plugin
 import sublime_api # For undocumented internals.
-
-# TODO Packages?
-# TODO Sublime environment updates for linux.
-# TODO remove some from Default context menu? https://forum.sublimetext.com/t/altering-default-context-menu/28766/3
-# TODO pdb?
-# TODO autosense a file name under the cursor like Open http... OpenContextUrlCommand().
-
-# http://xahlee.info/comp/unicode_computing_symbols.html
-# ⌘ ✲ ⎈ ^ ⌃ ❖ ⎇ ⌥ ⇮ ◆ ◇ ✦ ✧ ⇧ ⇪ 🄰 🅰 ⇪ ⇬ 🔠 🔡 ⇭ 🔢 🔤 ↩ ↵ ⏎ ⌤ ⎆ ▤ ☰ 𝌆 ⎄ ⭾ ↹ ⇄ ⇤ ⇥ ↤ ↦ ⎋ ⌫ ⟵
-# ⌦ ⎀ ⎚ ⌧ ↖ ↘ ⇤ ⇥ ⤒ ⤓ ⇞ ⇟ △ ▽ ▲ ▼ ⎗ ⎘ ↑ ↓ ← → ◀ ▶ ▲ ▼ ◁ ▷ △ ▽ ⇦ ⇨ ⇧ ⇩ ⬅ ➡ ⮕ ⬆ ⬇ ⎉ ⎊ ⎙ ⍰ ❓ ❔ ℹ 🛈
-# ☾ ⏏ ✉ 🏠 🏡 ⌂ ✂ ✄ ⎌ ↶ ↷ ⟲ ⟳ ↺ ↻ 🔍 🔎 🔅 🔆 🔇 🔈 🔉 🔊 🕨 🕩 🕪 ◼ ⏯ ⏮ ⏭ ⏪ ⏩ ⏫ ⏬ 🌐
-# alt  backspace  button1  button3  button4  button5  clk  ctrl  dbclk  del  down  end  enter  home
-# left  pagedown  pageup  right  shift  space  super/Windows  up  
 
 
 try:
@@ -40,6 +28,10 @@ except ModuleNotFoundError as e:
 def plugin_loaded():
     slog('X--X')
     # dump_stack()
+
+    print('>>>>', platform.win32_ver())
+    # (release, version, csd, ptype) = '10', '10.0.19041', '', 'Multiprocessor Free'
+
     pass
 
 

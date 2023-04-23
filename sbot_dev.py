@@ -26,10 +26,10 @@ except ModuleNotFoundError as e:
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    slog('X--X')
+    # slog('X--X')
     # dump_stack()
 
-    print('>>>>', platform.win32_ver())
+    # print('>>>>', platform.win32_ver())
     # (release, version, csd, ptype) = '10', '10.0.19041', '', 'Multiprocessor Free'
 
     pass
@@ -37,7 +37,7 @@ def plugin_loaded():
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    slog('X--X')
+    # slog('X--X')
     pass
 
 
@@ -71,7 +71,7 @@ def dump_attrs(obj):
 class SbotDebugCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        slog('X--X', '== before')
+        # slog('X--X', '== before')
 
         # print(os.environ)
 
@@ -91,7 +91,7 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # Force an unhandled exception.
         i = 222 / 0
 
-        slog('X--X', '== after')
+        # slog('X--X', '== after')
 
         ### stack stuff
         # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
@@ -110,7 +110,7 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 def start_interactive():
     winid = sublime.active_window().id()
     view = create_new_view(sublime.active_window(), '>>> howdy!')
-    slog('X--X', f'{self.view}  {winid}')
+    # slog('X--X', f'{self.view}  {winid}')
     view.settings().set('interactive' , True)
 
 class SbotInteractive(sublime_plugin.ViewEventListener):
@@ -122,7 +122,7 @@ class SbotInteractive(sublime_plugin.ViewEventListener):
 
     def on_selection_modified(self):
         if self.view.settings().get('interactive'):
-            slog('X--X', '+++++++')
+            # slog('X--X', '+++++++')
             pass
 
     # def on_init(self):
@@ -161,7 +161,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
 
     def run(self):
-        slog('X--X', 'abra')
+        # slog('X--X', 'abra')
         directions = ["north", "south", "east", "west"]
 
         items = []
@@ -200,7 +200,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     ''' blabla. '''
 
     def run(self):
-        slog('X--X', 'cadabra')
+        # slog('X--X', 'cadabra')
         # Bottom input area.
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
@@ -213,7 +213,8 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
         # cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
         # sout = cp.stdout
         # create_new_view(self.window, sout)
-        slog('====', f'Got:{text}')
+        # slog('====', f'Got:{text}')
+        pass
 
 
 #-----------------------------------------------------------------------------------

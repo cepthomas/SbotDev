@@ -20,7 +20,7 @@ import SbotCommon.sbot_common as sbot
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    sbot.slog('XXX', '+++++++++++++++++++++')
+    # sbot.slog('XXX', '+++++++++++++++++++++')
     # print(dir(sbot))
     sbot.slog('DEV', f'win_ver:{platform.win32_ver()}')
     # dump_stack()

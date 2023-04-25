@@ -1,12 +1,11 @@
 import unittest
 from unittest.mock import MagicMock
 import sublime
-
-#import sbot_common
-
-import sbot_utils
+import SbotCommon.sbot_common
+import SbotUtils.sbot_utils as sutils
 
 
+#-----------------------------------------------------------------------------------
 class TestDev(unittest.TestCase):
 
     def setUp(self):
@@ -25,11 +24,12 @@ class TestDev(unittest.TestCase):
         sel.add(sublime.Region(10, 20, 101))
         view.sel = MagicMock(return_value = sel)
 
-        evt = sbot_utils.SbotEvent()
+        evt = sutils.SbotEvent()
         evt.on_selection_modified(view)
 
         #self.assertEqual(1, 2, 'just a test test')
 
 
+#-----------------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

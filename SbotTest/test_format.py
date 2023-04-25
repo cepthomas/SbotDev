@@ -2,9 +2,10 @@ import sys
 import unittest
 from unittest.mock import MagicMock
 import sublime
-import sbot_format
+import SbotFormat.sbot_format as sformat
 
 
+#-----------------------------------------------------------------------------------
 class TestFormat(unittest.TestCase):
 
     def setUp(self):
@@ -19,7 +20,7 @@ class TestFormat(unittest.TestCase):
         with open(r'.\files\messy.json', 'r') as fp:
             # The happy path.
             s = fp.read()
-            cmd = sbot_format.SbotFormatJsonCommand(v)
+            cmd = sformat.SbotFormatJsonCommand(v)
             res = cmd._do_one(s)
             self.assertEqual(res[:50], '{\n    "MarkPitch": {\n        "Original": 0,\n      ')
 
@@ -35,7 +36,7 @@ class TestFormat(unittest.TestCase):
         with open(r'.\files\messy.xml', 'r') as fp:
             # The happy path.
             s = fp.read()
-            cmd = sbot_format.SbotFormatXmlCommand(v)
+            cmd = sformat.SbotFormatXmlCommand(v)
             res = cmd._do_one(s)
             self.assertEqual(res[100:150], 'nType="Anti-IgG (PEG)" TestSpec="08 ABSCR4 IgG" Du')
 
@@ -45,5 +46,6 @@ class TestFormat(unittest.TestCase):
             self.assertEqual(res, "Error: not well-formed (invalid token): line 6, column 4")
 
 
+#-----------------------------------------------------------------------------------
 if __name__ == '__main__':
     unittest.main()

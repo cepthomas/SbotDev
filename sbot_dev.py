@@ -6,7 +6,7 @@ import platform
 import sublime
 import sublime_plugin
 import sublime_api # For undocumented internals.
-import SbotCommon.sbot_common as sbot
+from .sbot_common import *
 
 
 # These go directly to console via _LogWriter(). Our hooks don't intercept.
@@ -20,16 +20,16 @@ import SbotCommon.sbot_common as sbot
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    # sbot.slog('XXX', '+++++++++++++++++++++')
+    slog('XXX', '+++++++++++++++++++++')
     # print(dir(sbot))
-    sbot.slog('DEV', f'win_ver:{platform.win32_ver()}')
+    slog('DEV', f'win_ver:{platform.win32_ver()}')
     # dump_stack()
     # (release, version, csd, ptype) = '10', '10.0.19041', '', 'Multiprocessor Free'
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    sbot.slog('DEV', 'plugin_unloaded')
+    slog('DEV', 'plugin_unloaded')
 
 
 #-----------------------------------------------------------------------------------
@@ -76,7 +76,7 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         #         import traceback
         #         traceback.print_exc(file=f)
 
-        sbot.slog(sbot.CAT_DBG, 'Forcing exception!')
+        slog(CAT_DBG, 'Forcing exception!')
 
         # Force an unhandled exception.
         i = 222 / 0
@@ -98,20 +98,20 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 
 def start_interactive():
     winid = sublime.active_window().id()
-    view = sbot.create_new_view(sublime.active_window(), '>>> howdy!')
-    # sbot.slog('DEV', f'{self.view}  {winid}')
+    view = create_new_view(sublime.active_window(), '>>> howdy!')
+    # slog('DEV', f'{self.view}  {winid}')
     view.settings().set('interactive' , True)
 
 class SbotInteractive(sublime_plugin.ViewEventListener):
     # def __init__(self, view):
     #     # This gets called for every view.
-    #     sbot.slog('DEV', str(view))
+    #     slog('DEV', str(view))
     #     super(sublime_plugin.ViewEventListener, self).__init__(view)
     #     super().__init__(view)
 
     def on_selection_modified(self):
         if self.view.settings().get('interactive'):
-            # sbot.slog('DEV', '+++++++')
+            # slog('DEV', '+++++++')
             pass
 
     # def on_init(self):
@@ -139,7 +139,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
 
     def run(self):
-        # sbot.slog('DEV', 'abra')
+        # slog('DEV', 'abra')
         directions = ["north", "south", "east", "west"]
 
         items = []
@@ -178,7 +178,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     ''' blabla. '''
 
     def run(self):
-        # sbot.slog('DEV', 'cadabra')
+        # slog('DEV', 'cadabra')
         # Bottom input area.
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
@@ -190,8 +190,8 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     def on_done(self, text):
         # cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
         # sout = cp.stdout
-        # sbot.create_new_view(self.window, sout)
-        # sbot.slog('DEV', f'Got:{text}')
+        # create_new_view(self.window, sout)
+        # slog('DEV', f'Got:{text}')
         pass
 
 
@@ -277,40 +277,40 @@ class SbotAllEvent(sublime_plugin.EventListener):
     # def on_init(self, views):
     #     ''' First thing that happens when plugin/window created. Views are valid.
     #     Note that this also happens if this module is reloaded - like when editing this file. '''
-    #     sbot.slog('DEV', f'{views}')
+    #     slog('DEV', f'{views}')
 
     # def on_load_project(self, window):
     #     ''' This gets called for new windows but not for the first one. '''
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_pre_close_project(self, window):
     #     ''' Save to file when closing window/project. Seems to be called twice. '''
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_load(self, view):
     #     ''' Load a file. '''
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_deactivated(self, view):
     #     # Window is still valid here.
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_pre_close(self, view):
     #     ''' This happens after on_pre_close_project(). '''
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_close(self, view):
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_pre_save(self, view):
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_post_save(self, view):
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_pre_close_window(self, window):
-    #     sbot.slog('DEV')
+    #     slog('DEV')
 
     # def on_new_window(self, window):
     #     ''' Another window/instance has been created. Project has not been opened yet though. '''
-    #     sbot.slog('DEV')
+    #     slog('DEV')

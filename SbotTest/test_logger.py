@@ -78,7 +78,7 @@ class TestLogger(unittest.TestCase):
         slogger.plugin_loaded()
 
         # Do the test.
-        sbot.slog('TST', 'dsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsds')
+        slog('TST', 'dsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsdsds')
 
         # Clean up.
         slogger.plugin_unloaded()

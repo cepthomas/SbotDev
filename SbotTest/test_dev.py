@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 import sublime
 import SbotCommon.sbot_common
-import SbotUtils.sbot_utils as sutils
+import SbotUtils.sbot_utils as sutils  #TODO fix these from .sbot_common import *
 
 
 #-----------------------------------------------------------------------------------

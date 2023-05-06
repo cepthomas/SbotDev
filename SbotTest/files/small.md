@@ -18,17 +18,17 @@ No support as yet for PackageControl.
 
 | Command                  | Description |
 |:--------                 |:-------     |
-| sbot_highlight_text      | Highlight text 1 through 6 from `scopes` |
+| sbot_highlight_text      | Highlight text 1 through 6 from highlight_scopes |
 | sbot_clear_highlight     | Remove highlight in selection |
 | sbot_clear_all_highlights| Remove all highlights |
-| sbot_show_scopes         | Popup that shows style for scopes |
+| sbot_show_scopes         | Popup that shows style for highlight_scopes |
 | sbot_show_eol            | Toggles showing EOLs |
 
 ### Settings
 
 | Setting                  | Description |
 |:--------                 |:-------     |
-| scopes                   | List of scope names for marking text - index corresponds to `sbot_highlight_text` arg |
+| highlight_scopes                   | List of scope names for marking text - index corresponds to `sbot_highlight_text` arg |
 
 
 ## Signets (bookmarks)

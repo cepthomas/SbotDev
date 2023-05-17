@@ -18,6 +18,26 @@ from .sbot_common import *
 #   sublime_api.log_message('Called sublime_api.log_message()\n')
 
 
+# Startup sequence
+# DBG notr.py:32 plugin_loaded()
+# > logging ok now
+# 2023-05-12 09:39:10.969 DEV sbot_dev.py:25 win_ver:('10', '10.0.19041', '', 'Multiprocessor Free')
+# 2023-05-12 09:39:10.972 DBG notr.py:51 on_init() [View(12), View(13), View(14), View(15), View(16)]
+# 2023-05-12 09:39:14.496 DBG notr.py:65 on_load() View(18)
+# > open new file
+# 2023-05-12 09:40:42.355 DBG notr.py:65 on_load() View(20)
+# > edit notr.py
+# 2023-05-12 09:41:53.702 reloading plugin Notr.notr
+# 2023-05-12 09:41:53.705 DBG notr.py:37 plugin_unloaded()
+# 2023-05-12 09:41:53.713 DBG notr.py:32 plugin_loaded()
+# 2023-05-12 09:41:53.717 DBG notr.py:51 on_init() [View(12), View(18), View(19), View(20), View(14), View(15), View(16)]
+# > new instance of ST
+# 2023-05-12 09:45:58.531 DBG notr.py:59 on_load_project() []
+# 2023-05-12 09:45:58.579 DBG notr.py:65 on_load() View(36)
+#
+# Basically init views in on_init() and on_load() should do it.
+
+
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # slog('XXX', '+++++++++++++++++++++')

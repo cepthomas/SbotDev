@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0c4c78da-4a9f-4ff6-a2f1-9b2599edcac7}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>test_logger.py</StartupFile>
+    <StartupFile>test_notr.py</StartupFile>
     <SearchPath>st_emul;..\..\</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -15,7 +15,7 @@
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
     <Environment>UNIT_TEST=1
-PYTHONPATH=%PYTHONPATH%;;st_emul</Environment>
+PYTHONPATH=%PYTHONPATH%;st_emul</Environment>
     <TestFramework>pytest</TestFramework>
     <UnitTestPattern>test*.py</UnitTestPattern>
     <UnitTestRootDirectory>.</UnitTestRootDirectory>
@@ -29,9 +29,6 @@ PYTHONPATH=%PYTHONPATH%;;st_emul</Environment>
   <ItemGroup>
     <Compile Include="..\..\SbotALogger\sbot_logger.py" />
     <Compile Include="..\..\SbotClean\sbot_clean.py" />
-    <Compile Include="..\..\SbotCommon\sbot_common.py">
-      <Link>sbot_common.py</Link>
-    </Compile>
     <Compile Include="..\..\SbotFormat\sbot_format.py" />
     <Compile Include="..\..\SbotHighlight\sbot_highlight.py" />
     <Compile Include="..\..\SbotRender\sbot_render.py" />
@@ -39,12 +36,15 @@ PYTHONPATH=%PYTHONPATH%;;st_emul</Environment>
     <Compile Include="..\..\SbotSidebar\sbot_sidebar.py" />
     <Compile Include="..\..\SbotSignet\sbot_signet.py" />
     <Compile Include="..\..\SbotUtils\sbot_utils.py" />
+    <Compile Include="..\..\Notr\notr.py" />
     <Compile Include="..\sbot_dev.py" />
+    <Compile Include="..\sbot_common.py" />
     <Compile Include="st_emul\sublime.py" />
     <Compile Include="st_emul\sublime_plugin.py" />
     <Compile Include="test_dev.py" />
     <Compile Include="test_format.py" />
     <Compile Include="test_logger.py" />
+    <Compile Include="test_notr.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="files\" />

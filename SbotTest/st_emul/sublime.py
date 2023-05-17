@@ -20,8 +20,8 @@ _window = None # Window(909)
 _views = []
 _view_id = 100
 
-# Settings.
-_settings = None # Settings(1234)
+# Configuration.
+_settings = None
 
 
 ################# Functions ###################################################
@@ -81,7 +81,6 @@ def active_window():
 
 
 ################# View ###################################################
-
 class View():
     def __init__(self, view_id):
         self.view_id = view_id
@@ -127,6 +126,9 @@ class View():
         # window_id = sublime_api.view_window(self.view_id)
         # return sublime_api.window_close_file(window_id, self.view_id)
 
+    def is_scratch(self):
+        return False
+
     def set_scratch(self, scratch):
         pass
         # return sublime_api.view_set_scratch(self.view_id, scratch)
@@ -135,7 +137,11 @@ class View():
         return len(self.buffer)
         # return sublime_api.view_size(self.view_id)
 
+    def syntax(self):
+        return Syntax()
+
     def settings(self):
+        global _settings
         return _settings
         # if not self.settings_object:
         #     self.settings_object = Settings(sublime_api.view_settings(self.view_id))
@@ -184,7 +190,7 @@ class View():
         # return sublime_api.view_find(self.view_id, pattern, start_pt, flags)
 
     def find_all(self, pattern, flags=0, fmt=None, extractions=None):
-        return True # IMPL
+        return [] # IMPL
         # if fmt is None:
         #     return sublime_api.view_find_all(self.view_id, pattern, flags)
         # else:
@@ -242,7 +248,6 @@ class View():
 
 
 ################# Window ###################################################
-
 class Window():
     def __init__(self, view_id):
         self.window_id = view_id
@@ -277,6 +282,7 @@ class Window():
 
     def settings(self):
         """ Per-window settings, the contents are persisted in the session """
+        global _settings
         return _settings
         # if not self.settings_object:
         #     self.settings_object = Settings(sublime_api.window_settings(self.window_id))
@@ -341,7 +347,6 @@ class Window():
 
 
 ################# Region ###################################################
-
 class Region():
     def __init__(self, a, b=None, xpos=-1):
         if b is None:
@@ -423,7 +428,6 @@ class Region():
 
 
 ################# Selection ###################################################
-
 class Selection():
     def __init__(self, view_id):
         self.view_id = view_id
@@ -494,7 +498,6 @@ class Selection():
 
 
 ################# Settings ###################################################
-
 class Settings():
     '''Completely reimplemented.'''
     def __init__(self, view_id):
@@ -511,3 +514,14 @@ class Settings():
     def set(self, key, value):
         self.settings_storage[key] = value
         # sublime_api.settings_set(self.settings_id, key, value)
+
+
+
+################# Syntax ###################################################
+class Syntax():
+    '''Completely reimplemented.'''
+    def __init__(self):
+        pass
+
+    def name(self):
+        return f'syntax_name'

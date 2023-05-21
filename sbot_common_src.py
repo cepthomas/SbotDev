@@ -40,9 +40,6 @@ def slog(cat: str, message='???'):
     msg = f'{cat} {fn}:{line} {message}'
     print(msg)
 
-    if cat == CAT_ERR:
-        sublime.error_message(msg)
-
 
 #-----------------------------------------------------------------------------------
 def get_store_fn(fn):
@@ -84,18 +81,31 @@ def create_new_view(window, text):
 
 
 #-----------------------------------------------------------------------------------
-def wait_load_file(view, line):
-    ''' Open file asynchronously then position at line. '''
-    if view.is_loading():
-        sublime.set_timeout(lambda: _wait_load_file(view, line), 1000)  # maybe not forever?
-    else:  # good to go
-        view.run_command("goto_line", {"line": line})
+def wait_load_file(window, fpath, line):
+    ''' Open file asynchronously then position at line. Returns the new View or None if failed. '''
+    vnew = None
+
+    def _load(view):
+        if vnew.is_loading():
+            sublime.set_timeout(lambda: _load(vnew), 10)  # maybe not forever?
+
+    # Open the file in a new view.
+    try:
+        vnew = window.open_file(fpath)
+        _load(vnew)
+    except Exception as e:
+        slog(CAT_ERR, f'Failed to open {fpath} {e}')
+        vnew = None
+
+    if vnew is not None:
+        vnew.run_command("goto_line", {"line": line})
+
+    return vnew    
 
 
 #-----------------------------------------------------------------------------------
 def start_file(filepath):
     ''' Like you double-clicked it. '''
-
     ret = 0
     try:
         if platform.system() == 'Darwin':       # macOS

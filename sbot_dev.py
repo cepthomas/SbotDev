@@ -88,8 +88,11 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # modules = dir()
         # modules = sys.modules.keys()
 
-        start_file('C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SbotDev\\README.md')
+        # slog(CAT_DBG, f'{self.window}')
+        wait_load_file(self.window, 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SbotDev\\LICENSE', 10)
         return
+
+        start_file('C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SbotDev\\README.md')
 
         # Force a handled exception.
         slog(CAT_DBG, 'Forcing exception!')

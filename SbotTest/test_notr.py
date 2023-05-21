@@ -67,7 +67,6 @@ class TestNotr(unittest.TestCase):
         cmd.run(edit)
 
 
-
         ### NotrGotoSectionCommand(sublime_plugin.TextCommand):
 
 

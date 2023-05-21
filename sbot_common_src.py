@@ -88,6 +88,8 @@ def wait_load_file(window, fpath, line):
     def _load(view):
         if vnew.is_loading():
             sublime.set_timeout(lambda: _load(vnew), 10)  # maybe not forever?
+        else:
+            vnew.run_command("goto_line", {"line": line})
 
     # Open the file in a new view.
     try:
@@ -96,9 +98,6 @@ def wait_load_file(window, fpath, line):
     except Exception as e:
         slog(CAT_ERR, f'Failed to open {fpath} {e}')
         vnew = None
-
-    if vnew is not None:
-        vnew.run_command("goto_line", {"line": line})
 
     return vnew    
 

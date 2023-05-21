@@ -185,6 +185,9 @@ class View():
     def sel(self):
         return self.selection
 
+    def line(self, region):
+        return region.a
+
     def find(self, pattern, start_pt, flags=0):
         return True # IMPL
         # return sublime_api.view_find(self.view_id, pattern, start_pt, flags)
@@ -344,6 +347,15 @@ class Window():
     def set_project_data(self, v):
         pass # IMPL
         # sublime_api.window_set_project_data(self.window_id, v)
+
+
+################# Edit ###################################################
+class Edit:
+    def __init__(self, token):
+        self.edit_token = token
+
+    def __repr__(self):
+        return f'Edit({self.edit_token!r})'
 
 
 ################# Region ###################################################

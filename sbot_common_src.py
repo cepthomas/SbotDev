@@ -1,6 +1,8 @@
 import sys
 import os
 import pathlib
+import platform
+import subprocess
 import enum
 import sublime
 import sublime_plugin
@@ -35,7 +37,12 @@ def slog(cat: str, message='???'):
     # class_name = frame.f_locals['self'].__class__.__name__
     # full_func = f'{class_name}.{func}'
 
-    print(f'{cat} {fn}:{line} {message}')
+    msg = f'{cat} {fn}:{line} {message}'
+    print(msg)
+
+    if cat == CAT_ERR:
+        sublime.error_message(msg)
+
 
 #-----------------------------------------------------------------------------------
 def get_store_fn(fn):
@@ -74,3 +81,31 @@ def create_new_view(window, text):
     vnew.set_scratch(True)
     vnew.run_command('append', {'characters': text})  # insert has some odd behavior - indentation
     return vnew
+
+
+#-----------------------------------------------------------------------------------
+def wait_load_file(view, line):
+    ''' Open file asynchronously then position at line. '''
+    if view.is_loading():
+        sublime.set_timeout(lambda: _wait_load_file(view, line), 1000)  # maybe not forever?
+    else:  # good to go
+        view.run_command("goto_line", {"line": line})
+
+
+#-----------------------------------------------------------------------------------
+def start_file(filepath):
+    ''' Like you double-clicked it. '''
+
+    ret = 0
+    try:
+        if platform.system() == 'Darwin':       # macOS
+            ret = subprocess.call(('open', filepath))
+        elif platform.system() == 'Windows':    # Windows
+            os.startfile(filepath)
+        else:                                   # linux variants
+            re = subprocess.call(('xdg-open', filepath))
+    except Exception as e:
+        slog(CAT_ERR, f'{e}')
+        ret = 999
+
+    return ret

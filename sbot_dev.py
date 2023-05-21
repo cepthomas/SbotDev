@@ -6,7 +6,7 @@ import platform
 import sublime
 import sublime_plugin
 import sublime_api # For undocumented internals.
-from .sbot_common import *
+from .sbot_common_src import *
 
 
 # These go directly to console via _LogWriter(). Our hooks don't intercept.
@@ -37,6 +37,7 @@ from .sbot_common import *
 #
 # Basically init views in on_init() and on_load() should do it.
 
+# clickable view: https://forum.sublimetext.com/t/custom-plugin-similar-to-find-results/53946/2
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
@@ -86,16 +87,11 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # dump_stack()
         # modules = dir()
         # modules = sys.modules.keys()
-        
+
+        start_file('C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SbotDev\\README.md')
+        return
 
         # Force a handled exception.
-        # try:
-        #     i = 111 / 0
-        # except Exception as e:
-        #     with open(r'somewhere\sbot_trace.log', 'a') as f:
-        #         import traceback
-        #         traceback.print_exc(file=f)
-
         slog(CAT_DBG, 'Forcing exception!')
 
         # Force an unhandled exception.
@@ -116,12 +112,15 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
 
 
+#-----------------------------------------------------------------------------------
 def start_interactive():
     winid = sublime.active_window().id()
     view = create_new_view(sublime.active_window(), '>>> howdy!')
     # slog('DEV', f'{self.view}  {winid}')
     view.settings().set('interactive' , True)
 
+
+#-----------------------------------------------------------------------------------
 class SbotInteractive(sublime_plugin.ViewEventListener):
     # def __init__(self, view):
     #     # This gets called for every view.
@@ -334,3 +333,51 @@ class SbotAllEvent(sublime_plugin.EventListener):
     # def on_new_window(self, window):
     #     ''' Another window/instance has been created. Project has not been opened yet though. '''
     #     slog('DEV')
+
+    def _process_notr_file_not(self, fn):
+        '''
+        Load file into a hidden view and process links.
+        This does not work as well as hoped. 
+        https://forum.sublimetext.com/t/is-it-possible-to-open-a-file-without-showing-it-to-the-user/35884/3
+        '''
+        # slog('!!!', f'fn:{fn}')
+
+        try:
+            with open(fn, 'r') as file:
+                content = file.read()
+                view = sublime.active_window().create_output_panel('_ntr_tmp', True )
+                view.run_command('append', {'characters': content})
+                view.assign_syntax('Packages/Notr/Notr.sublime-syntax')
+                # Get the links defined in the file.
+                doc = sublime.Region(0, view.size())
+                tokens = view.extract_tokens_with_scopes(doc)
+
+        except Exception as e:
+            # slog(CAT_ERR, f'{e}')
+            pass
+
+
+# goto_line.py
+# class PromptGotoLineCommand(sublime_plugin.WindowCommand):
+#     def run(self):
+#         self.window.show_input_panel("Goto Line:", "", self.on_done, None, None)
+#     def on_done(self, text):
+#         try:
+#             line = int(text)
+#             if self.window.active_view():
+#                 self.window.active_view().run_command("goto_line", {"line": line})
+#         except ValueError:
+#             pass
+#
+# class GotoLineCommand(sublime_plugin.TextCommand):
+#     def run(self, edit, line):
+#         # Convert from 1 based to a 0 based line number
+#         line = int(line) - 1
+#         # Negative line numbers count from the end of the buffer
+#         if line < 0:
+#             lines, _ = self.view.rowcol(self.view.size())
+#             line = lines + line + 1
+#         pt = self.view.text_point(line, 0)
+#         self.view.sel().clear()
+#         self.view.sel().add(sublime.Region(pt))
+#         self.view.show(pt)

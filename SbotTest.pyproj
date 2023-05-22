@@ -14,8 +14,9 @@
     <InterpreterId />
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
-    <Environment>UNIT_TEST=1;</Environment>
-    <TestFramework>pytest</TestFramework>
+    <Environment>UNIT_TEST=1
+PYTHONPATH=%PYTHONPATH%;st_emul;..</Environment>
+    <TestFramework>unittest</TestFramework>
     <UnitTestPattern>test_*.py</UnitTestPattern>
     <UnitTestRootDirectory>.</UnitTestRootDirectory>
     <IsWindowsApplication>False</IsWindowsApplication>
@@ -42,6 +43,7 @@
     <Compile Include="test_dev.py" />
     <Compile Include="test_format.py" />
     <Compile Include="test_logger.py" />
+    <Compile Include="test_notr.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="files\" />

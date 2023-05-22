@@ -1,7 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 import sublime
-#from .sbot_common import *
+import sublime_plugin
+from sbot_common_src import *
 import SbotUtils.sbot_utils as sutils
 
 

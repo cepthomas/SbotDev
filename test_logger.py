@@ -1,11 +1,11 @@
-from socket import setdefaulttimeout
+#from socket import setdefaulttimeout
 import sys
 import unittest
 from unittest.mock import MagicMock #, patch
 import traceback
 import sublime
-
-from .sbot_common import *
+import sublime_plugin
+from sbot_common_src import *
 
 
 '''

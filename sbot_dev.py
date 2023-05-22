@@ -5,7 +5,6 @@ import webbrowser
 import platform
 import sublime
 import sublime_plugin
-#import sublime_api # For undocumented internals.
 from .sbot_common_src import *
 
 

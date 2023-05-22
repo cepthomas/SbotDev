@@ -2,7 +2,12 @@ import sys
 import unittest
 from unittest.mock import MagicMock
 import sublime
+import sublime_plugin
+from sbot_common_src import *
+
+
 import SbotFormat.sbot_format as sformat
+
 
 
 #-----------------------------------------------------------------------------------

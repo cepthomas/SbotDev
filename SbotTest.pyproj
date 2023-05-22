@@ -14,8 +14,7 @@
     <InterpreterId />
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
-    <Environment>UNIT_TEST=1;
-PYTHONPATH=%PYTHONPATH%;st_emul</Environment>
+    <Environment>UNIT_TEST=1;</Environment>
     <TestFramework>pytest</TestFramework>
     <UnitTestPattern>test_*.py</UnitTestPattern>
     <UnitTestRootDirectory>.</UnitTestRootDirectory>

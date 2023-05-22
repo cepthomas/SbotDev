@@ -1,4 +1,4 @@
-# Sublime Text plugin development playground. Nothing to see here, move along.
+# Sublime Text plugin development playground. Nothing to see here, move along. TODO update
 
 ## General Notes
 

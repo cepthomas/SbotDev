@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 import sublime
 import sublime_plugin
-from sbot_common_src import *
+# from sbot_common_src import *
 import Notr.notr as snotr
 
 

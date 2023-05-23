@@ -5,7 +5,7 @@ from unittest.mock import MagicMock #, patch
 import traceback
 import sublime
 import sublime_plugin
-from sbot_common_src import *
+# from sbot_common_src import *
 
 
 '''

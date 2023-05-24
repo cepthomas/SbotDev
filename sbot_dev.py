@@ -88,10 +88,10 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # modules = sys.modules.keys()
 
         # slog(CAT_DBG, f'{self.window}')
-        wait_load_file(self.window, 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SbotDev\\LICENSE', 10)
+        wait_load_file(self.window, 'LICENSE', 10)
         return
 
-        start_file('C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SbotDev\\README.md')
+        start_file('README.md')
 
         # Force a handled exception.
         slog(CAT_DBG, 'Forcing exception!')
@@ -226,7 +226,6 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
         self.count = 0
 
     def run(self, edit):
-        # image = f"C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\SublimeBagOfTricks\\test\\files\\mark64.bmp"
         image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg")
         img_html = '<img src="file://' + image + '" width="16" height="16">'
 

@@ -1,4 +1,8 @@
-# Sublime Text plugin development playground. Nothing to see here, move along. TODO update
+# Sublime Text Plugin Dev Playground
+
+Just a big messy area. These are not the codes you are looking for.
+
+Built for ST4 on Windows and Linux.
 
 ## General Notes
 
@@ -68,7 +72,6 @@ EventListener.on_pre_close (View(16),) Window is not valid!
 EventListener.on_close (View(16),)
 '''
 
-
 ### Global
 ST says `plugin_loaded()` fires only once for all instances of sublime. However you can add this to 
 each module and they all get called. Safest is to only use it once.
@@ -76,20 +79,5 @@ each module and they all get called. Safest is to only use it once.
 ## Module Loading
 ST doesn't load modules like plain python and can cause some surprises. The problem is that sbot_common
 gets reloaded but it appears to be a different module from the one linked to by the other modules.
-This makes handling globals difficult. Modules that are common cannot store meaningful state.
+This makes handling globals interesting. Modules that are common cannot store meaningful state.
 
-# Utils
-From SublimeBagOfTricks: Island of misfit toys.
-
-- Window splitter.
-- Status bar shows text position.
-
-Built for ST4 on Windows and Linux.
-
-## Commands
-| Command                    | Implementation | Description                            | Args        |
-|:--------                   |:-------        |:-------                                |:--------    |
-| `sbot_split_view`          | Context        | Toggles simple horizontal split screen |             |
-
-## Settings
-None

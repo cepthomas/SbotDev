@@ -1,11 +1,10 @@
 import sys
 import os
 import subprocess
-import webbrowser
 import platform
 import sublime
 import sublime_plugin
-from .sbot_common_src import *
+from . import sbot_common_src as sc
 
 
 # These go directly to console via _LogWriter(). Our hooks don't intercept.
@@ -42,14 +41,14 @@ from .sbot_common_src import *
 def plugin_loaded():
     # slog('XXX', '+++++++++++++++++++++')
     # print(dir(sbot))
-    slog('DEV', f'win_ver:{platform.win32_ver()}')
+    sc.slog('DEV', f'win_ver:{platform.win32_ver()}')
     # dump_stack()
     # (release, version, csd, ptype) = '10', '10.0.19041', '', 'Multiprocessor Free'
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    slog('DEV', 'plugin_unloaded')
+    sc.slog('DEV', 'plugin_unloaded')
 
 
 #-----------------------------------------------------------------------------------
@@ -88,17 +87,16 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # modules = sys.modules.keys()
 
         # slog(CAT_DBG, f'{self.window}')
-        wait_load_file(self.window, 'LICENSE', 10)
+        sc.wait_load_file(self.window, 'LICENSE', 10)
         return
 
-        start_file('README.md')
+        sc.start_file('README.md')
 
         # Force a handled exception.
-        slog(CAT_DBG, 'Forcing exception!')
+        sc.slog(sc.CAT_DBG, 'Forcing exception!')
 
         # Force an unhandled exception.
         i = 222 / 0
-
 
         ### stack stuff
         # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
@@ -117,7 +115,7 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 #-----------------------------------------------------------------------------------
 def start_interactive():
     winid = sublime.active_window().id()
-    view = create_new_view(sublime.active_window(), '>>> howdy!')
+    view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
     # slog('DEV', f'{self.view}  {winid}')
     view.settings().set('interactive' , True)
 
@@ -126,13 +124,13 @@ def start_interactive():
 class SbotInteractive(sublime_plugin.ViewEventListener):
     # def __init__(self, view):
     #     # This gets called for every view.
-    #     slog('DEV', str(view))
+    #     sc.slog('DEV', str(view))
     #     super(sublime_plugin.ViewEventListener, self).__init__(view)
     #     super().__init__(view)
 
     def on_selection_modified(self):
         if self.view.settings().get('interactive'):
-            # slog('DEV', '+++++++')
+            # sc.slog('DEV', '+++++++')
             pass
 
     # def on_init(self):
@@ -160,7 +158,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
 
     def run(self):
-        # slog('DEV', 'abra')
+        # sc.slog('DEV', 'abra')
         directions = ["north", "south", "east", "west"]
 
         items = []

@@ -87,15 +87,17 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         # modules = sys.modules.keys()
 
         # slog(CAT_DBG, f'{self.window}')
-        sc.wait_load_file(self.window, 'LICENSE', 10)
-        return
 
-        sc.start_file('README.md')
+        # sc.wait_load_file(self.window, 'LICENSE', 10)
+
+        # sc.start_file('README.md')
 
         # Force a handled exception.
-        sc.slog(sc.CAT_DBG, 'Forcing exception!')
+        sc.slog(sc.CAT_DBG, 'Forcing handled exception!')
+        sc.start_file('not-a-real-file')
 
         # Force an unhandled exception.
+        sc.slog(sc.CAT_DBG, 'Forcing unhandled exception!')
         i = 222 / 0
 
         ### stack stuff
@@ -266,6 +268,19 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
 
         self.phantom_set.update(phantoms)
 
+        # Let's do some other visuals.
+        regions = []
+        anns = []
+        for i in range(3):
+            p = 1000 + i * 200
+            regions.append(sublime.Region(p, p + 20))
+            anns.append(f'Annotation=<b>{i}</b>')
+
+        self.view.add_regions(key='dev_region_name', regions=regions, scope='markup.user_hl6',
+                         annotations=anns, annotation_color='red',
+                         icon='circle', flags=sublime.RegionFlags.DRAW_STIPPLED_UNDERLINE)
+
+
     def nav(self, href):
         # on_navigate is an optional callback that should accept a single string parameter,
         # that is the href attribute of the link clicked.
@@ -332,51 +347,3 @@ class SbotAllEvent(sublime_plugin.EventListener):
     # def on_new_window(self, window):
     #     ''' Another window/instance has been created. Project has not been opened yet though. '''
     #     slog('DEV')
-
-    def _process_notr_file_not(self, fn):
-        '''
-        Load file into a hidden view and process links.
-        This does not work as well as hoped. 
-        https://forum.sublimetext.com/t/is-it-possible-to-open-a-file-without-showing-it-to-the-user/35884/3
-        '''
-        # slog('!!!', f'fn:{fn}')
-
-        try:
-            with open(fn, 'r') as file:
-                content = file.read()
-                view = sublime.active_window().create_output_panel('_ntr_tmp', True )
-                view.run_command('append', {'characters': content})
-                view.assign_syntax('Packages/Notr/Notr.sublime-syntax')
-                # Get the links defined in the file.
-                doc = sublime.Region(0, view.size())
-                tokens = view.extract_tokens_with_scopes(doc)
-
-        except Exception as e:
-            # slog(CAT_ERR, f'{e}')
-            pass
-
-
-# goto_line.py
-# class PromptGotoLineCommand(sublime_plugin.WindowCommand):
-#     def run(self):
-#         self.window.show_input_panel("Goto Line:", "", self.on_done, None, None)
-#     def on_done(self, text):
-#         try:
-#             line = int(text)
-#             if self.window.active_view():
-#                 self.window.active_view().run_command("goto_line", {"line": line})
-#         except ValueError:
-#             pass
-#
-# class GotoLineCommand(sublime_plugin.TextCommand):
-#     def run(self, edit, line):
-#         # Convert from 1 based to a 0 based line number
-#         line = int(line) - 1
-#         # Negative line numbers count from the end of the buffer
-#         if line < 0:
-#             lines, _ = self.view.rowcol(self.view.size())
-#             line = lines + line + 1
-#         pt = self.view.text_point(line, 0)
-#         self.view.sel().clear()
-#         self.view.sel().add(sublime.Region(pt))
-#         self.view.show(pt)

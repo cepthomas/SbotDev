@@ -4,26 +4,12 @@
         "caption": "Dev",
         "children":
         [
-            {
-                "caption": "Debug",
-                "command": "sbot_debug"
-            },
-            {
-                "caption": "Cmd",
-                "command": "sbot_cmd_line"
-            },
-            {
-                "caption": "Panel",
-                "command": "sbot_test_panel"
-            },
-            {
-                "caption": "Panel Input",
-                "command": "sbot_test_panel_input"
-            },
-            {
-                "caption": "Phantoms and More",
-                "command": "sbot_test_phantoms"
-            },
+            { "caption": "Debug", "command": "sbot_debug" },
+            { "caption": "Cmd", "command": "sbot_cmd_line" },
+            { "caption": "Panel", "command": "sbot_test_panel" },
+            { "caption": "Panel Input", "command": "sbot_test_panel_input" },
+            { "caption": "Phantoms and More", "command": "sbot_test_phantoms" },
+            { "caption": "Cheatsheet", "command": "sbot_utils_cheatsheet" },
         ]
     },
 ]

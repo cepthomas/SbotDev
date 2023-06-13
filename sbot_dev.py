@@ -2,8 +2,10 @@ import sys
 import os
 import subprocess
 import platform
+import inspect
 import sublime
 import sublime_plugin
+import sublime_api
 from . import sbot_common_src as sc
 
 
@@ -39,16 +41,14 @@ from . import sbot_common_src as sc
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    # slog('XXX', '+++++++++++++++++++++')
     # print(dir(sbot))
-    sc.slog('DEV', f'win_ver:{platform.win32_ver()}')
+    sc.slog(sc.CAT_DBG, f'++++++++++++++++++++++++++++ Starting up - win_ver:{platform.win32_ver()}')
     # dump_stack()
-    # (release, version, csd, ptype) = '10', '10.0.19041', '', 'Multiprocessor Free'
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    sc.slog('DEV', 'plugin_unloaded')
+    sc.slog(sc.CAT_DBG, 'plugin_unloaded')
 
 
 #-----------------------------------------------------------------------------------
@@ -81,16 +81,50 @@ def dump_attrs(obj):
 class SbotDebugCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        # print(os.environ)
-        # dump_stack()
-        # modules = dir()
-        # modules = sys.modules.keys()
 
-        # slog(CAT_DBG, f'{self.window}')
+        return
 
-        # sc.wait_load_file(self.window, 'LICENSE', 10)
 
-        # sc.start_file('README.md')
+        from inspect import getmembers, isfunction
+        # from my_project import my_module
+        functions_list = getmembers(sublime_api)#, isfunction)
+        for f in functions_list:
+            print(f'{f[0]}:   ')
+        return    
+
+        # https://stackoverflow.com/questions/218616/how-to-get-method-parameter-names
+        for a in dir(sublime_api):
+            print(f'{a}:')
+        return
+
+
+
+        # These are used to probe sublime_api for how it handles garbage args. tldr: not very well.
+        view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
+        pt = 10000
+        reg = sublime.Region(pt, pt + 1)
+        ret = view.rowcol(pt)
+        sc.slog(sc.CAT_DBG, f'>>> {ret}') #(0, 10)
+        ret = view.text_point(pt, pt)
+        sc.slog(sc.CAT_DBG, f'>>> {ret}') #10
+        ret = view.insert(edit, pt, 'booga') #0
+        sc.slog(sc.CAT_DBG, f'>>> {ret}')
+        ret = view.replace(edit, reg, 'booga') #None
+        sc.slog(sc.CAT_DBG, f'>>> {ret}')
+        ret = view.split_by_newlines(reg)
+        sc.slog(sc.CAT_DBG, f'>>> {ret}') #[Region(10, 10)]
+        ret = view.find('pattern', pt)
+        sc.slog(sc.CAT_DBG, f'>>> {ret}') #(-1, -1)
+        ret = view.substr(pt)
+        sc.slog(sc.CAT_DBG, f'>>> |{len(ret)}|{ret[0]}|{ret}|') #|1|2023-06-12 11:37:44.374 DBG sbot_dev.py:120 >>> (10000, 10000)||
+        ret = view.word(pt)
+        sc.slog(sc.CAT_DBG, f'>>> {ret}|{view.substr(ret)}|') #nada - see previous
+        ret = view.line(pt)
+        sc.slog(sc.CAT_DBG, f'>>> {ret}|{view.substr(ret)}|') #(9990, 10000)||
+        ret = view.full_line(pt)
+        sc.slog(sc.CAT_DBG, f'>>> {ret}|{view.substr(ret)}|') #(9990, 10000)||
+        return
+
 
         # Force a handled exception.
         sc.slog(sc.CAT_DBG, 'Forcing handled exception!')
@@ -102,14 +136,14 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 
         ### stack stuff
         # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
-        # frame = sys._getframe(0)
-        # fn = os.path.basename(frame.f_code.co_filename)
-        # func = frame.f_code.co_name
-        # line = frame.f_lineno
+        frame = sys._getframe(0)
+        fn = os.path.basename(frame.f_code.co_filename)
+        func = frame.f_code.co_name
+        line = frame.f_lineno
 
-        # dump_attrs(frame)
+        dump_attrs(frame)
         # >>> f_back, f_builtins, f_code, f_globals, f_lasti, f_lineno, f_locals, f_trace, f_trace_lines, f_trace_opcodes, False
-        # dump_attrs(frame.f_code)
+        dump_attrs(frame.f_code)
         # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
         #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
 
@@ -118,7 +152,7 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 def start_interactive():
     winid = sublime.active_window().id()
     view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
-    # slog('DEV', f'{self.view}  {winid}')
+    # slog(sc.CAT_DBG, f'{self.view}  {winid}')
     view.settings().set('interactive' , True)
 
 
@@ -126,13 +160,13 @@ def start_interactive():
 class SbotInteractive(sublime_plugin.ViewEventListener):
     # def __init__(self, view):
     #     # This gets called for every view.
-    #     sc.slog('DEV', str(view))
+    #     sc.slog(sc.CAT_DBG, str(view))
     #     super(sublime_plugin.ViewEventListener, self).__init__(view)
     #     super().__init__(view)
 
     def on_selection_modified(self):
         if self.view.settings().get('interactive'):
-            # sc.slog('DEV', '+++++++')
+            # sc.slog(sc.CAT_DBG, '+++++++')
             pass
 
     # def on_init(self):
@@ -160,7 +194,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
 
     def run(self):
-        # sc.slog('DEV', 'abra')
+        # sc.slog(sc.CAT_DBG, 'abra')
         directions = ["north", "south", "east", "west"]
 
         items = []
@@ -199,7 +233,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
     ''' blabla. '''
 
     def run(self):
-        # slog('DEV', 'cadabra')
+        # slog(sc.CAT_DBG, 'cadabra')
         # Bottom input area.
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
@@ -212,7 +246,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
         # cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
         # sout = cp.stdout
         # create_new_view(self.window, sout)
-        # slog('DEV', f'Got:{text}')
+        # slog(sc.CAT_DBG, f'Got:{text}')
         pass
 
 
@@ -234,6 +268,17 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
         # self.view.erase_phantoms ("test")
         # for sel in self.view.sel():
         #     self.view.add_phantom ("test", sel, img_html, sublime.LAYOUT_BLOCK)
+
+
+        # view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
+        # pt = 10000
+        # reg = sublime.Region(pt, pt + 1)
+        # ret = view.insert(edit, pt, 'booga') #0
+        # sc.slog(sc.CAT_DBG, f'>>> {ret}')
+        # ret = view.replace(edit, reg, 'booga') #None
+        # sc.slog(sc.CAT_DBG, f'>>> {ret}')
+
+
 
         # Clean first. Note - phantoms need to be managed externally rather than instantiate each time cmd is loaded.
         phantoms = []
@@ -310,40 +355,40 @@ class SbotAllEvent(sublime_plugin.EventListener):
     # def on_init(self, views):
     #     ''' First thing that happens when plugin/window created. Views are valid.
     #     Note that this also happens if this module is reloaded - like when editing this file. '''
-    #     slog('DEV', f'{views}')
+    #     slog(sc.CAT_DBG, f'{views}')
 
     # def on_load_project(self, window):
     #     ''' This gets called for new windows but not for the first one. '''
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_pre_close_project(self, window):
     #     ''' Save to file when closing window/project. Seems to be called twice. '''
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_load(self, view):
     #     ''' Load a file. '''
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_deactivated(self, view):
     #     # Window is still valid here.
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_pre_close(self, view):
     #     ''' This happens after on_pre_close_project(). '''
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_close(self, view):
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_pre_save(self, view):
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_post_save(self, view):
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_pre_close_window(self, window):
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)
 
     # def on_new_window(self, window):
     #     ''' Another window/instance has been created. Project has not been opened yet though. '''
-    #     slog('DEV')
+    #     slog(sc.CAT_DBG)

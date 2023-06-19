@@ -9,47 +9,15 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# These go directly to console via _LogWriter(). Our hooks don't intercept.
-#   sublime.log_commands(True/False)
-#   sublime.log_input(True/False)
-#   sublime.log_result_regex(True/False)
-#   sublime.log_control_tree(True/False)
-#   sublime.log_fps(True/False)
-#   sublime_api.log_message('Called sublime_api.log_message()\n')
-
-
-# Startup sequence
-# DBG notr.py:32 plugin_loaded()
-# > logging ok now
-# 2023-05-12 09:39:10.969 DEV sbot_dev.py:25 win_ver:('10', '10.0.19041', '', 'Multiprocessor Free')
-# 2023-05-12 09:39:10.972 DBG notr.py:51 on_init() [View(12), View(13), View(14), View(15), View(16)]
-# 2023-05-12 09:39:14.496 DBG notr.py:65 on_load() View(18)
-# > open new file
-# 2023-05-12 09:40:42.355 DBG notr.py:65 on_load() View(20)
-# > edit notr.py
-# 2023-05-12 09:41:53.702 reloading plugin Notr.notr
-# 2023-05-12 09:41:53.705 DBG notr.py:37 plugin_unloaded()
-# 2023-05-12 09:41:53.713 DBG notr.py:32 plugin_loaded()
-# 2023-05-12 09:41:53.717 DBG notr.py:51 on_init() [View(12), View(18), View(19), View(20), View(14), View(15), View(16)]
-# > new instance of ST
-# 2023-05-12 09:45:58.531 DBG notr.py:59 on_load_project() []
-# 2023-05-12 09:45:58.579 DBG notr.py:65 on_load() View(36)
-#
-# Basically init views in on_init() and on_load() should do it.
-
-# clickable view: https://forum.sublimetext.com/t/custom-plugin-similar-to-find-results/53946/2
-
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
-    sc.slog(sc.CAT_DBG, f'++++++++++++++++++++++++++++ Starting up - win_ver:{platform.win32_ver()}')
+    sc.slog(sc.CAT_DBG, f'>>>>>>>>>> Starting up: python {platform.python_version()} on {platform.platform()}')
     # dump_stack()
-
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
     sc.slog(sc.CAT_DBG, 'plugin_unloaded')
-
 
 #-----------------------------------------------------------------------------------
 def dump_stack(cat):
@@ -69,12 +37,48 @@ def dump_stack(cat):
         # End of stack.
         return
 
-
 #-----------------------------------------------------------------------------------
 def dump_attrs(obj):
     ''' Diagnostics. '''
     for attr in dir(obj):
         print(f'{attr} = {getattr(obj, attr)}')
+
+#-----------------------------------------------------------------------------------
+def start_interactive():
+    winid = sublime.active_window().id()
+    view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
+    # slog(sc.CAT_DBG, f'{self.view}  {winid}')
+    view.settings().set('interactive' , True)
+
+
+#-----------------------------------------------------------------------------------
+class SbotAllEvent(sublime_plugin.EventListener):
+    ''' For tracing EventListener event sequence. '''
+
+    # It appears that ViewEventListener exhibits some uexpected behavior. Safest to stay away from it I think.
+    # https://stackoverflow.com/a/50226141
+
+    def on_selection_modified(self, view):
+        if view.settings().get('interactive'):
+            # sc.slog(sc.CAT_DBG, '+++++++')
+            pass
+
+    # def on_hover(self, view, point, hover_zone):
+    #     # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone.
+    #     # hover_zone:
+    #     # TEXT = 1 The mouse is hovered over the text.
+    #     # GUTTER = 2 The mouse is hovered over the gutter.
+    #     # MARGIN = 3 The mouse is hovered in the white space to the right of a line.        
+    #     items = ['ietm1', 'item2', 'item3', 'item4']
+    #     view.show_popup_menu(items, self.on_done)
+    # def on_done(self, sel):
+    #     print(f'>>> {sel}')
+
+    # show_popup_menu(items: list[str], on_done: Callable[[int], None], flags=0)
+    #   Show a popup menu at the caret, for selecting an item in a list.
+    # show_popup(content: str, flags=PopupFlags.NONE, location: Point=-1, max_width: DIP=320,
+    #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
+    #   Show a popup displaying HTML content.
 
 
 #-----------------------------------------------------------------------------------
@@ -149,40 +153,6 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 
 
 #-----------------------------------------------------------------------------------
-def start_interactive():
-    winid = sublime.active_window().id()
-    view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
-    # slog(sc.CAT_DBG, f'{self.view}  {winid}')
-    view.settings().set('interactive' , True)
-
-
-#-----------------------------------------------------------------------------------
-class SbotInteractive(sublime_plugin.ViewEventListener):
-    # def __init__(self, view):
-    #     # This gets called for every view.
-    #     sc.slog(sc.CAT_DBG, str(view))
-    #     super(sublime_plugin.ViewEventListener, self).__init__(view)
-    #     super().__init__(view)
-
-    def on_selection_modified(self):
-        if self.view.settings().get('interactive'):
-            # sc.slog(sc.CAT_DBG, '+++++++')
-            pass
-
-    # def on_init(self):
-    # def on_load(self):
-    # def on_activated(self):
-    # def on_deactivated(self):
-    # def on_pre_close(self):
-    # def on_close(self):
-    # def on_pre_save(self):
-    # def on_post_save(self):
-    # def on_modified(self): Called after changes have been made to the view.
-    # def on_text_changed(self, changes): Called once after changes has been made to a view. changes is a list of TextChange objects.
-    # def on_selection_modified(self): Called after the selection has been modified in the view.   
-
-
-#-----------------------------------------------------------------------------------
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # Panel iterate stuff.
     # create_output_panel(name, <unlisted>) Returns the view associated with the named output panel, creating it if required.
@@ -207,16 +177,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
             # trigger - A unicode string of the text to match against the user's input.
             # details - An optional unicode string, or list of unicode strings, containing limited inline HTML. Displayed below the trigger.
             # annotation - An optional unicode string of a hint to draw to the right-hand side of the row.
-            # kind - An optional kind tuple – defaults to sublime.KIND_AMBIGUOUS.
-            # sublime.KIND_AMBIGUOUS When there source of the item is unknown – the default. Letter: none, theme class: kind_ambiguous
-            # sublime.KIND_KEYWORD When the item represents a keyword. Letter: k, theme class: kind_keyword
-            # sublime.KIND_TYPE When the item represents a data type, class, struct, interface, enum, trait, etc. Letter: t, theme class: kind_type
-            # sublime.KIND_FUNCTION When the item represents a function, method, constructor or subroutine. Letter: f, theme class: kind_function
-            # sublime.KIND_NAMESPACE When the item represents a namespace or module. Letter: a, theme class: kind_namespace
-            # sublime.KIND_NAVIGATION When the item represents a definition, label or section. Letter: n, theme class: kind_navigation
-            # sublime.KIND_MARKUP When the item represents a markup component, including HTML tags and CSS selectors. Letter: m, theme class: kind_markup
-            # sublime.KIND_VARIABLE When the item represents a variable, member, attribute, constant or parameter. Letter: v, theme class: kind_variable
-            # sublime.KIND_SNIPPET When the item contains a snippet. Letter: s, theme class: kind_snippet
+            # kind - An optional kind tuple – defaults to sublime.KIND_AMBIGUOUS. Otherwise KIND_KEYWORD, etc.
 
         self.window.show_quick_panel(items, self.on_done, flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT,
                                      selected_index=2, on_highlight=self.on_highlight, placeholder="place-xxx")
@@ -346,49 +307,3 @@ class SbotCmdLineCommand(sublime_plugin.WindowCommand):
         vnew = self.window.new_file()
         vnew.set_scratch(True)
         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
-
-#-----------------------------------------------------------------------------------
-class SbotAllEvent(sublime_plugin.EventListener):
-    ''' For tracing EventListener event sequence. '''
-    pass
-
-    # def on_init(self, views):
-    #     ''' First thing that happens when plugin/window created. Views are valid.
-    #     Note that this also happens if this module is reloaded - like when editing this file. '''
-    #     slog(sc.CAT_DBG, f'{views}')
-
-    # def on_load_project(self, window):
-    #     ''' This gets called for new windows but not for the first one. '''
-    #     slog(sc.CAT_DBG)
-
-    # def on_pre_close_project(self, window):
-    #     ''' Save to file when closing window/project. Seems to be called twice. '''
-    #     slog(sc.CAT_DBG)
-
-    # def on_load(self, view):
-    #     ''' Load a file. '''
-    #     slog(sc.CAT_DBG)
-
-    # def on_deactivated(self, view):
-    #     # Window is still valid here.
-    #     slog(sc.CAT_DBG)
-
-    # def on_pre_close(self, view):
-    #     ''' This happens after on_pre_close_project(). '''
-    #     slog(sc.CAT_DBG)
-
-    # def on_close(self, view):
-    #     slog(sc.CAT_DBG)
-
-    # def on_pre_save(self, view):
-    #     slog(sc.CAT_DBG)
-
-    # def on_post_save(self, view):
-    #     slog(sc.CAT_DBG)
-
-    # def on_pre_close_window(self, window):
-    #     slog(sc.CAT_DBG)
-
-    # def on_new_window(self, window):
-    #     ''' Another window/instance has been created. Project has not been opened yet though. '''
-    #     slog(sc.CAT_DBG)

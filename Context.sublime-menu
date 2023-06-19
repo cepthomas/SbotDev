@@ -1,6 +1,5 @@
 [ 
     // My custom menu.
-    // { "caption": "-" },
-    // { "caption": "Dev???" },
-    // { "caption": "-" },
+    { "caption": "-" },
+    { "caption": "Dev???" }
 ]

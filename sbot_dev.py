@@ -63,6 +63,28 @@ class SbotAllEvent(sublime_plugin.EventListener):
             # sc.slog(sc.CAT_DBG, '+++++++')
             pass
 
+    def on_query_completions(self, view, prefix, locations):
+        return ([], sublime.INHIBIT_WORD_COMPLETIONS)
+
+
+# on_query_completions(view: View, prefix: str, locations: List[Point]) 
+#            -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
+# Called whenever completions are to be presented to the user.
+# prefix - The text already typed by the user.
+# locations - The list of points being completed. Since this method is called for all completions no matter the syntax,
+#    self.view.match_selector(point, relevant_scope) should be called to determine if the point is relevant.
+# Returns - A list of completions in one of the valid formats or None if no completions are provided.
+
+# INHIBIT_WORD_COMPLETIONS = 8
+# Prevent Sublime Text from showing completions based on the contents of the view.
+# INHIBIT_EXPLICIT_COMPLETIONS = 16
+# Prevent Sublime Text from showing completions based on .sublime-completions files.
+# DYNAMIC_COMPLETIONS = 32
+# If completions should be re-queried as the user types.
+# INHIBIT_REORDER = 128
+# Prevent Sublime Text from changing the completion order.
+
+
     # def on_hover(self, view, point, hover_zone):
     #     # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone.
     #     # hover_zone:

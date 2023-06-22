@@ -66,47 +66,51 @@ class SbotAllEvent(sublime_plugin.EventListener):
     def on_query_completions(self, view, prefix, locations):
         return ([], sublime.INHIBIT_WORD_COMPLETIONS)
 
+        # on_query_completions(view: View, prefix: str, locations: List[Point]) 
+        #            -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
+        # Called whenever completions are to be presented to the user.
+        # prefix - The text already typed by the user.
+        # locations - The list of points being completed. Since this method is called for all completions no matter the syntax,
+        #    self.view.match_selector(point, relevant_scope) should be called to determine if the point is relevant.
+        # Returns - A list of completions in one of the valid formats or None if no completions are provided.
 
-# on_query_completions(view: View, prefix: str, locations: List[Point]) 
-#            -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
-# Called whenever completions are to be presented to the user.
-# prefix - The text already typed by the user.
-# locations - The list of points being completed. Since this method is called for all completions no matter the syntax,
-#    self.view.match_selector(point, relevant_scope) should be called to determine if the point is relevant.
-# Returns - A list of completions in one of the valid formats or None if no completions are provided.
-
-# INHIBIT_WORD_COMPLETIONS = 8
-# Prevent Sublime Text from showing completions based on the contents of the view.
-# INHIBIT_EXPLICIT_COMPLETIONS = 16
-# Prevent Sublime Text from showing completions based on .sublime-completions files.
-# DYNAMIC_COMPLETIONS = 32
-# If completions should be re-queried as the user types.
-# INHIBIT_REORDER = 128
-# Prevent Sublime Text from changing the completion order.
+        # INHIBIT_WORD_COMPLETIONS = 8
+        # Prevent Sublime Text from showing completions based on the contents of the view.
+        # INHIBIT_EXPLICIT_COMPLETIONS = 16
+        # Prevent Sublime Text from showing completions based on .sublime-completions files.
+        # DYNAMIC_COMPLETIONS = 32
+        # If completions should be re-queried as the user types.
+        # INHIBIT_REORDER = 128
+        # Prevent Sublime Text from changing the completion order.
 
 
-    # def on_hover(self, view, point, hover_zone):
-    #     # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone.
-    #     # hover_zone:
-    #     # TEXT = 1 The mouse is hovered over the text.
-    #     # GUTTER = 2 The mouse is hovered over the gutter.
-    #     # MARGIN = 3 The mouse is hovered in the white space to the right of a line.        
-    #     items = ['ietm1', 'item2', 'item3', 'item4']
-    #     view.show_popup_menu(items, self.on_done)
-    # def on_done(self, sel):
-    #     print(f'>>> {sel}')
+    def on_hover(self, view, point, hover_zone):
+        # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone.
+        # hover_zone:
+        # TEXT = 1 The mouse is hovered over the text.
+        # GUTTER = 2 The mouse is hovered over the gutter.
+        # MARGIN = 3 The mouse is hovered in the white space to the right of a line.        
+        items = ['ietm1', 'item2', 'item3', 'item4']
+        # view.show_popup_menu(items, self.on_done)
 
-    # show_popup_menu(items: list[str], on_done: Callable[[int], None], flags=0)
-    #   Show a popup menu at the caret, for selecting an item in a list.
-    # show_popup(content: str, flags=PopupFlags.NONE, location: Point=-1, max_width: DIP=320,
-    #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
-    #   Show a popup displaying HTML content.
+        # show_popup_menu(items: list[str], on_done: Callable[[int], None], flags=0)
+        #   Show a popup menu at the caret, for selecting an item in a list.
+        # show_popup(content: str, flags=PopupFlags.NONE, location: Point=-1, max_width: DIP=320,
+        #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
+        #   Show a popup displaying HTML content.
+
+    def on_done(self, sel):
+        print(f'>>> {sel}')
+
 
 
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.WindowCommand):
 
     def run(self):
+
+        # Render for android target.
+        self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
 
         return
 

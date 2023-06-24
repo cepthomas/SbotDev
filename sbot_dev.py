@@ -103,16 +103,12 @@ class SbotAllEvent(sublime_plugin.EventListener):
         print(f'>>> {sel}')
 
 
-
 #-----------------------------------------------------------------------------------
-class SbotDebugCommand(sublime_plugin.WindowCommand):
+class SbotDebugCommand(sublime_plugin.TextCommand):
 
-    def run(self):
+    def run(self, edit):
 
-        # # Render for android target.
-        # self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
-        # return
-
+        ##### Probing ST api.
 
         # from inspect import getmembers, isfunction
         # # from my_project import my_module
@@ -127,34 +123,75 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         #     print(f'{a}:')
         # return
 
+        ### Normal usage.
+        view = sc.create_new_view(sublime.active_window(), '012 3456\n789\nUUUU YYYY')
+        pt = 3
+        reg = sublime.Region(5, 8)
 
+        ret = view.rowcol(12)
+        sc.slog(sc.CAT_DBG, f'>0> {ret}') #(1, 3)
+        ret = view.text_point(2, 4)
+        sc.slog(sc.CAT_DBG, f'>0> {ret}') #17
+        ret = view.find('78', 5)
+        sc.slog(sc.CAT_DBG, f'>0> {ret}') #(9, 11)
+        ret = view.substr(11)
+        sc.slog(sc.CAT_DBG, f'>0> |{len(ret)}|{ret[0]}|{ret}|') #|1|9|9|
+        ret = view.word(13)
+        sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|') #(13, 17)|UUUU|
+        ret = view.line(3)
+        sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|') #(0, 8)|012 3456|
+        ret = view.full_line(12)
+        sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|') #(9, 13)|789
 
-        # These are used to probe sublime_api for how it handles garbage args. tldr: not very well.
-        view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
+        ### Empty buffer.
+        view = sc.create_new_view(sublime.active_window(), '')
+        pt = 0
+        reg = sublime.Region(pt, pt)
+
+        ret = view.rowcol(pt)
+        sc.slog(sc.CAT_DBG, f'>1> {ret}') #(0, 0)
+        ret = view.text_point(pt, pt)
+        sc.slog(sc.CAT_DBG, f'>1> {ret}') #0
+        ret = view.split_by_newlines(reg)
+        sc.slog(sc.CAT_DBG, f'>1> {ret}') #[Region(0, 0)] ???
+        ret = view.find('pattern', pt)
+        sc.slog(sc.CAT_DBG, f'>1> {ret}') #(-1, -1)
+        ret = view.substr(pt)
+        sc.slog(sc.CAT_DBG, f'>1> |{len(ret)}|{ret[0]}|{ret}|') #|1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
+        ret = view.word(pt)
+        sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #nada - see previous
+        ret = view.line(pt)
+        sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #(0, 0)
+        ret = view.full_line(pt)
+        sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #(0, 0)
+        # return
+
+        ### Outside legal range.
+        view = sc.create_new_view(sublime.active_window(), 'ABCDEFGHIJ')
         pt = 10000
         reg = sublime.Region(pt, pt + 1)
-        ret = view.rowcol(pt)
-        sc.slog(sc.CAT_DBG, f'>>> {ret}') #(0, 10)
-        ret = view.text_point(pt, pt)
-        sc.slog(sc.CAT_DBG, f'>>> {ret}') #10
-        ret = view.insert(edit, pt, 'booga')
-        sc.slog(sc.CAT_DBG, f'>>> {ret}') #0
-        ret = view.replace(edit, reg, 'booga')
-        sc.slog(sc.CAT_DBG, f'>>> {ret}') #None
-        ret = view.split_by_newlines(reg)
-        sc.slog(sc.CAT_DBG, f'>>> {ret}') #[Region(10, 10)]
-        ret = view.find('pattern', pt)
-        sc.slog(sc.CAT_DBG, f'>>> {ret}') #(-1, -1)
-        ret = view.substr(pt)
-        sc.slog(sc.CAT_DBG, f'>>> |{len(ret)}|{ret[0]}|{ret}|') #|1|2023-06-12 11:37:44.374 DBG sbot_dev.py:120 >>> (10000, 10000)||
-        ret = view.word(pt)
-        sc.slog(sc.CAT_DBG, f'>>> {ret}|{view.substr(ret)}|') #nada - see previous
-        ret = view.line(pt)
-        sc.slog(sc.CAT_DBG, f'>>> {ret}|{view.substr(ret)}|') #(9990, 10000)||
-        ret = view.full_line(pt)
-        sc.slog(sc.CAT_DBG, f'>>> {ret}|{view.substr(ret)}|') #(9990, 10000)||
-        return
 
+        ret = view.rowcol(pt)
+        sc.slog(sc.CAT_DBG, f'>2> {ret}') #(0, 10)
+        ret = view.text_point(pt, pt)
+        sc.slog(sc.CAT_DBG, f'>2> {ret}') #10
+        ret = view.insert(edit, pt, 'booga')
+        sc.slog(sc.CAT_DBG, f'>2> {ret}') #0
+        ret = view.replace(edit, reg, 'xyzzy')
+        sc.slog(sc.CAT_DBG, f'>2> {ret}') #None
+        ret = view.split_by_newlines(reg)
+        sc.slog(sc.CAT_DBG, f'>2> {ret}') #[Region(10, 10)]
+        ret = view.find('pattern', pt)
+        sc.slog(sc.CAT_DBG, f'>2> {ret}') #(-1, -1)
+        ret = view.substr(pt)
+        sc.slog(sc.CAT_DBG, f'>2> |{len(ret)}|{ret[0]}|{ret}|') #|1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
+        ret = view.word(pt)
+        sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #nada - see previous
+        ret = view.line(pt)
+        sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #(9990, 10000)||
+        ret = view.full_line(pt)
+        sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #(9990, 10000)||
+        return
 
         # Force a handled exception.
         sc.slog(sc.CAT_DBG, 'Forcing handled exception!')

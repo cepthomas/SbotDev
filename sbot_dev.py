@@ -63,7 +63,7 @@ class SbotAllEvent(sublime_plugin.EventListener):
             # sc.slog(sc.CAT_DBG, '+++++++')
             pass
 
-    def on_query_completions(self, view, prefix, locations):
+    def on_query_completions(self, view, prefix, locations): # TODO suppress too many offerings.
         return ([], sublime.INHIBIT_WORD_COMPLETIONS)
 
         # on_query_completions(view: View, prefix: str, locations: List[Point]) 
@@ -109,23 +109,23 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
 
     def run(self):
 
-        # Render for android target.
-        self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
+        # # Render for android target.
+        # self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
+        # return
 
-        return
+
+        # from inspect import getmembers, isfunction
+        # # from my_project import my_module
+        # functions_list = getmembers(sublime_api)#, isfunction)
+        # for f in functions_list:
+        #     print(f'{f[0]}:   ')
+        # return    
 
 
-        from inspect import getmembers, isfunction
-        # from my_project import my_module
-        functions_list = getmembers(sublime_api)#, isfunction)
-        for f in functions_list:
-            print(f'{f[0]}:   ')
-        return    
-
-        # https://stackoverflow.com/questions/218616/how-to-get-method-parameter-names
-        for a in dir(sublime_api):
-            print(f'{a}:')
-        return
+        # # https://stackoverflow.com/questions/218616/how-to-get-method-parameter-names
+        # for a in dir(sublime_api):
+        #     print(f'{a}:')
+        # return
 
 
 
@@ -137,10 +137,10 @@ class SbotDebugCommand(sublime_plugin.WindowCommand):
         sc.slog(sc.CAT_DBG, f'>>> {ret}') #(0, 10)
         ret = view.text_point(pt, pt)
         sc.slog(sc.CAT_DBG, f'>>> {ret}') #10
-        ret = view.insert(edit, pt, 'booga') #0
-        sc.slog(sc.CAT_DBG, f'>>> {ret}')
-        ret = view.replace(edit, reg, 'booga') #None
-        sc.slog(sc.CAT_DBG, f'>>> {ret}')
+        ret = view.insert(edit, pt, 'booga')
+        sc.slog(sc.CAT_DBG, f'>>> {ret}') #0
+        ret = view.replace(edit, reg, 'booga')
+        sc.slog(sc.CAT_DBG, f'>>> {ret}') #None
         ret = view.split_by_newlines(reg)
         sc.slog(sc.CAT_DBG, f'>>> {ret}') #[Region(10, 10)]
         ret = view.find('pattern', pt)

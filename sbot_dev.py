@@ -9,6 +9,67 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
+
+# TODO Consolidate sbot *_exec, *_run_script, *_terminal, start_file etc commands. Put in common?
+# TODO Also cheatsheet, show log, etc cmds - could be exec().
+
+
+# ------------ sbot_common ------------
+# def wait_load_file(window, fpath, line):  ''' Open file asynchronously then position at line. Returns the new View or None if failed. '''
+# def start_file(filepath):   ''' Like you double-clicked it. '''
+# def run_script(filepath, window):  ''' Script runner. Currently only python. Creates a new view with output. '''
+    
+
+
+# builtin Side Bar.sublime-menu - these are all ok
+# { "caption": "New File", "command": "new_file_at", "args": {"dirs": []} },
+# { "caption": "Rename…", "command": "rename_path", "args": {"paths": []} },
+# { "caption": "Delete File", "command": "delete_file", "args": {"files": [], "prompt": false} },
+# { "caption": "Open Folder…", "command": "open_folder", "args": {"dirs": []} },
+# { "caption": "Open Containing Folder…", "command": "open_containing_folder", "args": {"files": []} },
+# { "caption": "Reveal Link Source", "command": "reveal_link_source", "args": {"dirs": []} },
+# { "caption": "New Folder…", "command": "new_folder", "args": {"dirs": []} },
+# { "caption": "Delete Folder", "command": "delete_folder", "args": {"dirs": [], "prompt": true} },
+# { "caption": "Find in Folder…", "command": "find_in_folder", "args": {"dirs": []} },
+# 
+# my added Side Bar.sublime-menu
+# { "caption": "Copy Name", "command": "sbot_sidebar_copy_name", "args": { "paths": [] }},
+# { "caption": "Copy Path", "command": "sbot_sidebar_copy_path", "args": { "paths": [] }}, xxx same as Context."copy_path"
+# { "caption": "Copy File", "command": "sbot_sidebar_copy_file", "args": { "paths": [] }},
+# { "caption": "Execute", "command": "sbot_sidebar_exec", "args": { "paths": [] }},
+# { "caption": "Run Script", "command": "sbot_sidebar_run_script"},
+# { "caption": "Open Terminal", "command": "sbot_sidebar_terminal", "args": { "paths": [] }},
+# { "caption": "Tree", "command": "sbot_sidebar_tree", "args": { "paths": [] }},
+# 
+# class SbotSidebarCopyFileCommand(sublime_plugin.WindowCommand):
+# class SbotSidebarCopyNameCommand(sublime_plugin.WindowCommand):
+# class SbotSidebarCopyPathCommand(sublime_plugin.WindowCommand):
+# class SbotSidebarExecCommand(sublime_plugin.WindowCommand):
+# class SbotSidebarRunScriptCommand(sublime_plugin.WindowCommand):
+# class SbotSidebarTerminalCommand(sublime_plugin.WindowCommand):
+# class SbotSidebarTreeCommand(sublime_plugin.WindowCommand):
+
+
+
+# builtin+overrides - AppData\Roaming\Sublime Text\Packages\Default\Context.sublime-menu - ok
+# { "command": "open_context_url" },
+# { "command": "goto_definition", "caption": "Goto Definition" },
+# { "command": "toggle_inline_diff" },
+# { "command": "revert_hunk", "caption": "Revert Diff Hunk" },
+# { "command": "open_in_browser", "caption": "Open in Browser" }, xxx like exec
+# { "command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"}, "caption": "Open Containing Folder…" },
+# { "command": "copy_path", "caption": "Copy File Path" },  xxx remove and use mine
+# { "command": "reveal_in_side_bar", "caption": "Reveal in Side Bar" },
+# 
+# my added - Context.sublime-menu
+# { "caption": "Open Terminal", "command": "sbot_utils_terminal"}, xxx
+# { "caption": "Execute", "command": "sbot_utils_exec"}, xxx
+# { "caption": "Run Script", "command": "sbot_utils_run_script"}, xxx
+# class SbotUtilsExecCommand(sublime_plugin.WindowCommand): xxx
+# class SbotUtilsRunScriptCommand(sublime_plugin.WindowCommand): xxx
+# class SbotUtilsTerminalCommand(sublime_plugin.WindowCommand): xxx
+
+
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
@@ -63,26 +124,35 @@ class SbotAllEvent(sublime_plugin.EventListener):
             # sc.slog(sc.CAT_DBG, '+++++++')
             pass
 
-    def on_query_completions(self, view, prefix, locations): # TODO suppress too many offerings.
-        return ([], sublime.INHIBIT_WORD_COMPLETIONS)
+    def on_query_completions(self, view, prefix, locations): # ?? suppress too many offerings.
 
-        # on_query_completions(view: View, prefix: str, locations: List[Point]) 
-        #            -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
-        # Called whenever completions are to be presented to the user.
-        # prefix - The text already typed by the user.
-        # locations - The list of points being completed. Since this method is called for all completions no matter the syntax,
-        #    self.view.match_selector(point, relevant_scope) should be called to determine if the point is relevant.
-        # Returns - A list of completions in one of the valid formats or None if no completions are provided.
+        '''
+        on_query_completions(view: View, prefix: str, locations: List[Point]) 
+                   -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
+        Called whenever completions are to be presented to the user.
+        prefix - The text already typed by the user.
+        locations - The list of points being completed. Since this method is called for all completions no matter the syntax,
+           self.view.match_selector(point, relevant_scope) should be called to determine if the point is relevant.
+        Returns - A list of completions in one of the valid formats or None if no completions are provided.
 
-        # INHIBIT_WORD_COMPLETIONS = 8
-        # Prevent Sublime Text from showing completions based on the contents of the view.
-        # INHIBIT_EXPLICIT_COMPLETIONS = 16
-        # Prevent Sublime Text from showing completions based on .sublime-completions files.
-        # DYNAMIC_COMPLETIONS = 32
-        # If completions should be re-queried as the user types.
-        # INHIBIT_REORDER = 128
-        # Prevent Sublime Text from changing the completion order.
 
+        https://forum.sublimetext.com/t/annoying-autocomplete-c/59082
+        I seem not able to reproduce this in safe mode.
+        https://www.sublimetext.com/docs/safe_mode.html 26
+        If you can’t either, it’s likely a plugin behavior.
+        subl --safe-mode
+        Additionally on Windows and Mac, holding a modifier key while starting the application will open it in safe mode:
+        Windows: Shift+Alt
+
+        https://forum.sublimetext.com/t/how-to-stop-tab-auto-complete-on-4126/63222/2
+
+        INHIBIT_WORD_COMPLETIONS = 8  Prevent Sublime Text from showing completions based on the contents of the view.
+        INHIBIT_EXPLICIT_COMPLETIONS = 16  Prevent Sublime Text from showing completions based on .sublime-completions files.
+        DYNAMIC_COMPLETIONS = 32  If completions should be re-queried as the user types.
+        INHIBIT_REORDER = 128  Prevent Sublime Text from changing the completion order.
+        '''
+        pass
+        # return ([], sublime.INHIBIT_WORD_COMPLETIONS)
 
     def on_hover(self, view, point, hover_zone):
         # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone.
@@ -91,7 +161,7 @@ class SbotAllEvent(sublime_plugin.EventListener):
         # GUTTER = 2 The mouse is hovered over the gutter.
         # MARGIN = 3 The mouse is hovered in the white space to the right of a line.        
         items = ['ietm1', 'item2', 'item3', 'item4']
-        # view.show_popup_menu(items, self.on_done)
+        # view.show_popup_menu(items, self.on_hover_done)
 
         # show_popup_menu(items: list[str], on_done: Callable[[int], None], flags=0)
         #   Show a popup menu at the caret, for selecting an item in a list.
@@ -99,8 +169,8 @@ class SbotAllEvent(sublime_plugin.EventListener):
         #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
         #   Show a popup displaying HTML content.
 
-    def on_done(self, sel):
-        print(f'>>> {sel}')
+    def on_hover_done(self, sel):
+        print(f'>>> on_hover_done:{sel}')
 
 
 #-----------------------------------------------------------------------------------
@@ -370,3 +440,26 @@ class SbotCmdLineCommand(sublime_plugin.WindowCommand):
         vnew = self.window.new_file()
         vnew.set_scratch(True)
         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
+
+
+#-----------------------------------------------------------------------------------
+class SbotCheatsheetCommand(sublime_plugin.WindowCommand):
+    ''' Open user file. '''
+
+    def run(self):
+        # settings = sublime.load_settings(UTILS_SETTINGS_FILE)
+        # fn = settings.get('cheatsheet_path')
+
+        fn = "C:\\Users\\cepth\\OneDrive\\OneDrive Documents\\sublime\\ST-commands-CT.ntr"
+
+        if fn is not None and os.path.exists(fn):
+            self.window.open_file(fn)
+        else:
+            sublime.error_message(f'Invalid file: {fn}')            
+        # fn = os.path.join(sublime.packages_path(), 'SbotUtils', 'ST-commands.md')
+
+    # def is_visible(self):
+    #     settings = sublime.load_settings(UTILS_SETTINGS_FILE)
+    #     fn = settings.get('cheatsheet_path')
+    #     return fn is not None
+

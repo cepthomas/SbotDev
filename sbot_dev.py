@@ -9,13 +9,13 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-
 # TODO Consolidate sbot *_exec, *_run_script, *_terminal, start_file etc commands. Put in common?
-# TODO Also cheatsheet, show log, etc cmds - could be exec().
+
+# TODO dev: also cheatsheet, show log, etc cmds - could be exec().
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\User\.SbotStore
 
 
 # ------------ sbot_common ------------
-# def wait_load_file(window, fpath, line):  ''' Open file asynchronously then position at line. Returns the new View or None if failed. '''
 # def start_file(filepath):   ''' Like you double-clicked it. '''
 # def run_script(filepath, window):  ''' Script runner. Currently only python. Creates a new view with output. '''
     
@@ -39,7 +39,6 @@ from . import sbot_common_src as sc
 # { "caption": "Execute", "command": "sbot_sidebar_exec", "args": { "paths": [] }},
 # { "caption": "Run Script", "command": "sbot_sidebar_run_script"},
 # { "caption": "Open Terminal", "command": "sbot_sidebar_terminal", "args": { "paths": [] }},
-# { "caption": "Tree", "command": "sbot_sidebar_tree", "args": { "paths": [] }},
 # 
 # class SbotSidebarCopyFileCommand(sublime_plugin.WindowCommand):
 # class SbotSidebarCopyNameCommand(sublime_plugin.WindowCommand):
@@ -47,7 +46,6 @@ from . import sbot_common_src as sc
 # class SbotSidebarExecCommand(sublime_plugin.WindowCommand):
 # class SbotSidebarRunScriptCommand(sublime_plugin.WindowCommand):
 # class SbotSidebarTerminalCommand(sublime_plugin.WindowCommand):
-# class SbotSidebarTreeCommand(sublime_plugin.WindowCommand):
 
 
 
@@ -70,6 +68,9 @@ from . import sbot_common_src as sc
 # class SbotUtilsTerminalCommand(sublime_plugin.WindowCommand): xxx
 
 
+
+
+
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
@@ -78,7 +79,7 @@ def plugin_loaded():
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    sc.slog(sc.CAT_DBG, 'plugin_unloaded')
+    sc.slog(sc.CAT_DBG, 'sbot-dev plugin_unloaded')
 
 #-----------------------------------------------------------------------------------
 def dump_stack(cat):

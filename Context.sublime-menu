@@ -2,4 +2,10 @@
     // My custom menu.
     // { "caption": "-" },
     // { "caption": "Dev???" }
+
+    // { "caption": "Execute", "command": "sbot_exec", "args": { "paths": [] }},
+    // { "caption": "Open Terminal", "command": "sbot_terminal", "args": { "paths": [] }},
+    { "caption": "Execute", "command": "sbot_exec"},
+    { "caption": "Open Terminal", "command": "sbot_terminal"},
+
 ]

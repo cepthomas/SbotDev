@@ -9,72 +9,14 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# TODO Consolidate sbot *_exec, *_run_script, *_terminal, start_file etc commands. Put in common?
-
 # TODO dev: also cheatsheet, show log, etc cmds - could be exec().
 # C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\User\.SbotStore
-
-
-# ------------ sbot_common ------------
-# def start_file(filepath):   ''' Like you double-clicked it. '''
-# def run_script(filepath, window):  ''' Script runner. Currently only python. Creates a new view with output. '''
-    
-
-
-# builtin Side Bar.sublime-menu - these are all ok
-# { "caption": "New File", "command": "new_file_at", "args": {"dirs": []} },
-# { "caption": "Rename…", "command": "rename_path", "args": {"paths": []} },
-# { "caption": "Delete File", "command": "delete_file", "args": {"files": [], "prompt": false} },
-# { "caption": "Open Folder…", "command": "open_folder", "args": {"dirs": []} },
-# { "caption": "Open Containing Folder…", "command": "open_containing_folder", "args": {"files": []} },
-# { "caption": "Reveal Link Source", "command": "reveal_link_source", "args": {"dirs": []} },
-# { "caption": "New Folder…", "command": "new_folder", "args": {"dirs": []} },
-# { "caption": "Delete Folder", "command": "delete_folder", "args": {"dirs": [], "prompt": true} },
-# { "caption": "Find in Folder…", "command": "find_in_folder", "args": {"dirs": []} },
-# 
-# my added Side Bar.sublime-menu
-# { "caption": "Copy Name", "command": "sbot_sidebar_copy_name", "args": { "paths": [] }},
-# { "caption": "Copy Path", "command": "sbot_sidebar_copy_path", "args": { "paths": [] }}, xxx same as Context."copy_path"
-# { "caption": "Copy File", "command": "sbot_sidebar_copy_file", "args": { "paths": [] }},
-# { "caption": "Execute", "command": "sbot_sidebar_exec", "args": { "paths": [] }},
-# { "caption": "Run Script", "command": "sbot_sidebar_run_script"},
-# { "caption": "Open Terminal", "command": "sbot_sidebar_terminal", "args": { "paths": [] }},
-# 
-# class SbotSidebarCopyFileCommand(sublime_plugin.WindowCommand):
-# class SbotSidebarCopyNameCommand(sublime_plugin.WindowCommand):
-# class SbotSidebarCopyPathCommand(sublime_plugin.WindowCommand):
-# class SbotSidebarExecCommand(sublime_plugin.WindowCommand):
-# class SbotSidebarRunScriptCommand(sublime_plugin.WindowCommand):
-# class SbotSidebarTerminalCommand(sublime_plugin.WindowCommand):
-
-
-
-# builtin+overrides - AppData\Roaming\Sublime Text\Packages\Default\Context.sublime-menu - ok
-# { "command": "open_context_url" },
-# { "command": "goto_definition", "caption": "Goto Definition" },
-# { "command": "toggle_inline_diff" },
-# { "command": "revert_hunk", "caption": "Revert Diff Hunk" },
-# { "command": "open_in_browser", "caption": "Open in Browser" }, xxx like exec
-# { "command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"}, "caption": "Open Containing Folder…" },
-# { "command": "copy_path", "caption": "Copy File Path" },  xxx remove and use mine
-# { "command": "reveal_in_side_bar", "caption": "Reveal in Side Bar" },
-# 
-# my added - Context.sublime-menu
-# { "caption": "Open Terminal", "command": "sbot_utils_terminal"}, xxx
-# { "caption": "Execute", "command": "sbot_utils_exec"}, xxx
-# { "caption": "Run Script", "command": "sbot_utils_run_script"}, xxx
-# class SbotUtilsExecCommand(sublime_plugin.WindowCommand): xxx
-# class SbotUtilsRunScriptCommand(sublime_plugin.WindowCommand): xxx
-# class SbotUtilsTerminalCommand(sublime_plugin.WindowCommand): xxx
-
-
-
 
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
-    sc.slog(sc.CAT_DBG, f'>>>>>>>>>> Starting up: python {platform.python_version()} on {platform.platform()}')
+    sc.slog(sc.CAT_DBG, f'>>>>>>>>>> Starting up with python {platform.python_version()} on {platform.platform()}')
     # dump_stack()
 
 #-----------------------------------------------------------------------------------

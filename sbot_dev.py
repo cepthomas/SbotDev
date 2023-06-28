@@ -9,10 +9,6 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# TODO dev: also cheatsheet, show log, etc cmds - could be exec().
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\User\.SbotStore
-
-
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
@@ -383,26 +379,3 @@ class SbotCmdLineCommand(sublime_plugin.WindowCommand):
         vnew = self.window.new_file()
         vnew.set_scratch(True)
         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
-
-
-#-----------------------------------------------------------------------------------
-class SbotCheatsheetCommand(sublime_plugin.WindowCommand):
-    ''' Open user file. '''
-
-    def run(self):
-        # settings = sublime.load_settings(UTILS_SETTINGS_FILE)
-        # fn = settings.get('cheatsheet_path')
-
-        fn = "C:\\Users\\cepth\\OneDrive\\OneDrive Documents\\sublime\\ST-commands-CT.ntr"
-
-        if fn is not None and os.path.exists(fn):
-            self.window.open_file(fn)
-        else:
-            sublime.error_message(f'Invalid file: {fn}')            
-        # fn = os.path.join(sublime.packages_path(), 'SbotUtils', 'ST-commands.md')
-
-    # def is_visible(self):
-    #     settings = sublime.load_settings(UTILS_SETTINGS_FILE)
-    #     fn = settings.get('cheatsheet_path')
-    #     return fn is not None
-

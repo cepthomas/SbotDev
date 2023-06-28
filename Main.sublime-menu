@@ -9,7 +9,8 @@
             { "caption": "Panel", "command": "sbot_test_panel" },
             { "caption": "Panel Input", "command": "sbot_test_panel_input" },
             { "caption": "Phantoms and More", "command": "sbot_test_phantoms" },
-            { "caption": "Cheatsheet", "command": "sbot_cheatsheet" },
+            { "caption": "Cheatsheet", "command": "sbot_exec", "args": {"paths": ["C:\\Users\\cepth\\OneDrive\\OneDrive Documents\\sublime\\ST-commands-CT.ntr"]} },
+            { "caption": "Log", "command": "sbot_exec", "args": {"paths": ["C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
         ]
     },
 ]

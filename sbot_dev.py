@@ -262,7 +262,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
                 self.proc_ret(cp)
 
             elif git_cmd == 'push':
-                cmd = f'git push {fn}'
+                cmd = f'git push'
                 cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
                 self.proc_ret(cp)
 

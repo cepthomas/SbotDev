@@ -53,10 +53,7 @@ def start_interactive():
 
 #-----------------------------------------------------------------------------------
 class SbotAllEvent(sublime_plugin.EventListener):
-    ''' For tracing EventListener event sequence. '''
-
-    # It appears that ViewEventListener exhibits some uexpected behavior. Safest to stay away from it I think.
-    # https://stackoverflow.com/a/50226141
+    ''' General listener. '''
 
     def on_selection_modified(self, view):
         if view.settings().get('interactive'):
@@ -90,7 +87,7 @@ class SbotAllEvent(sublime_plugin.EventListener):
         DYNAMIC_COMPLETIONS = 32  If completions should be re-queried as the user types.
         INHIBIT_REORDER = 128  Prevent Sublime Text from changing the completion order.
         '''
-        pass
+        return ([], 0)
         # return ([], sublime.INHIBIT_WORD_COMPLETIONS)
 
     def on_hover(self, view, point, hover_zone):
@@ -110,6 +107,20 @@ class SbotAllEvent(sublime_plugin.EventListener):
 
     def on_hover_done(self, sel):
         print(f'>>> on_hover_done:{sel}')
+
+    # Open logfile at end of file - option.
+    def on_load(self, view):
+        if 'sbot.log' in view.file_name():
+            view.run_command("move_to", {"to": "eof"})
+# move_to
+# to (Enum): Values: bol, eol, bof, eof, brackets.
+# move
+# by (Enum): Values: characters, words, word_ends, subwords, subword_ends, lines, pages, stops.
+# forward (Bool): Whether to advance or reverse in the buffer.
+# word_begin (Bool)
+# empty_line (Bool)
+# punct_begin (Bool)
+# separators (Bool)
 
 
 #-----------------------------------------------------------------------------------
@@ -222,6 +233,47 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         dump_attrs(frame.f_code)
         # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
         #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
+
+
+#-----------------------------------------------------------------------------------
+class SbotGitCommand(sublime_plugin.TextCommand):
+
+    def is_visible(self):
+        return True
+        # return self.view.settings().get('syntax') == 'Packages/Markdown/Markdown.sublime-syntax'
+
+    def run(self, edit, git_cmd):
+        ''' Simple git tools: diff, commit, push? https://github.com/kemayo/sublime-text-git. '''
+
+        fn = self.view.file_name()
+
+        if fn is not None:
+            dir, fn = os.path.split(fn)
+            if git_cmd == 'diff':
+                cmd = f'git diff "{fn}"'
+                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+                self.proc_ret(cp, is_diff=True)
+
+            elif git_cmd == 'commit':
+                msg = 'WIP.'
+                # git commit --dry-run -a -m <msg> [<pathspec>]
+                cmd = f'git commit -m "{msg}" {fn}'
+                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+                self.proc_ret(cp)
+
+            elif git_cmd == 'push':
+                cmd = f'git push {fn}'
+                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+                self.proc_ret(cp)
+
+    def proc_ret(self, cp, is_diff=False):
+        ''' Common process output handling  cp: the CompletedProcess '''
+        if cp.returncode != 0:
+            new_view = sc.create_new_view(self.view.window(), f'Error:{cp.returncode}\n{cp.stderr}')
+        else:
+            new_view = sc.create_new_view(self.view.window(), cp.stdout)
+            if is_diff:
+                new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
 
 
 #-----------------------------------------------------------------------------------

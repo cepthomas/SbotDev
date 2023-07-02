@@ -283,6 +283,23 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
+class NotrPublishCommand(sublime_plugin.WindowCommand):
+    ''' TODO Publish notes somewhere for access from phone. Links? Nothing confidential! '''
+
+    #### Render for android target.
+    # self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
+
+    def run(self):
+        # Render notr files.
+        # Render for android target.
+        # self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
+        pass
+
+    def is_visible(self):
+        return True
+
+
+#-----------------------------------------------------------------------------------
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
     # Panel iterate stuff.
     # create_output_panel(name, <unlisted>) Returns the view associated with the named output panel, creating it if required.

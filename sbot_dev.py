@@ -267,13 +267,19 @@ class SbotGitCommand(sublime_plugin.TextCommand):
                 self.proc_ret(cp)
 
     def proc_ret(self, cp, is_diff=False):
-        ''' Common process output handling  cp: the CompletedProcess '''
+        ''' Common process output handling  cp: the CompletedProcess, Not git writes some non-error stuff to stderr. '''
+        text = []
         if cp.returncode != 0:
-            new_view = sc.create_new_view(self.view.window(), f'Error:{cp.returncode}\n{cp.stderr}')
-        else:
-            new_view = sc.create_new_view(self.view.window(), cp.stdout)
-            if is_diff:
-                new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
+            text.append(f'>>>> returncode:{cp.returncode}')
+        if len(cp.stdout) > 0:
+            text.append(f'>>>> stdout')
+            text.append(f'{cp.stdout}')
+        if len(cp.stderr) > 0:
+            text.append(f'>>>> stderr')
+            text.append(f'{cp.stderr}')
+        new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
+        if is_diff:
+            new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
 
 
 #-----------------------------------------------------------------------------------

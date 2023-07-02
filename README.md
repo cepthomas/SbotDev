@@ -1,6 +1,8 @@
-# Sublime Text Plugin Dev Playground
+# Sublime Text Plugin Incubator and Playground
 
 Just a big messy area. These are not the codes you are looking for.
+
+![owk](owk.jpg)
 
 Built for ST4 on Windows and Linux.
 
@@ -11,25 +13,27 @@ Built for ST4 on Windows and Linux.
     - `persisted` is the json compatible file format.
     - `visual` is the way ST API handles elements.
     - `internal` is the plugin format.
-- Commands can't end with `<underscore numeral>` e.g. `my_cmd_1` should be `stpt_cmd1`.
+- Commands can't end with `<underscore numeral>` e.g. `my_cmd_1` should be `my_cmd1`.
 - If you pass a dict as value in View.settings().set(name, value), it seems that the dict key must be a string.
 
 
 ## Event Handling
 There are some idiosyncrasies with ST event generation.
 
-- https://stackoverflow.com/questions/43125002/on-load-method-doesnt-work-as-expected
-- https://github.com/sublimehq/sublime_text/issues/5
+- [](https://stackoverflow.com/questions/43125002/on-load-method-doesnt-work-as-expected)
+- [](https://github.com/sublimehq/sublime_text/issues/5)
 
 ### ViewEventListener
 Is instantiated once per view and:
 
-- `on_load()` doesn't seem to work. Use EventListener instead.
+- `on_load()` doesn't seem to work.
 - `on_load_project()` doesn't work on first start.
 - `on_activated()` is normally called when the view gets focus but not when initially opened from single click.
 - `on_close()` is normally called when a view is closed but it does not appear to be consistent. Perhaps if ST is closed
   without closing the views first?
 - `on_deactivated()` is used in place of `on_close()` to save the persistence file every time the view loses focus. Good enough.
+
+So use EventListener instead. [](https://stackoverflow.com/a/50226141).
 
 Why does it matter? Highlighting and signets persist their state per file and the application needs to hook the open/close
 events in order to do so. Because the two obvious events don't work as expected (by me at least), some

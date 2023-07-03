@@ -20,8 +20,8 @@ Built for ST4 on Windows and Linux.
 ## Event Handling
 There are some idiosyncrasies with ST event generation.
 
-- [](https://stackoverflow.com/questions/43125002/on-load-method-doesnt-work-as-expected)
-- [](https://github.com/sublimehq/sublime_text/issues/5)
+- https://stackoverflow.com/questions/43125002/on-load-method-doesnt-work-as-expected
+- https://github.com/sublimehq/sublime_text/issues/5
 
 ### ViewEventListener
 Is instantiated once per view and:
@@ -33,7 +33,7 @@ Is instantiated once per view and:
   without closing the views first?
 - `on_deactivated()` is used in place of `on_close()` to save the persistence file every time the view loses focus. Good enough.
 
-So use EventListener instead. [](https://stackoverflow.com/a/50226141).
+So use EventListener instead. https://stackoverflow.com/a/50226141.
 
 Why does it matter? Highlighting and signets persist their state per file and the application needs to hook the open/close
 events in order to do so. Because the two obvious events don't work as expected (by me at least), some
@@ -57,7 +57,7 @@ Is instantiated once per window (ST instance):
 
 
 Actual Sequence:
-'''
+```
 - Open default/empty file.
 EventListener.on_init ([View(12)],)
 - Open real file with sigs.
@@ -74,7 +74,7 @@ EventListener.on_pre_close_project (Window(2),)
 EventListener.on_pre_close_project (Window(2),)
 EventListener.on_pre_close (View(16),) Window is not valid!
 EventListener.on_close (View(16),)
-'''
+```
 
 ### Global
 ST says `plugin_loaded()` fires only once for all instances of sublime. However you can add this to 
@@ -84,4 +84,3 @@ each module and they all get called. Safest is to only use it once.
 ST doesn't load modules like plain python and can cause some surprises. The problem is that sbot_common
 gets reloaded but it appears to be a different module from the one linked to by the other modules.
 This makes handling globals interesting. Modules that are common cannot store meaningful state.
-

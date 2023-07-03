@@ -63,6 +63,7 @@ class SbotAllEvent(sublime_plugin.EventListener):
     def on_query_completions(self, view, prefix, locations): # ?? suppress too many offerings.
 
         '''
+        These are cryptic, hard to configure correctly. See also associated settings.
         on_query_completions(view: View, prefix: str, locations: List[Point]) 
                    -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
         Called whenever completions are to be presented to the user.
@@ -108,19 +109,11 @@ class SbotAllEvent(sublime_plugin.EventListener):
     def on_hover_done(self, sel):
         print(f'>>> on_hover_done:{sel}')
 
-    # Open logfile at end of file - option.
+    # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
     def on_load(self, view):
         if 'sbot.log' in view.file_name():
-            view.run_command("move_to", {"to": "eof"})
-# move_to
-# to (Enum): Values: bol, eol, bof, eof, brackets.
-# move
-# by (Enum): Values: characters, words, word_ends, subwords, subword_ends, lines, pages, stops.
-# forward (Bool): Whether to advance or reverse in the buffer.
-# word_begin (Bool)
-# empty_line (Bool)
-# punct_begin (Bool)
-# separators (Bool)
+            # view.run_command("move_to", {"to": "eof"})
+            view.show_at_center(view.size())
 
 
 #-----------------------------------------------------------------------------------

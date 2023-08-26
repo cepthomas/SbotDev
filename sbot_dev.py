@@ -61,7 +61,6 @@ class SbotAllEvent(sublime_plugin.EventListener):
             pass
 
     def on_query_completions(self, view, prefix, locations): # ?? suppress too many offerings.
-
         '''
         These are cryptic, hard to configure correctly. See also associated settings.
         on_query_completions(view: View, prefix: str, locations: List[Point]) 
@@ -114,6 +113,53 @@ class SbotAllEvent(sublime_plugin.EventListener):
         if 'sbot.log' in view.file_name():
             # view.run_command("move_to", {"to": "eof"})
             view.show_at_center(view.size())
+
+
+#-----------------------------------------------------------------------------------
+class SbotGitCommand(sublime_plugin.TextCommand):
+
+    def is_visible(self):
+        return True
+        # return self.view.settings().get('syntax') == 'Packages/Markdown/Markdown.sublime-syntax'
+
+    def run(self, edit, git_cmd):
+        ''' Simple git tools: diff, commit, push? https://github.com/kemayo/sublime-text-git. '''
+
+        fn = self.view.file_name()
+
+        if fn is not None:
+            dir, fn = os.path.split(fn)
+            if git_cmd == 'diff':
+                cmd = f'git diff "{fn}"'
+                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+                self.proc_ret(cp, is_diff=True)
+
+            elif git_cmd == 'commit':
+                msg = 'WIP.'
+                # git commit --dry-run -a -m <msg> [<pathspec>]
+                cmd = f'git commit -m "{msg}" {fn}'
+                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+                self.proc_ret(cp)
+
+            elif git_cmd == 'push':
+                cmd = f'git push'
+                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+                self.proc_ret(cp)
+
+    def proc_ret(self, cp, is_diff=False):
+        ''' Common process output handling  cp: the CompletedProcess, Not git writes some non-error stuff to stderr. '''
+        text = []
+        if cp.returncode != 0:
+            text.append(f'>>>> returncode:{cp.returncode}')
+        if len(cp.stdout) > 0:
+            text.append(f'>>>> stdout')
+            text.append(f'{cp.stdout}')
+        if len(cp.stderr) > 0:
+            text.append(f'>>>> stderr')
+            text.append(f'{cp.stderr}')
+        new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
+        if is_diff:
+            new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
 
 
 #-----------------------------------------------------------------------------------
@@ -229,55 +275,8 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
-class SbotGitCommand(sublime_plugin.TextCommand):
-
-    def is_visible(self):
-        return True
-        # return self.view.settings().get('syntax') == 'Packages/Markdown/Markdown.sublime-syntax'
-
-    def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit, push? https://github.com/kemayo/sublime-text-git. '''
-
-        fn = self.view.file_name()
-
-        if fn is not None:
-            dir, fn = os.path.split(fn)
-            if git_cmd == 'diff':
-                cmd = f'git diff "{fn}"'
-                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
-                self.proc_ret(cp, is_diff=True)
-
-            elif git_cmd == 'commit':
-                msg = 'WIP.'
-                # git commit --dry-run -a -m <msg> [<pathspec>]
-                cmd = f'git commit -m "{msg}" {fn}'
-                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
-                self.proc_ret(cp)
-
-            elif git_cmd == 'push':
-                cmd = f'git push'
-                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
-                self.proc_ret(cp)
-
-    def proc_ret(self, cp, is_diff=False):
-        ''' Common process output handling  cp: the CompletedProcess, Not git writes some non-error stuff to stderr. '''
-        text = []
-        if cp.returncode != 0:
-            text.append(f'>>>> returncode:{cp.returncode}')
-        if len(cp.stdout) > 0:
-            text.append(f'>>>> stdout')
-            text.append(f'{cp.stdout}')
-        if len(cp.stderr) > 0:
-            text.append(f'>>>> stderr')
-            text.append(f'{cp.stderr}')
-        new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
-        if is_diff:
-            new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
-
-
-#-----------------------------------------------------------------------------------
 class NotrPublishCommand(sublime_plugin.WindowCommand):
-    ''' TODO Publish notes somewhere for access from phone. Links? Nothing confidential! '''
+    ''' Publish notes somewhere for access from phone. Links? Nothing confidential! '''
 
     #### Render for android target.
     # self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  

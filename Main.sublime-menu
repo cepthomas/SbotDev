@@ -12,8 +12,9 @@
             // { "caption": "Panel", "command": "sbot_test_panel" },
             // { "caption": "Panel Input", "command": "sbot_test_panel_input" },
             // { "caption": "Phantoms and More", "command": "sbot_test_phantoms" },
-            { "caption": "Cheatsheet", "command": "sbot_exec", "args": {"paths": ["$OneDrive\\OneDrive Documents\\sublime\\ST-commands-CT.ntr"]} },
-            { "caption": "Sbot Log", "command": "sbot_exec", "args": {"paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
-        ]
+            { "caption": "ST Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive\\OneDrive Documents\\tech\\sublime\\ST-commands-CT.ntr"]} },
+            { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": {"paths": ["$OneDrive\\OneDrive Documents\\tech\\lua\\lua_cheat_sheet.lua"]} },
+            { "caption": "Sbot Log", "command": "sbot_open", "args": {"paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
+        ],
     },
 ]

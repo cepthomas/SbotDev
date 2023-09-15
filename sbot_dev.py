@@ -8,6 +8,15 @@ import sublime_plugin
 import sublime_api
 from . import sbot_common_src as sc
 
+# Future?
+# - Make into package when it's cooked. https://packagecontrol.io/docs/submitting_a_package. Do something about demo/dump/etc.
+# - Unicode menu/picker to insert and view at caret.
+# - Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
+# - Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
+# - Show image file as phantom or hover, maybe thumbnail.
+# - Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
+# - Make a syntax_test_notr.ntr.
+
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():

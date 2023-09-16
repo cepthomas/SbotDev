@@ -119,7 +119,7 @@ class SbotAllEvent(sublime_plugin.EventListener):
 
     # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
     def on_load(self, view):
-        if 'sbot.log' in view.file_name():
+        if view.file_name() is not None and 'sbot.log' in view.file_name():
             # view.run_command("move_to", {"to": "eof"})
             view.show_at_center(view.size())
 

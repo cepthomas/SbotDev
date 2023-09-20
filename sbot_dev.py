@@ -8,8 +8,15 @@ import sublime_plugin
 import sublime_api
 from . import sbot_common_src as sc
 
-# Future?
-# - Make into package when it's cooked. https://packagecontrol.io/docs/submitting_a_package. Do something about demo/dump/etc.
+
+# C:\Users\cepth\OneDrive\OneDrive Documents\tech\sublime\st-notes.ntr
+
+# TODO1 python debugger like debugger.lua.
+# TODO1 do something with sublime.py and sublime_plugin.py in SbotTester?
+# TODO1 TOC at top of ntr files.
+# TODO2 Make notr into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
+
+# Future fancy stuff?
 # - Unicode menu/picker to insert and view at caret.
 # - Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
 # - Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
@@ -17,11 +24,15 @@ from . import sbot_common_src as sc
 # - Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
 # - Make a syntax_test_notr.ntr.
 
+# Find in Files.sublime-menu: Menu shown when clicking the ... button in Find in Files panel
+# Widget Context.sublime-menu: Context menu for text inputs in various panels.
+# Technically this file name can be changed via the "context_menu" setting inside of Widget.sublime-settings.
+
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
-    sc.slog(sc.CAT_DBG, f'>>>>>>>>>> Starting up with python {platform.python_version()} on {platform.platform()}')
+    sc.slog(sc.CAT_DBG, f'Starting up with python {platform.python_version()} on {platform.platform()}')
     # dump_stack()
 
 #-----------------------------------------------------------------------------------

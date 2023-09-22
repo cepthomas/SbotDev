@@ -9,12 +9,9 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# C:\Users\cepth\OneDrive\OneDrive Documents\tech\sublime\st-notes.ntr
-
-# TODO1 python debugger like debugger.lua.
-# TODO1 do something with sublime.py and sublime_plugin.py in SbotTester?
-# TODO1 TOC at top of ntr files.
-# TODO2 Make notr into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
+# TODO python debugger like debugger.lua.
+# TODO do something with sublime.py and sublime_plugin.py in SbotTester?
+# TODO Make notr into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
 
 # Future fancy stuff?
 # - Unicode menu/picker to insert and view at caret.

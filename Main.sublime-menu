@@ -4,9 +4,9 @@
         "caption": "Dev",
         "children":
         [
-            { "caption": "ST Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive\\OneDrive Documents\\tech\\ST-commands.ntr"]} },
-            { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": {"paths": ["$OneDrive\\OneDrive Documents\\tech\\lua-cheat-sheet.lua"]} },
-            { "caption": "Sbot Log", "command": "sbot_open", "args": {"paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
+            { "caption": "ST Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDrive Documents/tech/ST-commands.ntr"]} },
+            { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDrive Documents/tech/lua-cheat-sheet.lua"]} },
+            { "caption": "Sbot Log", "command": "sbot_open", "args": {"paths": ["${packages}/User/.SbotStore/sbot.log"]} },
             { "caption": "-" },
             { "caption": "Git Diff", "command": "sbot_git", "args": { "git_cmd": "diff" } },
             { "caption": "Git Commit", "command": "sbot_git", "args": { "git_cmd": "commit" } },
@@ -21,5 +21,34 @@
             // { "caption": "Panel Input", "command": "sbot_test_panel_input" },
             // { "caption": "Phantoms and More", "command": "sbot_test_phantoms" },
         ],
+    },
+
+    // Add to existing Preferences menu for package-settings.
+    {
+        "id": "preferences",
+        "children":
+        [
+            {
+                "id": "package-settings",
+                "children":
+                [
+                    {
+                        "caption": "SbotDev",
+                        "children":
+                        [
+                            {
+                                "caption": "Settings",
+                                "command": "edit_settings",
+                                "args":
+                                {
+                                    "base_file": "${packages}/SbotDev/SbotDev.sublime-settings",
+                                    "default": "{\n$0\n}\n"
+                                }
+                            },
+                        ]
+                    }
+                ]
+            },
+        ]
     },
 ]

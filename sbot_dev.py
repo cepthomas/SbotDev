@@ -8,10 +8,13 @@ import sublime_plugin
 import sublime_api
 from . import sbot_common_src as sc
 
+# See \sublime\md\Markdown.sublime-syntax  link-inline
 
 # TODO python debugger like debugger.lua.
 # TODO do something with sublime.py and sublime_plugin.py in SbotTester?
 # TODO Make notr into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
+
+# TODO menus? "platform": One of the strings: "OSX", "!OSX", "Windows", "!Windows", "Linux" or "!Linux". Controls what platforms the entry is shown on.
 
 # Future fancy stuff?
 # - Unicode menu/picker to insert and view at caret.

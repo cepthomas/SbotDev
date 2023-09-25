@@ -8,24 +8,34 @@ import sublime_plugin
 import sublime_api
 from . import sbot_common_src as sc
 
-# TODO1 Notr: put links in quick panel?
-# TODO1 Notr: Autogen links to files in dirs of interest? html, doc, pdf, ...
-# TODO1 Notr: highlight links in lists like [nyt](https://nytimes.com). See \sublime\md\Markdown.sublime-syntax  link-inline
-# TODO1 Notr: Block comment/uncomment useful - Use quote '>'
-# TODO2 Notr: PublishCommand() Publish notes somewhere for access from phone - raw or rendered. Android OneDrive can't process .ntr files.
-# TODO2 Notr: Insert TOC at top of ntr files. Includes non-indexed files - dynamically parse on demand
-# TODO2 Notr: Make into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
-# TODOF Notr: Nav and folding by section/hierarchy. Might be tricky: https://github.com/sublimehq/sublime_text/issues/5423.
-# TODOF Notr: Unicode menu/picker to insert and view at caret.
-# TODOF Notr: Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
-# TODOF Notr: Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
-# TODOF Notr: Show image file as phantom or hover, maybe thumbnail.
-# TODOF Notr: Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
-# TODOF Notr: Make a syntax_test_notr.ntr.
 
-# TODO1 do something with sublime.py and sublime_plugin.py in SbotTester?
-# TODO2 Close all temp windows (e.g. after Run). Or reuse views from create_new_view()?
-# TODOF python debugger like debugger.lua.
+# TODO Notr: Put links in quick panel?
+# { "keys": ["f5"], "command": "sbot_run" },
+# { "keys": ["f6"], "command": "sbot_terminal" },
+# { "keys": ["f7"], "command": "notr_goto_section", "args" : {"filter_by_tag" : false} },
+# { "keys": ["f8"], "command": "notr_goto_ref" },  <<<<<<<
+
+# TODO Notr: Autogen refs to files in dirs of interest? html, doc, pdf, ...
+
+# TODO Notr: highlight links in lists like [nyt](https://nytimes.com). See \sublime\md\Markdown.sublime-syntax  link-inline
+
+# TODO Notr: Block comment/uncomment - Use quote '>'
+
+# TODO Notr: PublishCommand() Publish notes somewhere for access from phone - raw or rendered. Android OneDrive can't process .ntr files.
+
+# TODO Notr: Make into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
+
+# TODO relocate sublime.py and sublime_plugin.py in SbotTester?
+
+# FUTURE Notr: Nav and folding by section/hierarchy. Might be tricky: https://github.com/sublimehq/sublime_text/issues/5423.
+# FUTURE Notr: Unicode menu/picker to insert and view at caret.
+# FUTURE Notr: Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
+# FUTURE Notr: Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
+# FUTURE Notr: Show image file as phantom or hover, maybe thumbnail.
+# FUTURE Notr: Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
+# FUTURE Notr: Make a syntax_test_notr.ntr.
+# FUTURE Close all temp windows (e.g. after Run). Or reuse views from create_new_view()?
+# FUTURE python debugger like debugger.lua.
 
 
 

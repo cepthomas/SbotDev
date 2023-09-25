@@ -8,25 +8,31 @@ import sublime_plugin
 import sublime_api
 from . import sbot_common_src as sc
 
-# See \sublime\md\Markdown.sublime-syntax  link-inline
+# TODO put Notr links in quick panel?
+
+# TODO https://chromium.googlesource.com/chromium/src/+/69.0.3482.1/docs/sublime_ide.md#using-sublime-text-as-your-ide
+
+# TODO Notr: PublishCommand() Publish notes somewhere for access from phone - raw or rendered. Android OneDrive can't process .ntr files.
+# TODO Notr: Autogen links to files in dirs of interest? html, doc, pdf, ...
+# TODO Notr: Insert TOC at top of ntr files. Includes non-indexed files - dynamically parse on demand
+# TODO Notr: highlight links in lists like [nyt](https://nytimes.com). See \sublime\md\Markdown.sublime-syntax  link-inline
+# TODO Notr: Nav and folding by section/hierarchy. Might be tricky: https://github.com/sublimehq/sublime_text/issues/5423.
+# TODO Notr: Block comment/uncomment useful? What would that mean - "hide" text? shade? Use quote '>'
+
+
 
 # TODO python debugger like debugger.lua.
 # TODO do something with sublime.py and sublime_plugin.py in SbotTester?
-# TODO Make notr into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
+# TODO Notr: Make into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
 
-# TODO menus? "platform": One of the strings: "OSX", "!OSX", "Windows", "!Windows", "Linux" or "!Linux". Controls what platforms the entry is shown on.
+# TODO-paths menus? "platform": One of the strings: "OSX", "!OSX", "Windows", "!Windows", "Linux" or "!Linux". Controls what platforms the entry is shown on.
 
-# Future fancy stuff?
-# - Unicode menu/picker to insert and view at caret.
-# - Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
-# - Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
-# - Show image file as phantom or hover, maybe thumbnail.
-# - Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
-# - Make a syntax_test_notr.ntr.
-
-# Find in Files.sublime-menu: Menu shown when clicking the ... button in Find in Files panel
-# Widget Context.sublime-menu: Context menu for text inputs in various panels.
-# Technically this file name can be changed via the "context_menu" setting inside of Widget.sublime-settings.
+# TODO-Future: Unicode menu/picker to insert and view at caret.
+# TODO-Future: Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
+# TODO-Future: Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
+# TODO-Future: Show image file as phantom or hover, maybe thumbnail.
+# TODO-Future: Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
+# TODO-Future: Make a syntax_test_notr.ntr.
 
 
 #-----------------------------------------------------------------------------------
@@ -37,7 +43,8 @@ def plugin_loaded():
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    sc.slog(sc.CAT_DBG, 'sbot-dev plugin_unloaded')
+    # sc.slog(sc.CAT_DBG, 'sbot_dev plugin_unloaded()')
+    pass
 
 #-----------------------------------------------------------------------------------
 def dump_stack(cat):
@@ -292,23 +299,6 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         dump_attrs(frame.f_code)
         # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
         #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
-
-
-#-----------------------------------------------------------------------------------
-class NotrPublishCommand(sublime_plugin.WindowCommand):
-    ''' Publish notes somewhere for access from phone. Links? Nothing confidential! '''
-
-    #### Render for android target.
-    # self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
-
-    def run(self):
-        # Render notr files.
-        # Render for android target.
-        # self.window.active_view().run_command('sbot_render_to_html', {'font_face':'monospace', 'font_size':'1.2em' } )  
-        pass
-
-    def is_visible(self):
-        return True
 
 
 #-----------------------------------------------------------------------------------

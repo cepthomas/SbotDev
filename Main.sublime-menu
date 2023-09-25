@@ -4,9 +4,10 @@
         "caption": "Dev",
         "children":
         [
-            { "caption": "ST Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDrive Documents/tech/ST-commands.ntr"]} },
+            { "caption": "☞ Sublime Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDrive Documents/tech/sublime-commands.ntr"]} },
             { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDrive Documents/tech/lua-cheat-sheet.lua"]} },
-            { "caption": "Sbot Log", "command": "sbot_open", "args": {"paths": ["${packages}/User/.SbotStore/sbot.log"]} },
+            // This command needs an env var ST_PKGS pointing to your sublime packages dir.
+            { "caption": "Sbot Log", "command": "sbot_open", "args": {"paths": ["$ST_PKGS/User/.SbotStore/sbot.log"]} },
             { "caption": "-" },
             { "caption": "Git Diff", "command": "sbot_git", "args": { "git_cmd": "diff" } },
             { "caption": "Git Commit", "command": "sbot_git", "args": { "git_cmd": "commit" } },
@@ -16,10 +17,11 @@
             { "caption": "Reload Notr", "command": "notr_reload" },
             { "caption": "-" },
             { "caption": "Debug", "command": "sbot_debug" },
-            // { "caption": "Cmd", "command": "sbot_cmd_line" },
-            // { "caption": "Panel", "command": "sbot_test_panel" },
-            // { "caption": "Panel Input", "command": "sbot_test_panel_input" },
-            // { "caption": "Phantoms and More", "command": "sbot_test_phantoms" },
+            { "caption": "-" },
+            { "caption": "Cmd", "command": "sbot_cmd_line" },
+            { "caption": "Panel", "command": "sbot_test_panel" },
+            { "caption": "Panel Input", "command": "sbot_test_panel_input" },
+            { "caption": "Phantoms and More", "command": "sbot_test_phantoms" },
         ],
     },
 

@@ -8,31 +8,25 @@ import sublime_plugin
 import sublime_api
 from . import sbot_common_src as sc
 
-# TODO put Notr links in quick panel?
+# TODO1 Notr: put links in quick panel?
+# TODO1 Notr: Autogen links to files in dirs of interest? html, doc, pdf, ...
+# TODO1 Notr: highlight links in lists like [nyt](https://nytimes.com). See \sublime\md\Markdown.sublime-syntax  link-inline
+# TODO1 Notr: Block comment/uncomment useful - Use quote '>'
+# TODO2 Notr: PublishCommand() Publish notes somewhere for access from phone - raw or rendered. Android OneDrive can't process .ntr files.
+# TODO2 Notr: Insert TOC at top of ntr files. Includes non-indexed files - dynamically parse on demand
+# TODO2 Notr: Make into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
+# TODOF Notr: Nav and folding by section/hierarchy. Might be tricky: https://github.com/sublimehq/sublime_text/issues/5423.
+# TODOF Notr: Unicode menu/picker to insert and view at caret.
+# TODOF Notr: Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
+# TODOF Notr: Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
+# TODOF Notr: Show image file as phantom or hover, maybe thumbnail.
+# TODOF Notr: Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
+# TODOF Notr: Make a syntax_test_notr.ntr.
 
-# TODO https://chromium.googlesource.com/chromium/src/+/69.0.3482.1/docs/sublime_ide.md#using-sublime-text-as-your-ide
+# TODO1 do something with sublime.py and sublime_plugin.py in SbotTester?
+# TODO2 Close all temp windows (e.g. after Run). Or reuse views from create_new_view()?
+# TODOF python debugger like debugger.lua.
 
-# TODO Notr: PublishCommand() Publish notes somewhere for access from phone - raw or rendered. Android OneDrive can't process .ntr files.
-# TODO Notr: Autogen links to files in dirs of interest? html, doc, pdf, ...
-# TODO Notr: Insert TOC at top of ntr files. Includes non-indexed files - dynamically parse on demand
-# TODO Notr: highlight links in lists like [nyt](https://nytimes.com). See \sublime\md\Markdown.sublime-syntax  link-inline
-# TODO Notr: Nav and folding by section/hierarchy. Might be tricky: https://github.com/sublimehq/sublime_text/issues/5423.
-# TODO Notr: Block comment/uncomment useful? What would that mean - "hide" text? shade? Use quote '>'
-
-
-
-# TODO python debugger like debugger.lua.
-# TODO do something with sublime.py and sublime_plugin.py in SbotTester?
-# TODO Notr: Make into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
-
-# TODO-paths menus? "platform": One of the strings: "OSX", "!OSX", "Windows", "!Windows", "Linux" or "!Linux". Controls what platforms the entry is shown on.
-
-# TODO-Future: Unicode menu/picker to insert and view at caret.
-# TODO-Future: Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
-# TODO-Future: Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
-# TODO-Future: Show image file as phantom or hover, maybe thumbnail.
-# TODO-Future: Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
-# TODO-Future: Make a syntax_test_notr.ntr.
 
 
 #-----------------------------------------------------------------------------------

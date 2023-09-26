@@ -3,109 +3,16 @@ import os
 import subprocess
 import platform
 import inspect
+import collections
 import sublime
 import sublime_plugin
 import sublime_api
 from . import sbot_common_src as sc
 
 
-
-# One section: srcfile=ntr file path, line=ntr file line, froot=ntr file name root, level=1-N, name=section title, tags[]
-# Section = collections.namedtuple('Section', 'srcfile, line, froot, level, name, tags')
-# One link: srcfile=ntr file path, line=ntr file line, name=unique desc text, target=clickable uri or file
-# Link = collections.namedtuple('Link', 'srcfile, line, name, target')
-# One reference: srcfile=ntr file path, line=ntr file line, target=section or link
-# Ref = collections.namedtuple('Ref', 'srcfile, line, target')
-# All Sections found in all ntr files - in order to support hierarchy.
-# _sections = []
-# All Links found in all ntr files.
-# _links = []
-# All Refs found in all ntr files.
-# _refs = []
-# All valid ref targets in _sections and _links.
-# _valid_ref_targets = {}
-# All tags found in all ntr files. Value is count.
-# _tags = {}
-
-
-# Target = collections.namedtuple('Target', 'srcfile, line, froot, level, name, tags')
-# type: section, uri/file
-
-# One section: srcfile=ntr file path, line=ntr file line, froot=ntr file name root, level=1-N, name=section title, tags[]
-
-# One link: srcfile=ntr file path, line=ntr file line, name=unique desc text, target=clickable uri or file
-
-# One reference: srcfile=ntr file path, line=ntr file line, target=section or link
-
-# Need:
-# List of targets for goto or insert.
-
-
-# Dump:
-# ===== links =====
-# Link(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/notes/notr-index.ntr', line=9, name='yer news', target='https://nytimes.com')
-# Link(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/notes/notr-index.ntr', line=10, name='some felix', target='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/notes/felix9.jpg')
-# Link(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/tech\\sublime-notes.ntr', line=17, name='ST executable dir', target='C:\\Program Files\\Sublime Text')
-# Link(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/tech\\sublime-notes.ntr', line=43, name='data dir', target='C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text')
-# Link(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/tech\\win-linux-compat.ntr', line=166, name='win11', target='https://www.pcmag.com/news/the-10-worst-things-about-windows-11 bracket')
-# 
-# ===== refs =====
-# Ref(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/notes/notr-index.ntr', line=13, target='some felix')
-# Ref(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/notes\\todo.ntr', line=9, target='some felix')
-# Ref(srcfile='C:\\Users\\cepth\\OneDrive/OneDriveDocuments/tech\\sublime-commands.ntr', line=3, target='sublime-commands#Learn')
-# 
-# ===== valid_ref_targets =====
-# notr-index#Index Common Links
-# activities#Stuff
-# ....
-# yer news
-# some felix
-# ST executable dir
-# data dir
-# win11
-# 
-# ===== tags =====
-# tag2
-# tag9
-# 
-
-
-# TODO Notr: Put links in quick panel?
-# { "keys": ["f8"], "command": "notr_goto_ref" },  <<<<<<< only if scope is _ref
-# { "caption": "Insert Link", "command": "notr_insert_link" },
-# { "caption": "Insert Ref", "command": "notr_insert_ref" }, presents _valid_ref_targets
-
-# ok:
-# { "caption": "Goto Tag Section", "command": "notr_goto_section", "args" : {"filter_by_tag" : true} },
-# { "keys": ["f7"], "command": "notr_goto_section", "args" : {"filter_by_tag" : false} }, <<<< merge with refs?
-# { "keys": ["f5"], "command": "sbot_run" },
-# { "keys": ["f6"], "command": "sbot_terminal" },  could reuse this...
-
-# TODO Notr: do something with section.level, _tags.
-
-
-
-# TODO Notr: highlight links in lists like [nyt](https://nytimes.com). See \sublime\md\Markdown.sublime-syntax  link-inline
-
-# TODO Notr: Block comment/uncomment - Use quote '>'
-
-# TODO Notr: PublishCommand() Publish notes somewhere for access from phone - raw or rendered. Android OneDrive can't process .ntr files.
-
-# TODO Notr: Make into package when it's cooked. Maybe others. https://packagecontrol.io/docs/submitting_a_package.
-
 # TODO relocate sublime.py and sublime_plugin.py in SbotTester?
-
-# FUTURE Notr: Nav and folding by section/hierarchy. Might be tricky: https://github.com/sublimehq/sublime_text/issues/5423.
-# FUTURE Notr: Unicode menu/picker to insert and view at caret.
-# FUTURE Notr: Toggle syntax coloring (distraction free). Maybe just set to Plain Text.
-# FUTURE Notr: Use icons, style, annotations, phantoms for something? See mdpopups for generating tooltip popups.
-# FUTURE Notr: Show image file as phantom or hover, maybe thumbnail.
-# FUTURE Notr: Auto/manual Indent/dedent lists with bullets. Probably not possible as ST controls this.
-# FUTURE Notr: Make a syntax_test_notr.ntr.
 # FUTURE Close all temp windows (e.g. after Run). Or reuse views from create_new_view()?
 # FUTURE python debugger like debugger.lua.
-
-
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():

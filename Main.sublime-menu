@@ -4,8 +4,8 @@
         "caption": "Dev",
         "children":
         [
-            { "caption": "☞ Sublime Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDrive Documents/tech/sublime-commands.ntr"]} },
-            { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDrive Documents/tech/lua-cheat-sheet.lua"]} },
+            { "caption": "☞ ☞ ☞ Sublime Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDriveDocuments/tech/sublime-commands.ntr"]} },
+            { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": {"paths": ["$OneDrive/OneDriveDocuments/tech/lua-cheat-sheet.lua"]} },
             // This command needs an env var ST_PKGS pointing to your sublime packages dir.
             { "caption": "Sbot Log", "command": "sbot_open", "args": {"paths": ["$ST_PKGS/User/.SbotStore/sbot.log"]} },
             { "caption": "-" },

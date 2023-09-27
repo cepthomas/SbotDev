@@ -10,9 +10,9 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# TODO relocate sublime.py and sublime_plugin.py in SbotTester?
-# FUTURE Close all temp windows (e.g. after Run). Or reuse views from create_new_view()?
-# FUTURE python debugger like debugger.lua.
+# TODO? python debugger like debugger.lua.
+# TODO? Close all temp windows (e.g. after Run). Or reuse views from create_new_view()?
+
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():

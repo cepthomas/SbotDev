@@ -10,6 +10,8 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
+# TODO python version of lua debugger.
+
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():

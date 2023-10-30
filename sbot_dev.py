@@ -10,7 +10,7 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# TODO python version of lua debugger.
+# TODO2 python version of lua debugger.
 
 
 #-----------------------------------------------------------------------------------

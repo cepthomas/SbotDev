@@ -10,7 +10,24 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# TODO2 python version of lua debugger.
+# TODO0 Search within notr project files. Get user input. Use grep? https://forum.sublimetext.com/t/custom-plugin-similar-to-find-results/53946/2
+# https://stackoverflow.com/questions/20519040/search-in-all-files-in-a-project-in-sublime-text-3
+    # class CustomFindInFilesCommand(sublime_plugin.TextCommand):
+#      def run(self, edit):
+#          self.view.window().run_command("show_panel", { "panel": "find_in_files", "where": "<current file>", "whole_word": True, 
+#                     "preserve_case": True, "regex": True, "show_context": True, "use_buffer": False, "case_sensitive": True })
+#     command: show_panel {"panel": "find_in_files"}
+#     command: show_panel {"panel": "console", "toggle": true}
+#     command: show_panel {"panel": "output.find_results", "panel_name": "Results Panel", "toggle": true, "toggle_when_not_focused": true}
+#     command: show_panel {"panel": "console", "toggle": true}
+#     command: show_panel {"panel": "find", "reverse": false}
+#     command: show_panel {"panel": "console", "toggle": true}
+#     command: find_next
+#     command: move {"by": "lines", "forward": false}
+#     and:
+#     right click on a folder in the sidebar and “Find in Folder”:
+#     command: show_panel {"panel": "find_in_files", "where": "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Notr,<project filters>"}
+#     command: show_panel {"panel": "console", "toggle": true}
 
 
 #-----------------------------------------------------------------------------------

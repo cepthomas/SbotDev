@@ -10,26 +10,6 @@ import sublime_api
 from . import sbot_common_src as sc
 
 
-# TODO0 Search within notr project files. Get user input. Use grep? https://forum.sublimetext.com/t/custom-plugin-similar-to-find-results/53946/2
-# https://stackoverflow.com/questions/20519040/search-in-all-files-in-a-project-in-sublime-text-3
-    # class CustomFindInFilesCommand(sublime_plugin.TextCommand):
-#      def run(self, edit):
-#          self.view.window().run_command("show_panel", { "panel": "find_in_files", "where": "<current file>", "whole_word": True, 
-#                     "preserve_case": True, "regex": True, "show_context": True, "use_buffer": False, "case_sensitive": True })
-#     command: show_panel {"panel": "find_in_files"}
-#     command: show_panel {"panel": "console", "toggle": true}
-#     command: show_panel {"panel": "output.find_results", "panel_name": "Results Panel", "toggle": true, "toggle_when_not_focused": true}
-#     command: show_panel {"panel": "console", "toggle": true}
-#     command: show_panel {"panel": "find", "reverse": false}
-#     command: show_panel {"panel": "console", "toggle": true}
-#     command: find_next
-#     command: move {"by": "lines", "forward": false}
-#     and:
-#     right click on a folder in the sidebar and “Find in Folder”:
-#     command: show_panel {"panel": "find_in_files", "where": "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Notr,<project filters>"}
-#     command: show_panel {"panel": "console", "toggle": true}
-
-
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
@@ -87,41 +67,19 @@ class SbotAllEvent(sublime_plugin.EventListener):
         These are cryptic, hard to configure correctly. See also associated settings.
         on_query_completions(view: View, prefix: str, locations: List[Point]) 
                    -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
-        Called whenever completions are to be presented to the user.
-        prefix - The text already typed by the user.
-        locations - The list of points being completed. Since this method is called for all completions no matter the syntax,
-           self.view.match_selector(point, relevant_scope) should be called to determine if the point is relevant.
-        Returns - A list of completions in one of the valid formats or None if no completions are provided.
-
-
         https://forum.sublimetext.com/t/annoying-autocomplete-c/59082
-        I seem not able to reproduce this in safe mode.
-        https://www.sublimetext.com/docs/safe_mode.html 26
-        If you can’t either, it’s likely a plugin behavior.
-        subl --safe-mode
-        Additionally on Windows and Mac, holding a modifier key while starting the application will open it in safe mode:
-        Windows: Shift+Alt
-
         https://forum.sublimetext.com/t/how-to-stop-tab-auto-complete-on-4126/63222/2
-
-        INHIBIT_WORD_COMPLETIONS = 8  Prevent Sublime Text from showing completions based on the contents of the view.
-        INHIBIT_EXPLICIT_COMPLETIONS = 16  Prevent Sublime Text from showing completions based on .sublime-completions files.
-        DYNAMIC_COMPLETIONS = 32  If completions should be re-queried as the user types.
-        INHIBIT_REORDER = 128  Prevent Sublime Text from changing the completion order.
         '''
         return ([], 0)
         # return ([], sublime.INHIBIT_WORD_COMPLETIONS)
 
     def on_hover(self, view, point, hover_zone):
-        # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone.
-        # hover_zone:
-        # TEXT = 1 The mouse is hovered over the text.
-        # GUTTER = 2 The mouse is hovered over the gutter.
-        # MARGIN = 3 The mouse is hovered in the white space to the right of a line.        
+        # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone:
+        #    TEXT = 1 The mouse is hovered over the text.
+        #    GUTTER = 2 The mouse is hovered over the gutter.
+        #    MARGIN = 3 The mouse is hovered in the white space to the right of a line.        
         items = ['ietm1', 'item2', 'item3', 'item4']
         # view.show_popup_menu(items, self.on_hover_done)
-
-        # show_popup_menu(items: list[str], on_done: Callable[[int], None], flags=0)
         #   Show a popup menu at the caret, for selecting an item in a list.
         # show_popup(content: str, flags=PopupFlags.NONE, location: Point=-1, max_width: DIP=320,
         #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
@@ -139,10 +97,6 @@ class SbotAllEvent(sublime_plugin.EventListener):
 
 #-----------------------------------------------------------------------------------
 class SbotGitCommand(sublime_plugin.TextCommand):
-
-    def is_visible(self):
-        return True
-        # return self.view.settings().get('syntax') == 'Packages/Markdown/Markdown.sublime-syntax'
 
     def run(self, edit, git_cmd):
         ''' Simple git tools: diff, commit, push? https://github.com/kemayo/sublime-text-git. '''
@@ -169,7 +123,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
                 self.proc_ret(cp)
 
     def proc_ret(self, cp, is_diff=False):
-        ''' Common process output handling  cp: the CompletedProcess, Not git writes some non-error stuff to stderr. '''
+        ''' Common process output handling  cp: the CompletedProcess, Note git writes some non-error stuff to stderr. '''
         text = []
         if cp.returncode != 0:
             text.append(f'>>>> returncode:{cp.returncode}')
@@ -182,6 +136,10 @@ class SbotGitCommand(sublime_plugin.TextCommand):
         new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
         if is_diff:
             new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
+
+    def is_visible(self):
+        return True
+        # return self.view.settings().get('syntax') == 'Packages/Markdown/Markdown.sublime-syntax'
 
 
 #-----------------------------------------------------------------------------------
@@ -245,7 +203,8 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #(0, 0)
         ret = view.full_line(pt)
         sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #(0, 0)
-        # return
+        
+        return
 
         ### Outside legal range.
         view = sc.create_new_view(sublime.active_window(), 'ABCDEFGHIJ')
@@ -272,6 +231,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #(9990, 10000)||
         ret = view.full_line(pt)
         sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #(9990, 10000)||
+        
         return
 
         # Force a handled exception.
@@ -298,14 +258,6 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
 #-----------------------------------------------------------------------------------
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
-    # Panel iterate stuff.
-    # create_output_panel(name, <unlisted>) Returns the view associated with the named output panel, creating it if required.
-    #   The output panel can be shown by running the show_panel window command, with the panel argument set to the name with an "output." prefix.
-    #   The optional unlisted parameter is a boolean to control if the output panel should be listed in the panel switcher.
-    # find_output_panel(name) Returns the view associated with the named output panel, or None if the output panel does not exist.    
-    # destroy_output_panel(name)  Destroys the named output panel, hiding it if currently open.   
-    # active_panel()  Returns the name of the currently open panel, or None if no panel is open. Will return built-in panel names (e.g. "console", "find", etc) in addition to output panels. 
-    # panels() Returns a list of the names of all panels that have not been marked as unlisted. Includes certain built-in panels in addition to output panels.
 
     def run(self):
         # sc.slog(sc.CAT_DBG, 'abra')
@@ -335,55 +287,34 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
 #-----------------------------------------------------------------------------------
 class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
-    ''' blabla. '''
 
     def run(self):
-        # slog(sc.CAT_DBG, 'cadabra')
         # Bottom input area.
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
-        # show_input_panel(caption, initial_text, on_done, on_change, on_cancel)
-        # Shows the input panel, to collect a line of input from the user. on_done and on_change, if not None, should both
-        # be functions that expect a single string argument. on_cancel should be a function that expects no arguments. 
-        # The view used for the input widget is returned.
-
     def on_done(self, text):
-        # cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, check=True, capture_output=True, shell=True)
-        # sout = cp.stdout
-        # create_new_view(self.window, sout)
-        # slog(sc.CAT_DBG, f'Got:{text}')
-        pass
+        create_new_view(self.window, text)
+        slog(sc.CAT_DBG, f'Got:{text}')
 
 
 #-----------------------------------------------------------------------------------
-class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
+class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
     def __init__(self, view):
-        super(SbotTestPhantomsCommand, self).__init__(view)
+        super(SbotTestVisualsCommand, self).__init__(view)
         self.view = view
         self.phantom_set = sublime.PhantomSet(self.view, "my_key")
         self.count = 0
 
     def run(self, edit):
+        # Phantoms.
         image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg")
         img_html = '<img src="file://' + image + '" width="16" height="16">'
 
         # Old way works too:
         # self.view.erase_phantoms("test")
-        # self.view.erase_phantoms ("test")
         # for sel in self.view.sel():
         #     self.view.add_phantom ("test", sel, img_html, sublime.LAYOUT_BLOCK)
-
-
-        # view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
-        # pt = 10000
-        # reg = sublime.Region(pt, pt + 1)
-        # ret = view.insert(edit, pt, 'booga') #0
-        # sc.slog(sc.CAT_DBG, f'>>> {ret}')
-        # ret = view.replace(edit, reg, 'booga') #None
-        # sc.slog(sc.CAT_DBG, f'>>> {ret}')
-
-
 
         # Clean first. Note - phantoms need to be managed externally rather than instantiate each time cmd is loaded.
         phantoms = []
@@ -418,7 +349,7 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
 
         self.phantom_set.update(phantoms)
 
-        # Let's do some other visuals.
+        # Annotations.
         regions = []
         anns = []
         for i in range(3):
@@ -429,7 +360,6 @@ class SbotTestPhantomsCommand(sublime_plugin.TextCommand):
         self.view.add_regions(key='dev_region_name', regions=regions, scope='markup.user_hl6',
                          annotations=anns, annotation_color='red',
                          icon='circle', flags=sublime.RegionFlags.DRAW_STIPPLED_UNDERLINE)
-
 
     def nav(self, href):
         # on_navigate is an optional callback that should accept a single string parameter,

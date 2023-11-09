@@ -2,55 +2,25 @@ import sys
 import os
 import subprocess
 import platform
-import inspect
-import collections
 import sublime
 import sublime_plugin
-import sublime_api
 from . import sbot_common_src as sc
+from . import folding_all_hack
+
+
+# Trim?? C:\Users\cepth\OneDrive\OneDriveDocuments\tech\sublime\ST4\Default\Default.sublime-commands
 
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
     sc.slog(sc.CAT_DBG, f'Starting up with python {platform.python_version()} on {platform.platform()}')
-    # dump_stack()
+
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
     # sc.slog(sc.CAT_DBG, 'sbot_dev plugin_unloaded()')
     pass
-
-#-----------------------------------------------------------------------------------
-def dump_stack(cat):
-    ''' Diagnostics. '''
-    depth = 0
-    try:
-        while True:
-            frame = sys._getframe(depth)
-            fn = os.path.basename(frame.f_code.co_filename)
-            func = frame.f_code.co_name
-
-            # smsg = f'{cat}{depth} __name__:{frame.f_globals["__name__"]} FILE:{fn}  LINE:{frame.f_lineno}  FUNCTION:{frame.f_code.co_name}'
-            smsg = f'{cat}{depth} FU:{func} FILE:{fn} LINE:{frame.f_lineno}  '
-            print(smsg)
-            depth += 1
-    except:
-        # End of stack.
-        return
-
-#-----------------------------------------------------------------------------------
-def dump_attrs(obj):
-    ''' Diagnostics. '''
-    for attr in dir(obj):
-        print(f'{attr} = {getattr(obj, attr)}')
-
-#-----------------------------------------------------------------------------------
-def start_interactive():
-    winid = sublime.active_window().id()
-    view = sc.create_new_view(sublime.active_window(), '>>> howdy!')
-    # slog(sc.CAT_DBG, f'{self.view}  {winid}')
-    view.settings().set('interactive' , True)
 
 
 #-----------------------------------------------------------------------------------
@@ -58,11 +28,9 @@ class SbotAllEvent(sublime_plugin.EventListener):
     ''' General listener. '''
 
     def on_selection_modified(self, view):
-        if view.settings().get('interactive'):
-            # sc.slog(sc.CAT_DBG, '+++++++')
-            pass
+        pass
 
-    def on_query_completions(self, view, prefix, locations): # ?? suppress too many offerings.
+    def on_query_completions(self, view, prefix, locations):  # ?? suppress too many offerings.
         '''
         These are cryptic, hard to configure correctly. See also associated settings.
         on_query_completions(view: View, prefix: str, locations: List[Point]) 
@@ -118,7 +86,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
                 self.proc_ret(cp)
 
             elif git_cmd == 'push':
-                cmd = f'git push'
+                cmd = 'git push'
                 cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
                 self.proc_ret(cp)
 
@@ -128,10 +96,10 @@ class SbotGitCommand(sublime_plugin.TextCommand):
         if cp.returncode != 0:
             text.append(f'>>>> returncode:{cp.returncode}')
         if len(cp.stdout) > 0:
-            text.append(f'>>>> stdout')
+            text.append('>>>> stdout')
             text.append(f'{cp.stdout}')
         if len(cp.stderr) > 0:
-            text.append(f'>>>> stderr')
+            text.append('>>>> stderr')
             text.append(f'{cp.stderr}')
         new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
         if is_diff:
@@ -147,91 +115,10 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
 
-        ##### Probing ST api.
+        # do_api(edit)
 
-        # from inspect import getmembers, isfunction
-        # # from my_project import my_module
-        # functions_list = getmembers(sublime_api)#, isfunction)
-        # for f in functions_list:
-        #     print(f'{f[0]}:   ')
-        # return    
+        do_folding(self.view)
 
-
-        # # https://stackoverflow.com/questions/218616/how-to-get-method-parameter-names
-        # for a in dir(sublime_api):
-        #     print(f'{a}:')
-        # return
-
-        ### Normal usage.
-        view = sc.create_new_view(sublime.active_window(), '012 3456\n789\nUUUU YYYY')
-        pt = 3
-        reg = sublime.Region(5, 8)
-
-        ret = view.rowcol(12)
-        sc.slog(sc.CAT_DBG, f'>0> {ret}') #(1, 3)
-        ret = view.text_point(2, 4)
-        sc.slog(sc.CAT_DBG, f'>0> {ret}') #17
-        ret = view.find('78', 5)
-        sc.slog(sc.CAT_DBG, f'>0> {ret}') #(9, 11)
-        ret = view.substr(11)
-        sc.slog(sc.CAT_DBG, f'>0> |{len(ret)}|{ret[0]}|{ret}|') #|1|9|9|
-        ret = view.word(13)
-        sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|') #(13, 17)|UUUU|
-        ret = view.line(3)
-        sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|') #(0, 8)|012 3456|
-        ret = view.full_line(12)
-        sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|') #(9, 13)|789
-
-        ### Empty buffer.
-        view = sc.create_new_view(sublime.active_window(), '')
-        pt = 0
-        reg = sublime.Region(pt, pt)
-
-        ret = view.rowcol(pt)
-        sc.slog(sc.CAT_DBG, f'>1> {ret}') #(0, 0)
-        ret = view.text_point(pt, pt)
-        sc.slog(sc.CAT_DBG, f'>1> {ret}') #0
-        ret = view.split_by_newlines(reg)
-        sc.slog(sc.CAT_DBG, f'>1> {ret}') #[Region(0, 0)] ???
-        ret = view.find('pattern', pt)
-        sc.slog(sc.CAT_DBG, f'>1> {ret}') #(-1, -1)
-        ret = view.substr(pt)
-        sc.slog(sc.CAT_DBG, f'>1> |{len(ret)}|{ret[0]}|{ret}|') #|1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
-        ret = view.word(pt)
-        sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #nada - see previous
-        ret = view.line(pt)
-        sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #(0, 0)
-        ret = view.full_line(pt)
-        sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|') #(0, 0)
-        
-        return
-
-        ### Outside legal range.
-        view = sc.create_new_view(sublime.active_window(), 'ABCDEFGHIJ')
-        pt = 10000
-        reg = sublime.Region(pt, pt + 1)
-
-        ret = view.rowcol(pt)
-        sc.slog(sc.CAT_DBG, f'>2> {ret}') #(0, 10)
-        ret = view.text_point(pt, pt)
-        sc.slog(sc.CAT_DBG, f'>2> {ret}') #10
-        ret = view.insert(edit, pt, 'booga')
-        sc.slog(sc.CAT_DBG, f'>2> {ret}') #0
-        ret = view.replace(edit, reg, 'xyzzy')
-        sc.slog(sc.CAT_DBG, f'>2> {ret}') #None
-        ret = view.split_by_newlines(reg)
-        sc.slog(sc.CAT_DBG, f'>2> {ret}') #[Region(10, 10)]
-        ret = view.find('pattern', pt)
-        sc.slog(sc.CAT_DBG, f'>2> {ret}') #(-1, -1)
-        ret = view.substr(pt)
-        sc.slog(sc.CAT_DBG, f'>2> |{len(ret)}|{ret[0]}|{ret}|') #|1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
-        ret = view.word(pt)
-        sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #nada - see previous
-        ret = view.line(pt)
-        sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #(9990, 10000)||
-        ret = view.full_line(pt)
-        sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|') #(9990, 10000)||
-        
         return
 
         # Force a handled exception.
@@ -293,8 +180,8 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
     def on_done(self, text):
-        create_new_view(self.window, text)
-        slog(sc.CAT_DBG, f'Got:{text}')
+        sc.create_new_view(self.window, text)
+        sc.slog(sc.CAT_DBG, f'Got:{text}')
 
 
 #-----------------------------------------------------------------------------------
@@ -358,12 +245,11 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
             anns.append(f'Annotation=<b>{i}</b>')
 
         self.view.add_regions(key='dev_region_name', regions=regions, scope='markup.user_hl6',
-                         annotations=anns, annotation_color='red',
-                         icon='circle', flags=sublime.RegionFlags.DRAW_STIPPLED_UNDERLINE)
+                              annotations=anns, annotation_color='red',
+                              icon='circle', flags=sublime.RegionFlags.DRAW_STIPPLED_UNDERLINE)
 
     def nav(self, href):
-        # on_navigate is an optional callback that should accept a single string parameter,
-        # that is the href attribute of the link clicked.
+        # href attribute of the link clicked.
         pass
 
 
@@ -381,3 +267,147 @@ class SbotCmdLineCommand(sublime_plugin.WindowCommand):
         vnew = self.window.new_file()
         vnew.set_scratch(True)
         vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
+
+
+#-----------------------------------------------------------------------------------
+def do_folding(view):
+
+    ''' View
+    is_folded(region: Region) → bool
+    Returns: Whether the provided Region is folded.
+
+    folded_regions() → list[sublime.Region]
+    Returns: The list of folded regions.
+
+    fold(x: Region | list[sublime.Region]) → bool
+    Fold the provided Region(s).
+    Returns: False if the regions were already folded.
+
+    unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
+    Unfold all text in the provided Region(s).
+    Returns: The unfolded regions.
+    '''
+
+    regions = view.folded_regions()
+    text = ["folded_regions"]
+    for r in regions:
+        s = f'region:{r}'
+        text.append(s)
+    new_view = sc.create_new_view(view.window(), '\n'.join(text))
+
+
+
+
+
+#-----------------------------------------------------------------------------------
+def do_api(edit):
+
+    ##### Probing ST api.
+
+    # from inspect import getmembers, isfunction
+    # # from my_project import my_module
+    # functions_list = getmembers(sublime_api)#, isfunction)
+    # for f in functions_list:
+    #     print(f'{f[0]}:   ')
+    # return    
+
+    # # https://stackoverflow.com/questions/218616/how-to-get-method-parameter-names
+    # for a in dir(sublime_api):
+    #     print(f'{a}:')
+    # return
+
+    ### Normal usage.
+    view = sc.create_new_view(sublime.active_window(), '012 3456\n789\nUUUU YYYY')
+    pt = 3
+    reg = sublime.Region(5, 8)
+
+    ret = view.rowcol(12)
+    sc.slog(sc.CAT_DBG, f'>0> {ret}')  # (1, 3)
+    ret = view.text_point(2, 4)
+    sc.slog(sc.CAT_DBG, f'>0> {ret}')  # 17
+    ret = view.find('78', 5)
+    sc.slog(sc.CAT_DBG, f'>0> {ret}')  # (9, 11)
+    ret = view.substr(11)
+    sc.slog(sc.CAT_DBG, f'>0> |{len(ret)}|{ret[0]}|{ret}|')  # |1|9|9|
+    ret = view.word(13)
+    sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|')  # (13, 17)|UUUU|
+    ret = view.line(3)
+    sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|')  # (0, 8)|012 3456|
+    ret = view.full_line(12)
+    sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|')  # (9, 13)|789
+
+    ### Empty buffer.
+    view = sc.create_new_view(sublime.active_window(), '')
+    pt = 0
+    reg = sublime.Region(pt, pt)
+
+    ret = view.rowcol(pt)
+    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # (0, 0)
+    ret = view.text_point(pt, pt)
+    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # 0
+    ret = view.split_by_newlines(reg)
+    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # [Region(0, 0)] ???
+    ret = view.find('pattern', pt)
+    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # (-1, -1)
+    ret = view.substr(pt)
+    sc.slog(sc.CAT_DBG, f'>1> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
+    ret = view.word(pt)
+    sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|')  # nada - see previous
+    ret = view.line(pt)
+    sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    ret = view.full_line(pt)
+    sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    
+    return
+
+    ### Outside legal range.
+    view = sc.create_new_view(sublime.active_window(), 'ABCDEFGHIJ')
+    pt = 10000
+    reg = sublime.Region(pt, pt + 1)
+
+    ret = view.rowcol(pt)
+    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # (0, 10)
+    ret = view.text_point(pt, pt)
+    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # 10
+    ret = view.insert(edit, pt, 'booga')
+    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # 0
+    ret = view.replace(edit, reg, 'xyzzy')
+    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # None
+    ret = view.split_by_newlines(reg)
+    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # [Region(10, 10)]
+    ret = view.find('pattern', pt)
+    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # (-1, -1)
+    ret = view.substr(pt)
+    sc.slog(sc.CAT_DBG, f'>2> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
+    ret = view.word(pt)
+    sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|')  # nada - see previous
+    ret = view.line(pt)
+    sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+    ret = view.full_line(pt)
+    sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+
+
+#-----------------------------------------------------------------------------------
+def dump_stack(cat):
+    ''' Diagnostics. '''
+    depth = 0
+    try:
+        while True:
+            frame = sys._getframe(depth)
+            fn = os.path.basename(frame.f_code.co_filename)
+            func = frame.f_code.co_name
+
+            # smsg = f'{cat}{depth} __name__:{frame.f_globals["__name__"]} FILE:{fn}  LINE:{frame.f_lineno}  FUNCTION:{frame.f_code.co_name}'
+            smsg = f'{cat}{depth} FU:{func} FILE:{fn} LINE:{frame.f_lineno}  '
+            print(smsg)
+            depth += 1
+    except:
+        # End of stack.
+        return
+
+
+#-----------------------------------------------------------------------------------
+def dump_attrs(obj):
+    ''' Diagnostics. '''
+    for attr in dir(obj):
+        print(f'{attr} = {getattr(obj, attr)}')

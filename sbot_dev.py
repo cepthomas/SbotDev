@@ -5,7 +5,7 @@ import platform
 import sublime
 import sublime_plugin
 from . import sbot_common_src as sc
-from . import folding_all_hack
+# from . import folding_all_hack
 
 
 # Trim?? C:\Users\cepth\OneDrive\OneDriveDocuments\tech\sublime\ST4\Default\Default.sublime-commands

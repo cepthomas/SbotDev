@@ -5,10 +5,6 @@ import platform
 import sublime
 import sublime_plugin
 from . import sbot_common_src as sc
-# from . import folding_all_hack
-
-
-# Trim?? C:\Users\cepth\OneDrive\OneDriveDocuments\tech\sublime\ST4\Default\Default.sublime-commands
 
 
 #-----------------------------------------------------------------------------------
@@ -30,7 +26,7 @@ class SbotAllEvent(sublime_plugin.EventListener):
     def on_selection_modified(self, view):
         pass
 
-    def on_query_completions(self, view, prefix, locations):  # ?? suppress too many offerings.
+    def on_query_completions(self, view, prefix, locations):  # suppress too many offerings?
         '''
         These are cryptic, hard to configure correctly. See also associated settings.
         on_query_completions(view: View, prefix: str, locations: List[Point]) 
@@ -254,22 +250,6 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
-class SbotCmdLineCommand(sublime_plugin.WindowCommand):
-    ''' Run a simple command in the project dir. '''
-
-    def run(self):
-        # Bottom input area.
-        self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
-
-    def on_done(self, text):
-        cp = subprocess.run(text, cwd=self.window.extract_variables()['folder'], universal_newlines=True, capture_output=True, shell=True)
-        sout = cp.stdout
-        vnew = self.window.new_file()
-        vnew.set_scratch(True)
-        vnew.run_command('append', {'characters': sout})  # insert has some odd behavior - indentation
-
-
-#-----------------------------------------------------------------------------------
 def do_folding(view):
 
     ''' View
@@ -294,9 +274,6 @@ def do_folding(view):
         s = f'region:{r}'
         text.append(s)
     new_view = sc.create_new_view(view.window(), '\n'.join(text))
-
-
-
 
 
 #-----------------------------------------------------------------------------------

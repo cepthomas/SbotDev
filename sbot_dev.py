@@ -111,6 +111,10 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
 
+        x = 1 / 0
+
+
+
         # do_api(edit)
 
         do_folding(self.view)

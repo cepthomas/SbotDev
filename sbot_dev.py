@@ -111,6 +111,9 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
 
+
+        bing = bong
+
         x = 1 / 0
 
 

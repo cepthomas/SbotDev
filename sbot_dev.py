@@ -111,18 +111,14 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
 
-
-        bing = bong
-
-        x = 1 / 0
-
-
-
         # do_api(edit)
 
-        do_folding(self.view)
+        # do_folding(self.view)
 
-        return
+
+        # Blow stuff up.
+        bing = bong
+        x = 1 / 0
 
         # Force a handled exception.
         sc.slog(sc.CAT_DBG, 'Forcing handled exception!')
@@ -132,18 +128,18 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         sc.slog(sc.CAT_DBG, 'Forcing unhandled exception!')
         i = 222 / 0
 
-        ### stack stuff
-        # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
-        frame = sys._getframe(0)
-        fn = os.path.basename(frame.f_code.co_filename)
-        func = frame.f_code.co_name
-        line = frame.f_lineno
+        # ### stack stuff
+        # # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
+        # frame = sys._getframe(0)
+        # fn = os.path.basename(frame.f_code.co_filename)
+        # func = frame.f_code.co_name
+        # line = frame.f_lineno
 
-        dump_attrs(frame)
-        # >>> f_back, f_builtins, f_code, f_globals, f_lasti, f_lineno, f_locals, f_trace, f_trace_lines, f_trace_opcodes, False
-        dump_attrs(frame.f_code)
-        # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
-        #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
+        # dump_attrs(frame)
+        # # >>> f_back, f_builtins, f_code, f_globals, f_lasti, f_lineno, f_locals, f_trace, f_trace_lines, f_trace_opcodes, False
+        # dump_attrs(frame.f_code)
+        # # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
+        # #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
 
 
 #-----------------------------------------------------------------------------------

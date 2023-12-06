@@ -147,7 +147,26 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
         # sc.slog(sc.CAT_DBG, 'abra')
-        directions = ["north", "south", "east", "west"]
+        directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
+        # KIND_ID_AMBIGUOUS = 0
+        # KIND_ID_KEYWORD = 1
+        # KIND_ID_TYPE = 2
+        # KIND_ID_FUNCTION = 3
+        # KIND_ID_NAMESPACE = 4
+        # KIND_ID_NAVIGATION = 5
+        # KIND_ID_MARKUP = 6
+        # KIND_ID_VARIABLE = 7
+        # KIND_ID_SNIPPET = 8
+        # KIND_ID_COLOR_REDISH = 9
+        # KIND_ID_COLOR_ORANGISH = 10
+        # KIND_ID_COLOR_YELLOWISH = 11
+        # KIND_ID_COLOR_GREENISH = 12
+        # KIND_ID_COLOR_CYANISH = 13
+        # KIND_ID_COLOR_BLUISH = 14
+        # KIND_ID_COLOR_PURPLISH = 15
+        # KIND_ID_COLOR_PINKISH = 16
+        # KIND_ID_COLOR_DARK = 17
+        # KIND_ID_COLOR_LIGHT = 18
 
         items = []
         for dir in directions:
@@ -155,14 +174,14 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
                 trigger=dir,
                 details=["<i>details</i>", "<b>more</b>"],
                 annotation=f"look_{dir}",
-                kind=sublime.KIND_NAVIGATION))
+                kind=(sublime.KIND_ID_COLOR_REDISH + directions.index(dir), dir[:1], '????') ))
             # trigger - A unicode string of the text to match against the user's input.
             # details - An optional unicode string, or list of unicode strings, containing limited inline HTML. Displayed below the trigger.
             # annotation - An optional unicode string of a hint to draw to the right-hand side of the row.
             # kind - An optional kind tuple – defaults to sublime.KIND_AMBIGUOUS. Otherwise KIND_KEYWORD, etc.
 
-        self.window.show_quick_panel(items, self.on_done, flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT,
-                                     selected_index=2, on_highlight=self.on_highlight, placeholder="place-xxx")
+        self.window.show_quick_panel(items, self.on_done, on_highlight=self.on_highlight, placeholder="type here")
+        # self.window.show_quick_panel(items, self.on_done, flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT, selected_index=2, on_highlight=self.on_highlight, placeholder="place-xxx")
 
     def on_done(self, *args, **kwargs):
         sel = args[0]

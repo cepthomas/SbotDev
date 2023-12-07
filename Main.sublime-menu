@@ -28,9 +28,8 @@
             },
         ]
     },
-    {
+    { "caption": "Dev",
         "id": "dev",
-        "caption": "Dev",
         "children":
         [
             { "caption": "Git Diff", "command": "sbot_git", "args": { "git_cmd": "diff" } },

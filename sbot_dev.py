@@ -7,6 +7,11 @@ import sublime_plugin
 from . import sbot_common_src as sc
 
 
+# TODO-FUTURE python (embedded st) debugger like debugger.lua
+# TODO-FUTURE Unicode tool. [*unicode#Top]
+# TODO-FUTURE better way to share common stuff across plugins.
+
+
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))

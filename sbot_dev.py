@@ -7,10 +7,10 @@ import sublime_plugin
 from . import sbot_common_src as sc
 
 
-# TODO-FUTURE python (embedded st) debugger like debugger.lua
-# TODO-FUTURE Unicode tool. [*unicode#Top]
-# TODO-FUTURE better way to share common stuff across plugins.
-
+# TODO? python (embedded st) debugger like debugger.lua
+# TODO? Unicode tool. [*unicode#Top]
+# TODO? better way to share common stuff across plugins.
+# TODO sort numeric
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():

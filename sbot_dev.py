@@ -11,6 +11,7 @@ from . import sbot_common_src as sc
 # TODO? Unicode tool. [*unicode#Top]
 # TODO? better way to share common stuff across plugins.
 # TODO sort numeric
+# TODO insert/delete lua dbg() from ST.
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():

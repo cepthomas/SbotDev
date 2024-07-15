@@ -63,6 +63,13 @@ def get_store_fn_for_project(project_fn, file_ext):
     ''' General utility to get store file name based on ST project name. '''
 
     fn = os.path.basename(project_fn).replace('.sublime-project', file_ext)
+#  TODO1 error here for SbotSignet and SbotHighlight:
+#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotSignet\sbot_common.py", line 65, in get_store_fn_for_project
+#     fn = os.path.basename(project_fn).replace('.sublime-project', file_ext)
+#   File "./python3.8/ntpath.py", line 216, in basename
+#   File "./python3.8/ntpath.py", line 185, in split
+# TypeError: expected str, bytes or os.PathLike object, not NoneType
+
     store_fn = get_store_fn(fn)
     return store_fn
 

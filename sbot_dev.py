@@ -7,10 +7,8 @@ import sublime_plugin
 from . import sbot_common_src as sc
 
 
+# TODO better way to share sbot_common.py across plugins.
 # TODO python (embedded st) debugger like debugger.lua. insert/delete lua dbg() from ST.
-# TODO Unicode tool. [*unicode#Top]
-# TODO better way to share common stuff across plugins.
-# TODO sort numeric
 
 
 #-----------------------------------------------------------------------------------

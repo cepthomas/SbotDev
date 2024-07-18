@@ -129,8 +129,6 @@ dmypy.json
 .pyre/
 
 # Project files
-/temp/
-/store/
 
 
 # VS

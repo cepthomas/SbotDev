@@ -2,10 +2,13 @@ import sys
 import os
 import subprocess
 import platform
+import logging
 import sublime
 import sublime_plugin
-from . import sbot_common_src as sc
+from . import sbot_common as sc
 
+_logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
 
 # TODO better way to share sbot_common.py across plugins.
 # TODO python (embedded st) debugger like debugger.lua. insert/delete lua dbg() from ST.
@@ -14,12 +17,12 @@ from . import sbot_common_src as sc
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
-    sc.slog(sc.CAT_DBG, f'Starting up with python {platform.python_version()} on {platform.platform()}')
+    _logger.debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    # sc.slog(sc.CAT_DBG, 'sbot_dev plugin_unloaded()')
+    # _logger.debug('sbot_dev plugin_unloaded()')
     pass
 
 
@@ -125,11 +128,11 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         x = 1 / 0
 
         # Force a handled exception.
-        sc.slog(sc.CAT_DBG, 'Forcing handled exception!')
+        _logger.debug('Forcing handled exception!')
         sc.start_file('not-a-real-file')
 
         # Force an unhandled exception.
-        sc.slog(sc.CAT_DBG, 'Forcing unhandled exception!')
+        _logger.debug('Forcing unhandled exception!')
         i = 222 / 0
 
         # ### stack stuff
@@ -150,7 +153,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        # sc.slog(sc.CAT_DBG, 'abra')
+        # _logger.debug('abra')
         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
         # KIND_ID_AMBIGUOUS = 0
         # KIND_ID_KEYWORD = 1
@@ -203,7 +206,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
 
     def on_done(self, text):
         sc.create_new_view(self.window, text)
-        sc.slog(sc.CAT_DBG, f'Got:{text}')
+        _logger.debug(f'Got:{text}')
 
 
 #-----------------------------------------------------------------------------------
@@ -325,19 +328,19 @@ def do_api(edit):
     reg = sublime.Region(5, 8)
 
     ret = view.rowcol(12)
-    sc.slog(sc.CAT_DBG, f'>0> {ret}')  # (1, 3)
+    _logger.debug(f'>0> {ret}')  # (1, 3)
     ret = view.text_point(2, 4)
-    sc.slog(sc.CAT_DBG, f'>0> {ret}')  # 17
+    _logger.debug(f'>0> {ret}')  # 17
     ret = view.find('78', 5)
-    sc.slog(sc.CAT_DBG, f'>0> {ret}')  # (9, 11)
+    _logger.debug(f'>0> {ret}')  # (9, 11)
     ret = view.substr(11)
-    sc.slog(sc.CAT_DBG, f'>0> |{len(ret)}|{ret[0]}|{ret}|')  # |1|9|9|
+    _logger.debug(f'>0> |{len(ret)}|{ret[0]}|{ret}|')  # |1|9|9|
     ret = view.word(13)
-    sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|')  # (13, 17)|UUUU|
+    _logger.debug(f'>0> {ret}|{view.substr(ret)}|')  # (13, 17)|UUUU|
     ret = view.line(3)
-    sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|')  # (0, 8)|012 3456|
+    _logger.debug(f'>0> {ret}|{view.substr(ret)}|')  # (0, 8)|012 3456|
     ret = view.full_line(12)
-    sc.slog(sc.CAT_DBG, f'>0> {ret}|{view.substr(ret)}|')  # (9, 13)|789
+    _logger.debug(f'>0> {ret}|{view.substr(ret)}|')  # (9, 13)|789
 
     ### Empty buffer.
     view = sc.create_new_view(sublime.active_window(), '')
@@ -345,21 +348,21 @@ def do_api(edit):
     reg = sublime.Region(pt, pt)
 
     ret = view.rowcol(pt)
-    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # (0, 0)
+    _logger.debug(f'>1> {ret}')  # (0, 0)
     ret = view.text_point(pt, pt)
-    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # 0
+    _logger.debug(f'>1> {ret}')  # 0
     ret = view.split_by_newlines(reg)
-    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # [Region(0, 0)] ???
+    _logger.debug(f'>1> {ret}')  # [Region(0, 0)] ???
     ret = view.find('pattern', pt)
-    sc.slog(sc.CAT_DBG, f'>1> {ret}')  # (-1, -1)
+    _logger.debug(f'>1> {ret}')  # (-1, -1)
     ret = view.substr(pt)
-    sc.slog(sc.CAT_DBG, f'>1> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
+    _logger.debug(f'>1> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
     ret = view.word(pt)
-    sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|')  # nada - see previous
+    _logger.debug(f'>1> {ret}|{view.substr(ret)}|')  # nada - see previous
     ret = view.line(pt)
-    sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    _logger.debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
     ret = view.full_line(pt)
-    sc.slog(sc.CAT_DBG, f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    _logger.debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
     
     return
 
@@ -369,25 +372,25 @@ def do_api(edit):
     reg = sublime.Region(pt, pt + 1)
 
     ret = view.rowcol(pt)
-    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # (0, 10)
+    _logger.debug(f'>2> {ret}')  # (0, 10)
     ret = view.text_point(pt, pt)
-    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # 10
+    _logger.debug(f'>2> {ret}')  # 10
     ret = view.insert(edit, pt, 'booga')
-    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # 0
+    _logger.debug(f'>2> {ret}')  # 0
     ret = view.replace(edit, reg, 'xyzzy')
-    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # None
+    _logger.debug(f'>2> {ret}')  # None
     ret = view.split_by_newlines(reg)
-    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # [Region(10, 10)]
+    _logger.debug(f'>2> {ret}')  # [Region(10, 10)]
     ret = view.find('pattern', pt)
-    sc.slog(sc.CAT_DBG, f'>2> {ret}')  # (-1, -1)
+    _logger.debug(f'>2> {ret}')  # (-1, -1)
     ret = view.substr(pt)
-    sc.slog(sc.CAT_DBG, f'>2> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
+    _logger.debug(f'>2> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
     ret = view.word(pt)
-    sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|')  # nada - see previous
+    _logger.debug(f'>2> {ret}|{view.substr(ret)}|')  # nada - see previous
     ret = view.line(pt)
-    sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+    _logger.debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
     ret = view.full_line(pt)
-    sc.slog(sc.CAT_DBG, f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+    _logger.debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
 
 
 #-----------------------------------------------------------------------------------

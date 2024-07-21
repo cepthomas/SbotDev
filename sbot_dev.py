@@ -10,6 +10,7 @@ from . import sbot_common as sc
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.DEBUG)
 
+
 # TODO better way to share sbot_common.py across plugins.
 # TODO python (embedded st) debugger like debugger.lua. insert/delete lua dbg() from ST.
 
@@ -27,7 +28,7 @@ def plugin_unloaded():
 
 
 #-----------------------------------------------------------------------------------
-class SbotAllEvent(sublime_plugin.EventListener):
+class DevEvent(sublime_plugin.EventListener):
     ''' General listener. '''
 
     def on_selection_modified(self, view):
@@ -117,6 +118,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 class SbotDebugCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
+        global _logger
 
         # do_api(edit)
 
@@ -153,6 +155,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
+        global _logger
         # _logger.debug('abra')
         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
         # KIND_ID_AMBIGUOUS = 0
@@ -205,6 +208,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
     def on_done(self, text):
+        global _logger
         sc.create_new_view(self.window, text)
         _logger.debug(f'Got:{text}')
 
@@ -307,6 +311,7 @@ def do_folding(view):
 
 #-----------------------------------------------------------------------------------
 def do_api(edit):
+    global _logger
 
     ##### Probing ST api.
 

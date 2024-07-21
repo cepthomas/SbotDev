@@ -16,12 +16,10 @@ _logger = logging.getLogger(__name__)
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    # print(dir(sbot))
     pass
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    # _logger.debug('sbot_dev plugin_unloaded()')
     pass
 
 
@@ -31,7 +29,6 @@ class DevEvent(sublime_plugin.EventListener):
 
     def on_init(self, views):
         ''' First thing that happens when plugin/window created. Initialize everything. '''
-        global _logger
         _logger.setLevel(logging.DEBUG)
         _logger.debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
@@ -61,8 +58,8 @@ class DevEvent(sublime_plugin.EventListener):
         #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
         #   Show a popup displaying HTML content.
 
-    def on_hover_done(self, sel):
-        print(f'>>> on_hover_done:{sel}')
+    # def on_hover_done(self, sel):
+    #     print(f'>>> on_hover_done:{sel}')
 
     # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
     def on_load(self, view):
@@ -122,12 +119,10 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 class SbotDebugCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
-        global _logger
 
         # do_api(edit)
 
         # do_folding(self.view)
-
 
         # Blow stuff up.
         bing = bong
@@ -159,7 +154,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        global _logger
+
         # _logger.debug('abra')
         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
         # KIND_ID_AMBIGUOUS = 0
@@ -212,7 +207,6 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
 
     def on_done(self, text):
-        global _logger
         sc.create_new_view(self.window, text)
         _logger.debug(f'Got:{text}')
 
@@ -315,8 +309,6 @@ def do_folding(view):
 
 #-----------------------------------------------------------------------------------
 def do_api(edit):
-    global _logger
-
     ##### Probing ST api.
 
     # from inspect import getmembers, isfunction

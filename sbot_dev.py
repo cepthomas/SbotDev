@@ -8,7 +8,6 @@ import sublime_plugin
 from . import sbot_common as sc
 
 _logger = logging.getLogger(__name__)
-_logger.setLevel(logging.DEBUG)
 
 
 # TODO better way to share sbot_common.py across plugins.
@@ -18,8 +17,7 @@ _logger.setLevel(logging.DEBUG)
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     # print(dir(sbot))
-    _logger.debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
-
+    pass
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
@@ -30,6 +28,12 @@ def plugin_unloaded():
 #-----------------------------------------------------------------------------------
 class DevEvent(sublime_plugin.EventListener):
     ''' General listener. '''
+
+    def on_init(self, views):
+        ''' First thing that happens when plugin/window created. Initialize everything. '''
+        global _logger
+        _logger.setLevel(logging.DEBUG)
+        _logger.debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
     def on_selection_modified(self, view):
         pass

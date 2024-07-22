@@ -9,6 +9,7 @@ from . import sbot_common as sc
 
 _logger = logging.getLogger(__name__)
 
+print(f'>>> loaded sbot_dev.py {__package__}')
 
 # TODO better way to share sbot_common.py across plugins.
 # TODO python (embedded st) debugger like debugger.lua. insert/delete lua dbg() from ST.
@@ -16,11 +17,15 @@ _logger = logging.getLogger(__name__)
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    pass
+    ''' Called once per plugin instance. '''
+    print(f'>>> plugin_loaded() {__package__} {id(_logger)}')
+
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    pass
+    # Clean up logging.
+    sc.deinit_log(_logger)
+
 
 
 #-----------------------------------------------------------------------------------
@@ -29,6 +34,9 @@ class DevEvent(sublime_plugin.EventListener):
 
     def on_init(self, views):
         ''' First thing that happens when plugin/window created. Initialize everything. '''
+
+        print(f'>>> on_init() {__package__}')
+
         _logger.setLevel(logging.DEBUG)
         _logger.debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 

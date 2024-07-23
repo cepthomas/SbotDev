@@ -6,21 +6,20 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
-print(f'>>> loaded sbot_dev.py {__package__}')
 
 # TODO better way to share sbot_common.py across plugins.
 # TODO python (embedded st) debugger like debugger.lua. insert/delete lua dbg() from ST.
-# TODO1 remove print() and logs etc. Or make trace?
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     ''' Called once per plugin instance. '''
-    print(f'>>> plugin_loaded() {__package__}')
+    pass
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    print(f'>>> plugin_unloaded() {__package__}')
+    ''' Called once per plugin instance. '''
+    pass
 
 
 #-----------------------------------------------------------------------------------
@@ -29,7 +28,6 @@ class DevEvent(sublime_plugin.EventListener):
 
     def on_init(self, views):
         ''' First thing that happens when plugin/window created. Initialize everything. '''
-        print(f'>>> on_init() {__package__}')
         sc.set_log_level(sc.LL_DEBUG)
         sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
         # _logger.setLevel(logging.DEBUG)
@@ -62,7 +60,7 @@ class DevEvent(sublime_plugin.EventListener):
         #   Show a popup displaying HTML content.
 
     # def on_hover_done(self, sel):
-    #     print(f'>>> on_hover_done:{sel}')
+    #     print(f'+++ on_hover_done:{sel}')
 
     # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
     def on_load(self, view):
@@ -102,12 +100,12 @@ class SbotGitCommand(sublime_plugin.TextCommand):
         ''' Common process output handling  cp: the CompletedProcess, Note git writes some non-error stuff to stderr. '''
         text = []
         if cp.returncode != 0:
-            text.append(f'>>>> returncode:{cp.returncode}')
+            text.append(f'+++ returncode:{cp.returncode}')
         if len(cp.stdout) > 0:
-            text.append('>>>> stdout')
+            text.append('+++ stdout')
             text.append(f'{cp.stdout}')
         if len(cp.stderr) > 0:
-            text.append('>>>> stderr')
+            text.append('+++ stderr')
             text.append(f'{cp.stderr}')
         new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
         if is_diff:

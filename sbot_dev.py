@@ -8,7 +8,8 @@ from . import sbot_common as sc
 
 from . import remote_pdb
 
-# insert/delete lua dbg() from ST.
+
+DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 
 #-----------------------------------------------------------------------------------
@@ -29,6 +30,23 @@ class DevEvent(sublime_plugin.EventListener):
 
     def on_init(self, views):
         ''' First thing that happens when plugin/window created. Initialize everything. '''
+
+        settings = sublime.load_settings(DEV_SETTINGS_FILE)
+
+
+        current_project = settings.get('current_project')
+        projects = settings.get('projects')
+        project = None
+
+        for p in projects:
+            print(p)
+            if p["name"] == current_project:
+                project = p
+                break
+
+        print(">>>", p)
+
+
         sc.set_log_level(sc.LL_DEBUG)
         sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
         # _logger.setLevel(logging.DEBUG)

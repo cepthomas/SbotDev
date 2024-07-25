@@ -1,3 +1,47 @@
 {
-    // nothing here
+    "sort_tags_alpha": false,
+    "mru_size": 5,
+    "fixed_hl": [ [], [], [] ],
+    "fixed_hl_whole_word": false,
+    "section_marker_size": 1,
+    "log_level": "DBG",
+
+    "current_project": "doodaa",
+
+    "projects":
+    [
+        {
+            "name": "demo",
+            "notr_paths": [
+                "C:/Users/cepth/AppData/Roaming/Sublime Text/Packages/Notr/example"
+            ],
+            "notr_index": "C:/Users/cepth/AppData/Roaming/Sublime Text/Packages/Notr/example/my-index.ntr",
+            "fixed_hl": [
+                ["2DO", "and_a"],
+                ["user", "and_b"],
+                ["dynamic", "and_c"],
+            ],
+            "sticky": [
+            ],
+        },
+
+        {
+            "name": "doodaa",
+            "notr_paths": [
+                "$OneDrive/OneDriveDocuments/notes",
+                "$OneDrive/OneDriveDocuments/sports",
+                "$OneDrive/OneDriveDocuments/tech",
+            ],
+            "notr_index": "$OneDrive/OneDriveDocuments/notes/notr-index.ntr",
+            "fixed_hl": [
+                ["cepthomas"],
+            ],
+            "sticky": [
+                "todo#Top",
+                "shop#Top",
+                "move#Top",
+                "dev-notes#Top",
+            ],
+        },
+    ],
 }

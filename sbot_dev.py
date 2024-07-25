@@ -8,6 +8,8 @@ from . import sbot_common as sc
 
 from . import remote_pdb
 
+# insert/delete lua dbg() from ST.
+
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
@@ -126,21 +128,6 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
         # do_boom(self.view)
 
-
-        """
-        This will run pdb as a ephemeral telnet service. Once you connect no one
-        else can connect. On construction this object will block execution till a
-        client has connected.
-
-        Based on https://github.com/tamentis/rpdb I think ...
-
-        To use this::
-
-            RemotePdb(host='0.0.0.0', port=4444).set_trace()
-
-        Then run: telnet 127.0.0.1 4444
-        """
-
         print('--- Before running rpdb')
 
         try:
@@ -184,6 +171,17 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         #                 wait_for_strings(client.read, TIMEOUT, "-> print('{b2}')")
         #                 client.fh.write(b'continue\r\n')
         #         wait_for_strings(proc.read, TIMEOUT, 'DIED.')
+
+
+        # https://github.com/python/cpython/blob/3.12/Lib/pdb.py
+        # 
+        # Others:
+        # https://stackoverflow.com/questions/543196/how-do-i-attach-a-remote-debugger-to-a-python-process
+        # https://pypi.org/project/rpdb/ - old
+        # https://github.com/sassoftware/epdb - *maybe, uses telnetlib
+        # https://github.com/inducer/pudb - newer, telnet, just nx!
+        # https://github.com/bluebird75/winpdb - gui, oldish, uses rpdb(2)
+        # https://github.com/gruns/icecream - fancy print()
 
 
 #-----------------------------------------------------------------------------------

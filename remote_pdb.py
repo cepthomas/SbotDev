@@ -1,5 +1,21 @@
 # TODO1 my hacked version of https://github.com/ionelmc/python-remote-pdb
 
+# Make colors like debugger.lua
+
+'''
+This will run pdb as a ephemeral telnet service. Once you connect no one
+else can connect. On construction this object will block execution till a
+client has connected.
+
+Based on https://github.com/tamentis/rpdb I think ...
+
+To use this::
+
+    RemotePdb(host='0.0.0.0', port=4444).set_trace()
+
+Then run: telnet 127.0.0.1 4444
+'''
+
 from __future__ import print_function
 
 import errno

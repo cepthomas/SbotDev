@@ -6,6 +6,7 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
+from . import remote_pdb
 
 
 #-----------------------------------------------------------------------------------
@@ -123,30 +124,66 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
         # do_folding(self.view)
 
-        # Blow stuff up.
-        bing = bong
-        x = 1 / 0
+        # do_boom(self.view)
 
-        # Force a handled exception.
-        sc.log_debug('Forcing handled exception!')
-        sc.start_file('not-a-real-file')
 
-        # Force an unhandled exception.
-        sc.log_debug('Forcing unhandled exception!')
-        i = 222 / 0
+        """
+        This will run pdb as a ephemeral telnet service. Once you connect no one
+        else can connect. On construction this object will block execution till a
+        client has connected.
 
-        # ### stack stuff
-        # # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
-        # frame = sys._getframe(0)
-        # fn = os.path.basename(frame.f_code.co_filename)
-        # func = frame.f_code.co_name
-        # line = frame.f_lineno
+        Based on https://github.com/tamentis/rpdb I think ...
 
-        # dump_attrs(frame)
-        # # >>> f_back, f_builtins, f_code, f_globals, f_lasti, f_lineno, f_locals, f_trace, f_trace_lines, f_trace_opcodes, False
-        # dump_attrs(frame.f_code)
-        # # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
-        # #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
+        To use this::
+
+            RemotePdb(host='0.0.0.0', port=4444).set_trace()
+
+        Then run: telnet 127.0.0.1 4444
+        """
+
+        print('--- Before running rpdb')
+
+        try:
+            remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
+        except Exception as e:
+            print(f'--- RemotePdb exception: {e}')
+
+        print('--- After running rpdb')
+
+        # reloading plugin SbotDev.sbot_dev
+        # --- Before running rpdb
+        # >>>RemotePdb session open at 127.0.0.1:4444, waiting for connection ...
+        # >>>RemotePdb accepted connection from ('127.0.0.1', 51528).
+        # --- After running rpdb
+        # ...
+        # --- Before running rpdb
+        # >>>RemotePdb session open at 127.0.0.1:4444, waiting for connection ...
+        # >>>RemotePdb accepted connection from ('127.0.0.1', 51667).
+        # Traceback (most recent call last):
+        #   File "C:\Program Files\Sublime Text\Lib\python38\sublime_plugin.py", line 1704, in run_
+        #     return self.run(edit)
+        #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\sbot_dev.py", line 151, in run
+        #     print('--- After running rpdb')
+        #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\sbot_dev.py", line 151, in run
+        #     print('--- After running rpdb')
+        #   File "./python3.8/bdb.py", line 88, in trace_dispatch
+        #   File "./python3.8/bdb.py", line 113, in dispatch_line
+        # bdb.BdbQuit
+
+
+        # with TestProcess(sys.executable, __file__, 'daemon', 'test_simple') as proc:
+        #     with dump_on_error(proc.read):
+        #         wait_for_strings(proc.read, TIMEOUT,
+        #                          '{a1}',
+        #                          '{b1}',
+        #                          'RemotePdb session open at ')
+        #         host, port = re.findall("RemotePdb session open at (.+):(.+),", proc.read())[0]
+        #         with TestSocket(socket.create_connection((host, int(port)), timeout=TIMEOUT)) as client:
+        #             with dump_on_error(client.read):
+        #                 wait_for_strings(proc.read, TIMEOUT, 'accepted connection from')
+        #                 wait_for_strings(client.read, TIMEOUT, "-> print('{b2}')")
+        #                 client.fh.write(b'continue\r\n')
+        #         wait_for_strings(proc.read, TIMEOUT, 'DIED.')
 
 
 #-----------------------------------------------------------------------------------
@@ -277,6 +314,35 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
     def nav(self, href):
         # href attribute of the link clicked.
         pass
+
+
+#-----------------------------------------------------------------------------------
+def do_boom(view):
+
+    # Blow stuff up.
+    bing = bong
+    x = 1 / 0
+
+    # Force a handled exception.
+    sc.log_debug('Forcing handled exception!')
+    sc.start_file('not-a-real-file')
+
+    # Force an unhandled exception.
+    sc.log_debug('Forcing unhandled exception!')
+    i = 222 / 0
+
+    # ### stack stuff
+    # # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
+    # frame = sys._getframe(0)
+    # fn = os.path.basename(frame.f_code.co_filename)
+    # func = frame.f_code.co_name
+    # line = frame.f_lineno
+
+    # dump_attrs(frame)
+    # # >>> f_back, f_builtins, f_code, f_globals, f_lasti, f_lineno, f_locals, f_trace, f_trace_lines, f_trace_opcodes, False
+    # dump_attrs(frame.f_code)
+    # # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
+    # #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
 
 
 #-----------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # TODO1 my hacked version of https://github.com/ionelmc/python-remote-pdb
 
-# Make colors like debugger.lua
+# TODO1 add colors like debugger.lua
 
 '''
 This will run pdb as a ephemeral telnet service. Once you connect no one
@@ -101,14 +101,7 @@ class RemotePdb(Pdb):
         Pdb.__init__(self, completekey='tab', stdin=self.handle, stdout=self.handle)
         self.backup = []
         if patch_stdstreams:
-            for name in (
-                    'stderr',
-                    'stdout',
-                    '__stderr__',
-                    '__stdout__',
-                    'stdin',
-                    '__stdin__',
-            ):
+            for name in ('stderr', 'stdout', '__stderr__', '__stdout__', 'stdin', '__stdin__'):
                 self.backup.append((name, getattr(sys, name)))
                 setattr(sys, name, self.handle)
         RemotePdb.active_instance = self

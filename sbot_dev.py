@@ -8,9 +8,12 @@ from . import sbot_common as sc
 
 from . import remote_pdb
 
+# { "keys": ["ctrl+k", "n"], "command": "sublime_linter_goto_error", },
+# { "keys": ["ctrl+k", "p"], "command": "sublime_linter_goto_error",
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
+# TODO1 clean up global
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
@@ -24,6 +27,129 @@ def plugin_unloaded():
     pass
 
 
+
+# NOTR_STORAGE_FILE = "notrX.store"
+
+# # Persisted mru.
+# # _mru = []
+
+# # Current project file (*.nproj) contents.
+# _current_proj = None
+
+# # The whole store file (notr.store) contents.
+# _store = None
+
+
+
+# #-----------------------------------------------------------------------------------
+# #-----------------------------------------------------------------------------------
+# #-----------------------------------------------------------------------------------
+# def _read_store():
+#     ''' Get everything. '''
+#     # global _mru
+#     global _store
+
+#     # Get persisted info.
+#     store_fn = sc.get_store_fn(NOTR_STORAGE_FILE)
+
+#     if os.path.isfile(store_fn):
+#         try:
+#             with open(store_fn, 'r') as fp:
+#                 s = fp.read()
+#                 _store = json.loads(s)
+#                 # _mru = store["mru"]
+#         except Exception as e:
+#             # Assume bad file.
+#             sc.log_error(f'Error processing {store_fn}: {e}')
+#     else:  # Assume new file. Create default fields.
+#         # _mru.clear()
+#         _store["projects"] = []
+#         _store["current_project_name"] = ""
+
+
+# def _write_store():
+#     ''' Save everything. '''
+#     store_fn = sc.get_store_fn(NOTR_STORAGE_FILE)
+#     store = _store      #{"mru": _mru}
+#     with open(store_fn, 'w') as fp:
+#         json.dump(store, fp, indent=4)
+
+
+# def _open_project(project_name):
+#     try:
+#         # Dig out the corresponding filename.
+#         fn = None
+#         for p in _store["projects"]:
+#             if p["name"] == project_name:
+#                 fn = p["path"]
+#                 _store["current_project_name"] = project_name
+#                 break
+#         if fn is None:
+#             sc.log_error(f'Missing project name: {project_name}')
+#         else:
+#             with open(fn, 'r') as fp:
+#                 s = fp.read()
+#                 _current_proj = json.loads(s)
+#     except Exception as e:
+#         # Assume bad file.
+#         sc.log_error(f'Error processing project file for {project_name}: {e}')
+#         _current_proj = None
+
+
+# class NotrOpenProjectCommand(sublime_plugin.WindowCommand):
+#     ''' Open an existing project '''
+#     _panel_items = []
+
+#     def run(self):
+#         ''' Populate selector with projects in notr.store. '''
+#         self._panel_items.clear()
+#         for p in _store["projects"]:
+#             self._panel_items.append(sublime.QuickPanelItem(trigger=p["name"], details=["path"], kind=sty))
+#         self.window.show_quick_panel(_panel_items, on_select=self.on_sel_project)
+
+#     def on_sel_project(self, *args, **kwargs):
+#         if len(args) > 0 and args[0] >= 0:
+#             projnm = self._panel_items[args[0]].trigger
+#             _open_project(projnm)
+
+#     def is_visible(self):
+#         return True
+
+
+
+# class NotrEditProjectCommand(sublime_plugin.WindowCommand):
+#     ''' Open the file in a new view for editing. '''
+
+#     def run(self):
+#         # Dig out the filename itself.
+#         fn = None
+#         for p in _store["projects"]:
+#             if p["name"] == _store["current_project_name"]:
+#                 fn = p["path"]
+#                 break
+#         if fn is None:
+#             sc.log_error(f'Invalid project name: {project_name}')
+#         else:
+#             # Open the file in a new view.
+#             vnew = None
+#             try:
+#                 vnew = self.window.open_file(fn)
+#                 view.assign_syntax('json')
+#                 _load(vnew)
+#             except Exception as e:
+#                 sc.log_error(f'Failed to open {fn}: {e}')
+#                 vnew = None
+
+#     def is_visible(self):
+#         return _current_proj is not None
+
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+
+
+
+
 #-----------------------------------------------------------------------------------
 class DevEvent(sublime_plugin.EventListener):
     ''' General listener. '''
@@ -32,19 +158,16 @@ class DevEvent(sublime_plugin.EventListener):
         ''' First thing that happens when plugin/window created. Initialize everything. '''
 
         settings = sublime.load_settings(DEV_SETTINGS_FILE)
+        # current_project_name = settings.get('current_project_name')
+        # projects = settings.get('projects')
+        # project = None
 
-
-        current_project = settings.get('current_project')
-        projects = settings.get('projects')
-        project = None
-
-        for p in projects:
-            print(p)
-            if p["name"] == current_project:
-                project = p
-                break
-
-        print(">>>", p)
+        # for p in projects:
+        #     print(p)
+        #     if p["name"] == current_project_name:
+        #         project = p
+        #         break
+        # print(">>>", p)
 
 
         sc.set_log_level(sc.LL_DEBUG)

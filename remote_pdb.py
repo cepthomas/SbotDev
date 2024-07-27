@@ -1,6 +1,6 @@
-# TODO1 my hacked version of https://github.com/ionelmc/python-remote-pdb
+# TODO my hacked version of https://github.com/ionelmc/python-remote-pdb
 
-# TODO1 add colors like debugger.lua
+# TODO add colors like debugger.lua?
 
 '''
 This will run pdb as a ephemeral telnet service. Once you connect no one

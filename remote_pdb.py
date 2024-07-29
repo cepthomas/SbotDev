@@ -1,42 +1,28 @@
-# TODO my hacked version of https://github.com/ionelmc/python-remote-pdb
-
-# TODO add colors like debugger.lua?
-
-'''
-This will run pdb as a ephemeral telnet service. Once you connect no one
-else can connect. On construction this object will block execution till a
-client has connected.
-
-Based on https://github.com/tamentis/rpdb I think ...
-
-To use this::
-
-    RemotePdb(host='0.0.0.0', port=4444).set_trace()
-
-Then run: telnet 127.0.0.1 4444
-'''
-
 from __future__ import print_function
 
 import errno
-# import logging
+### import logging
 import os
 import re
 import socket
 import sys
 from pdb import Pdb
 
-__version__ = '2.1.0'
+# TODO my hacked version of https://github.com/ionelmc/python-remote-pdb
+# TODO add colors like debugger.lua?
 
-PY3 = sys.version_info[0] == 3
-# log = logging.getLogger(__name__)
+
+### __version__ = '2.1.0'
+
+### PY3 = sys.version_info[0] == 3
+### log = logging.getLogger(__name__)
 
 
 def cry(message, stderr=sys.__stderr__):
-    # log.critical(message)
-    # print(message, file=stderr)
-    # stderr.flush()
-    print('>>>' + message)
+    ### log.critical(message)
+    ### print(message, file=stderr)
+    ### stderr.flush()
+    print(f'RPDB {message}')
 
 
 class LF2CRLF_FileWrapper(object):

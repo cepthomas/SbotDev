@@ -26,6 +26,155 @@ def plugin_unloaded():
     pass
 
 
+
+class SomeClass(object):
+
+    # def __new__(cls, arg1):
+    #     # Called to create a new instance of class cls. __new__() is a static method (special-cased so you need not
+    #     # declare it as such) that takes the class of which an instance was requested as its first argument.
+    #     # The remaining arguments are those passed to the object constructor expression (the call to the class).
+    #     # The return value of __new__() should be the new object instance (usually an instance of cls).
+    #     print(f'new')
+
+    def __init__(self, arg1):
+        # Called after the instance has been created (by __new__()), but before it is returned to the caller.
+        # If a base class has an __init__() method, the derived class’s __init__() method, if any, must explicitly
+        # call it to ensure proper initialization of the base class part of the instance; for example: super().__init__([args...]).
+
+        # Get caller info.
+        frame = sys._getframe(1)
+        fn = os.path.basename(frame.f_code.co_filename)
+        line = frame.f_lineno
+        func = {frame.f_code.co_name}
+        # f'mod_name = {frame.f_globals["__name__"]}'
+        # f'class_name = {frame.f_locals["self"].__class__.__name__}'
+
+        self.function = func
+
+
+        print(f'enter {self.function}')
+
+    # Called when the instance is “called” as a function;
+    # if this method is defined, x(arg1, arg2, ...) roughly translates to type(x).__call__(x, arg1, ...).
+    def __call__(self, a1, a2):
+        print(f'call({a1},{a2})')
+        pass
+
+    def __del__(self):
+        # Called when the instance is about to be destroyed. This is also called a finalizer or (improperly) a destructor.
+        # If a base class has a __del__() method, the derived class’s __del__() method, if any, must explicitly call
+        # it to ensure proper deletion of the base class part of the instance.
+        #  Due to the precarious circumstances under which __del__() methods are invoked, exceptions that occur during
+        # their execution are ignored, and a warning is printed to sys.stderr instead. 
+        print(f'exit {self.function}')
+
+
+    ####################################################### 
+    # https://www.pythonlikeyoumeanit.com/Module4_OOP/Special_Methods.html
+    # https://docs.python.org/3/reference/datamodel.html#special-method-names
+
+    # Called by the repr() built-in function to compute the “official” string representation of an object.
+    # If at all possible, this should look like a valid Python expression that could be used to recreate an object
+    # with the same value (given an appropriate environment).
+    # repr(x) invokes x.__repr__(), this is also invoked when an object is returned by a console
+    def __repr__(self):
+        return 'aaaaa'
+
+    # Returns string representation of an object.
+    # This method differs from object.__repr__() in that there is no expectation that __str__() return a valid
+    # Python expression: a more convenient or concise representation can be used.
+    def __str__(self):
+        return 'bbbbb'
+
+    def __format__(self, format_spec):
+        return 'ccccc'
+
+    def __hash__(self):
+        return 999
+
+    # Also Mathematical/Comparison Operators, Container-Like Class
+
+    # def __getitem__(self, key):
+    # def __pow__(self, other):
+    # object.__getattr__(self, name) etc
+    # object.__len__(self)
+    # object.__contains__(self, item)
+
+
+class _context(object):
+
+    def __init__(self, arg1):
+        # Get caller info.
+        # TODO or this way: https://tutor.python.narkive.com/BWnyK2vR/getting-caller-name-without-the-help-of-sys-getframe-1-f-code-co-name
+        frame = sys._getframe(1)
+        fn = os.path.basename(frame.f_code.co_filename)
+        line = frame.f_lineno
+        func = {frame.f_code.co_name}  # 'run'
+        mod_name = {frame.f_globals['__name__']}  # 'SbotDev.sbot_dev'
+
+        if 'self' in frame.f_locals:
+            class_name = {frame.f_locals['self'].__class__.__name__}  # 'SbotDebugCommand'
+        else:
+            class_name = 'just a func'
+
+        print(f'mod_name: {mod_name}')
+        print(f'class_name: {class_name}')
+
+        self.function = func
+        print(f'enter {self.function}')
+
+    def __call__(self, a1, a2):
+        print(f'call({a1},{a2})')
+        pass
+
+    def __del__(self):
+        print(f'exit {self.function}')
+
+def a_function():
+    C = _context(222)
+    C('xxx', 'yyy')
+
+
+#-----------------------------------------------------------------------------------
+class SbotDebugCommand(sublime_plugin.TextCommand):
+
+    def run(self, edit):
+
+        C = _context(111)
+        C('aaa', 'bbb')
+
+        a_function()
+
+        # mod_name: {'SbotDev.sbot_dev'}
+        # class_name: {'SbotDebugCommand'}
+        # enter {'run'}
+        # call(aaa,bbb)
+        # mod_name: {'SbotDev.sbot_dev'}
+        # class_name: just a func
+        # enter {'a_function'}
+        # call(xxx,yyy)
+        # exit {'a_function'}
+        # exit {'run'}
+
+
+
+        # do_api(edit)
+
+        # do_folding(self.view)
+
+        # do_boom(self.view)
+
+        # # rpdb
+        # print('--- Before running rpdb')
+        # try:
+        #     remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
+        # except Exception as e:
+        #     print(f'RPDB RemotePdb exception: {e}')
+        # print('RPDB After running rpdb')
+
+
+
+
 #-----------------------------------------------------------------------------------
 class DevEvent(sublime_plugin.EventListener):
     ''' General listener. '''
@@ -132,73 +281,6 @@ class SbotGitCommand(sublime_plugin.TextCommand):
     def is_visible(self):
         return True
         # return self.view.settings().get('syntax') == 'Packages/Markdown/Markdown.sublime-syntax'
-
-
-#-----------------------------------------------------------------------------------
-class SbotDebugCommand(sublime_plugin.TextCommand):
-
-    def run(self, edit):
-
-        # do_api(edit)
-
-        # do_folding(self.view)
-
-        # do_boom(self.view)
-
-        print('--- Before running rpdb')
-
-        try:
-            remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
-        except Exception as e:
-            print(f'--- RemotePdb exception: {e}')
-
-        print('--- After running rpdb')
-
-        # reloading plugin SbotDev.sbot_dev
-        # --- Before running rpdb
-        # >>>RemotePdb session open at 127.0.0.1:4444, waiting for connection ...
-        # >>>RemotePdb accepted connection from ('127.0.0.1', 51528).
-        # --- After running rpdb
-        # ...
-        # --- Before running rpdb
-        # >>>RemotePdb session open at 127.0.0.1:4444, waiting for connection ...
-        # >>>RemotePdb accepted connection from ('127.0.0.1', 51667).
-        # Traceback (most recent call last):
-        #   File "C:\Program Files\Sublime Text\Lib\python38\sublime_plugin.py", line 1704, in run_
-        #     return self.run(edit)
-        #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\sbot_dev.py", line 151, in run
-        #     print('--- After running rpdb')
-        #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\sbot_dev.py", line 151, in run
-        #     print('--- After running rpdb')
-        #   File "./python3.8/bdb.py", line 88, in trace_dispatch
-        #   File "./python3.8/bdb.py", line 113, in dispatch_line
-        # bdb.BdbQuit
-
-
-        # with TestProcess(sys.executable, __file__, 'daemon', 'test_simple') as proc:
-        #     with dump_on_error(proc.read):
-        #         wait_for_strings(proc.read, TIMEOUT,
-        #                          '{a1}',
-        #                          '{b1}',
-        #                          'RemotePdb session open at ')
-        #         host, port = re.findall("RemotePdb session open at (.+):(.+),", proc.read())[0]
-        #         with TestSocket(socket.create_connection((host, int(port)), timeout=TIMEOUT)) as client:
-        #             with dump_on_error(client.read):
-        #                 wait_for_strings(proc.read, TIMEOUT, 'accepted connection from')
-        #                 wait_for_strings(client.read, TIMEOUT, "-> print('{b2}')")
-        #                 client.fh.write(b'continue\r\n')
-        #         wait_for_strings(proc.read, TIMEOUT, 'DIED.')
-
-
-        # https://github.com/python/cpython/blob/3.12/Lib/pdb.py
-        # 
-        # Others:
-        # https://stackoverflow.com/questions/543196/how-do-i-attach-a-remote-debugger-to-a-python-process
-        # https://pypi.org/project/rpdb/ - old
-        # https://github.com/sassoftware/epdb - *maybe, uses telnetlib
-        # https://github.com/inducer/pudb - newer, telnet, just nx!
-        # https://github.com/bluebird75/winpdb - gui, oldish, uses rpdb(2)
-        # https://github.com/gruns/icecream - fancy print()
 
 
 #-----------------------------------------------------------------------------------

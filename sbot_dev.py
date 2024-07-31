@@ -28,6 +28,8 @@ def plugin_unloaded():
 
 
 class SomeClass(object):
+    # https://www.pythonlikeyoumeanit.com/Module4_OOP/Special_Methods.html
+    # https://docs.python.org/3/reference/datamodel.html#special-method-names
 
     # def __new__(cls, arg1):
     #     # Called to create a new instance of class cls. __new__() is a static method (special-cased so you need not
@@ -48,17 +50,13 @@ class SomeClass(object):
         func = {frame.f_code.co_name}
         # f'mod_name = {frame.f_globals["__name__"]}'
         # f'class_name = {frame.f_locals["self"].__class__.__name__}'
-
         self.function = func
-
-
         print(f'enter {self.function}')
 
-    # Called when the instance is “called” as a function;
-    # if this method is defined, x(arg1, arg2, ...) roughly translates to type(x).__call__(x, arg1, ...).
     def __call__(self, a1, a2):
+        # Called when the instance is “called” as a function;
+        # if this method is defined, x(arg1, arg2, ...) roughly translates to type(x).__call__(x, arg1, ...).
         print(f'call({a1},{a2})')
-        pass
 
     def __del__(self):
         # Called when the instance is about to be destroyed. This is also called a finalizer or (improperly) a destructor.
@@ -68,22 +66,17 @@ class SomeClass(object):
         # their execution are ignored, and a warning is printed to sys.stderr instead. 
         print(f'exit {self.function}')
 
-
-    ####################################################### 
-    # https://www.pythonlikeyoumeanit.com/Module4_OOP/Special_Methods.html
-    # https://docs.python.org/3/reference/datamodel.html#special-method-names
-
-    # Called by the repr() built-in function to compute the “official” string representation of an object.
-    # If at all possible, this should look like a valid Python expression that could be used to recreate an object
-    # with the same value (given an appropriate environment).
-    # repr(x) invokes x.__repr__(), this is also invoked when an object is returned by a console
     def __repr__(self):
+        # Called by the repr() built-in function to compute the “official” string representation of an object.
+        # If at all possible, this should look like a valid Python expression that could be used to recreate an object
+        # with the same value (given an appropriate environment).
+        # repr(x) invokes x.__repr__(), this is also invoked when an object is returned by a console
         return 'aaaaa'
 
-    # Returns string representation of an object.
-    # This method differs from object.__repr__() in that there is no expectation that __str__() return a valid
-    # Python expression: a more convenient or concise representation can be used.
     def __str__(self):
+        # Returns string representation of an object.
+        # This method differs from object.__repr__() in that there is no expectation that __str__() return a valid
+        # Python expression: a more convenient or concise representation can be used.
         return 'bbbbb'
 
     def __format__(self, format_spec):
@@ -93,20 +86,20 @@ class SomeClass(object):
         return 999
 
     # Also Mathematical/Comparison Operators, Container-Like Class
-
     # def __getitem__(self, key):
     # def __pow__(self, other):
-    # object.__getattr__(self, name) etc
-    # object.__len__(self)
-    # object.__contains__(self, item)
+    # def __getattr__(self, name) etc
+    # def __len__(self)
+    # def __contains__(self, item)
 
 
 class _context(object):
 
-    def __init__(self, arg1):
+    def __init__(self, arg1):  # args?
         # Get caller info.
-        # TODO or this way: https://tutor.python.narkive.com/BWnyK2vR/getting-caller-name-without-the-help-of-sys-getframe-1-f-code-co-name
+        # ? or this way: https://tutor.python.narkive.com/BWnyK2vR/getting-caller-name-without-the-help-of-sys-getframe-1-f-code-co-name
         frame = sys._getframe(1)
+        print(f'frame({type(frame)}):{dir(frame)}')
         fn = os.path.basename(frame.f_code.co_filename)
         line = frame.f_lineno
         func = {frame.f_code.co_name}  # 'run'
@@ -114,25 +107,27 @@ class _context(object):
 
         if 'self' in frame.f_locals:
             class_name = {frame.f_locals['self'].__class__.__name__}  # 'SbotDebugCommand'
+            self.function = f'{class_name}.{func}'
         else:
-            class_name = 'just a func'
+            self.function = func
 
-        print(f'mod_name: {mod_name}')
-        print(f'class_name: {class_name}')
-
-        self.function = func
+        print(f'func:{dir(func)}')
+        for f in func:
+            print(f)
         print(f'enter {self.function}')
 
-    def __call__(self, a1, a2):
-        print(f'call({a1},{a2})')
+    def __call__(self, arg1, arg2):  # args?
+        print(f'call({arg1},{arg2})')
         pass
 
     def __del__(self):
         print(f'exit {self.function}')
 
+
+
 def a_function():
     C = _context(222)
-    C('xxx', 'yyy')
+    C('ct2_1', 'ct2_2')
 
 
 #-----------------------------------------------------------------------------------
@@ -141,20 +136,11 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit):
 
         C = _context(111)
-        C('aaa', 'bbb')
+
+        C('ct1_1', 'ct1_2')
 
         a_function()
 
-        # mod_name: {'SbotDev.sbot_dev'}
-        # class_name: {'SbotDebugCommand'}
-        # enter {'run'}
-        # call(aaa,bbb)
-        # mod_name: {'SbotDev.sbot_dev'}
-        # class_name: just a func
-        # enter {'a_function'}
-        # call(xxx,yyy)
-        # exit {'a_function'}
-        # exit {'run'}
 
 
 

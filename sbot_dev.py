@@ -8,9 +8,6 @@ from . import sbot_common as sc
 
 from . import remote_pdb
 
-# { "keys": ["ctrl+k", "n"], "command": "sublime_linter_goto_error", },
-# { "keys": ["ctrl+k", "p"], "command": "sublime_linter_goto_error",
-
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 
@@ -26,141 +23,6 @@ def plugin_unloaded():
     pass
 
 
-
-class SomeClass(object):
-    # https://www.pythonlikeyoumeanit.com/Module4_OOP/Special_Methods.html
-    # https://docs.python.org/3/reference/datamodel.html#special-method-names
-
-    # def __new__(cls, arg1):
-    #     # Called to create a new instance of class cls. __new__() is a static method (special-cased so you need not
-    #     # declare it as such) that takes the class of which an instance was requested as its first argument.
-    #     # The remaining arguments are those passed to the object constructor expression (the call to the class).
-    #     # The return value of __new__() should be the new object instance (usually an instance of cls).
-    #     print(f'new')
-
-    def __init__(self, arg1):
-        # Called after the instance has been created (by __new__()), but before it is returned to the caller.
-        # If a base class has an __init__() method, the derived class’s __init__() method, if any, must explicitly
-        # call it to ensure proper initialization of the base class part of the instance; for example: super().__init__([args...]).
-
-        # Get caller info.
-        frame = sys._getframe(1)
-        fn = os.path.basename(frame.f_code.co_filename)
-        line = frame.f_lineno
-        func = {frame.f_code.co_name}
-        # f'mod_name = {frame.f_globals["__name__"]}'
-        # f'class_name = {frame.f_locals["self"].__class__.__name__}'
-        self.function = func
-        print(f'enter {self.function}')
-
-    def __call__(self, a1, a2):
-        # Called when the instance is “called” as a function;
-        # if this method is defined, x(arg1, arg2, ...) roughly translates to type(x).__call__(x, arg1, ...).
-        print(f'call({a1},{a2})')
-
-    def __del__(self):
-        # Called when the instance is about to be destroyed. This is also called a finalizer or (improperly) a destructor.
-        # If a base class has a __del__() method, the derived class’s __del__() method, if any, must explicitly call
-        # it to ensure proper deletion of the base class part of the instance.
-        #  Due to the precarious circumstances under which __del__() methods are invoked, exceptions that occur during
-        # their execution are ignored, and a warning is printed to sys.stderr instead. 
-        print(f'exit {self.function}')
-
-    def __repr__(self):
-        # Called by the repr() built-in function to compute the “official” string representation of an object.
-        # If at all possible, this should look like a valid Python expression that could be used to recreate an object
-        # with the same value (given an appropriate environment).
-        # repr(x) invokes x.__repr__(), this is also invoked when an object is returned by a console
-        return 'aaaaa'
-
-    def __str__(self):
-        # Returns string representation of an object.
-        # This method differs from object.__repr__() in that there is no expectation that __str__() return a valid
-        # Python expression: a more convenient or concise representation can be used.
-        return 'bbbbb'
-
-    def __format__(self, format_spec):
-        return 'ccccc'
-
-    def __hash__(self):
-        return 999
-
-    # Also Mathematical/Comparison Operators, Container-Like Class
-    # def __getitem__(self, key):
-    # def __pow__(self, other):
-    # def __getattr__(self, name) etc
-    # def __len__(self)
-    # def __contains__(self, item)
-
-
-class _context(object):
-
-    def __init__(self, arg1):  # args?
-        # Get caller info.
-        # ? or this way: https://tutor.python.narkive.com/BWnyK2vR/getting-caller-name-without-the-help-of-sys-getframe-1-f-code-co-name
-        frame = sys._getframe(1)
-        print(f'frame({type(frame)}):{dir(frame)}')
-        fn = os.path.basename(frame.f_code.co_filename)
-        line = frame.f_lineno
-        func = {frame.f_code.co_name}  # 'run'
-        mod_name = {frame.f_globals['__name__']}  # 'SbotDev.sbot_dev'
-
-        if 'self' in frame.f_locals:
-            class_name = {frame.f_locals['self'].__class__.__name__}  # 'SbotDebugCommand'
-            self.function = f'{class_name}.{func}'
-        else:
-            self.function = func
-
-        print(f'func:{dir(func)}')
-        for f in func:
-            print(f)
-        print(f'enter {self.function}')
-
-    def __call__(self, arg1, arg2):  # args?
-        print(f'call({arg1},{arg2})')
-        pass
-
-    def __del__(self):
-        print(f'exit {self.function}')
-
-
-
-def a_function():
-    C = _context(222)
-    C('ct2_1', 'ct2_2')
-
-
-#-----------------------------------------------------------------------------------
-class SbotDebugCommand(sublime_plugin.TextCommand):
-
-    def run(self, edit):
-
-        C = _context(111)
-
-        C('ct1_1', 'ct1_2')
-
-        a_function()
-
-
-
-
-        # do_api(edit)
-
-        # do_folding(self.view)
-
-        # do_boom(self.view)
-
-        # # rpdb
-        # print('--- Before running rpdb')
-        # try:
-        #     remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
-        # except Exception as e:
-        #     print(f'RPDB RemotePdb exception: {e}')
-        # print('RPDB After running rpdb')
-
-
-
-
 #-----------------------------------------------------------------------------------
 class DevEvent(sublime_plugin.EventListener):
     ''' General listener. '''
@@ -169,22 +31,8 @@ class DevEvent(sublime_plugin.EventListener):
         ''' First thing that happens when plugin/window created. Initialize everything. '''
 
         settings = sublime.load_settings(DEV_SETTINGS_FILE)
-        # current_project_name = settings.get('current_project_name')
-        # projects = settings.get('projects')
-        # project = None
-
-        # for p in projects:
-        #     print(p)
-        #     if p["name"] == current_project_name:
-        #         project = p
-        #         break
-        # print(">>>", p)
-
-
         sc.set_log_level(sc.LL_DEBUG)
         sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
-        # _logger.setLevel(logging.DEBUG)
-        # sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
     def on_selection_modified(self, view):
         pass
@@ -197,8 +45,8 @@ class DevEvent(sublime_plugin.EventListener):
         https://forum.sublimetext.com/t/annoying-autocomplete-c/59082
         https://forum.sublimetext.com/t/how-to-stop-tab-auto-complete-on-4126/63222/2
         '''
-        return ([], 0)
         # return ([], sublime.INHIBIT_WORD_COMPLETIONS)
+        return ([], 0)
 
     def on_hover(self, view, point, hover_zone):
         # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone:
@@ -212,8 +60,8 @@ class DevEvent(sublime_plugin.EventListener):
         #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
         #   Show a popup displaying HTML content.
 
-    # def on_hover_done(self, sel):
-    #     print(f'+++ on_hover_done:{sel}')
+    def on_hover_done(self, sel):
+        print(f'DEV on_hover_done:{sel}')
 
     # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
     def on_load(self, view):
@@ -223,10 +71,53 @@ class DevEvent(sublime_plugin.EventListener):
 
 
 #-----------------------------------------------------------------------------------
+class SbotDebugCommand(sublime_plugin.TextCommand):
+    def run(self, edit, what):
+
+        if what == 'rpdb':
+            print('--- Before running rpdb')
+            try:
+                remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
+            except Exception as e:
+                print(f'RPDB RemotePdb exception: {e}')
+            print('RPDB After running rpdb')
+
+        elif what == 'boom':
+            # Blow stuff up.
+            bing = bong
+            x = 1 / 0
+
+            # Force a handled exception.
+            sc.log_debug('Forcing handled exception!')
+            sc.start_file('not-a-real-file')
+
+            # Force an unhandled exception.
+            sc.log_debug('Forcing unhandled exception!')
+            i = 222 / 0
+
+        elif what == 'api':
+            do_api(edit)
+
+        elif what == 'folding':
+            ''' 
+            is_folded(region: Region) → bool
+            folded_regions() → list[sublime.Region]
+            fold(x: Region | list[sublime.Region]) → bool
+            unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
+            '''
+            regions = self.view.folded_regions()
+            text = ["folded_regions"]
+            for r in regions:
+                s = f'region:{r}'
+                text.append(s)
+            new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
+
+
+#-----------------------------------------------------------------------------------
 class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit, push? https://github.com/kemayo/sublime-text-git. '''
+        ''' Simple git tools: diff, commit (TODO comment?), push? https://github.com/kemayo/sublime-text-git. '''
 
         fn = self.view.file_name()
 
@@ -253,12 +144,12 @@ class SbotGitCommand(sublime_plugin.TextCommand):
         ''' Common process output handling  cp: the CompletedProcess, Note git writes some non-error stuff to stderr. '''
         text = []
         if cp.returncode != 0:
-            text.append(f'+++ returncode:{cp.returncode}')
+            text.append(f'DEV returncode:{cp.returncode}')
         if len(cp.stdout) > 0:
-            text.append('+++ stdout')
+            text.append('DEV stdout')
             text.append(f'{cp.stdout}')
         if len(cp.stderr) > 0:
-            text.append('+++ stderr')
+            text.append('DEV stderr')
             text.append(f'{cp.stderr}')
         new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
         if is_diff:
@@ -273,28 +164,8 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-
         # sc.log_debug('abra')
         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
-        # KIND_ID_AMBIGUOUS = 0
-        # KIND_ID_KEYWORD = 1
-        # KIND_ID_TYPE = 2
-        # KIND_ID_FUNCTION = 3
-        # KIND_ID_NAMESPACE = 4
-        # KIND_ID_NAVIGATION = 5
-        # KIND_ID_MARKUP = 6
-        # KIND_ID_VARIABLE = 7
-        # KIND_ID_SNIPPET = 8
-        # KIND_ID_COLOR_REDISH = 9
-        # KIND_ID_COLOR_ORANGISH = 10
-        # KIND_ID_COLOR_YELLOWISH = 11
-        # KIND_ID_COLOR_GREENISH = 12
-        # KIND_ID_COLOR_CYANISH = 13
-        # KIND_ID_COLOR_BLUISH = 14
-        # KIND_ID_COLOR_PURPLISH = 15
-        # KIND_ID_COLOR_PINKISH = 16
-        # KIND_ID_COLOR_DARK = 17
-        # KIND_ID_COLOR_LIGHT = 18
 
         items = []
         for dir in directions:
@@ -303,10 +174,6 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
                 details=["<i>details</i>", "<b>more</b>"],
                 annotation=f"look_{dir}",
                 kind=(sublime.KIND_ID_COLOR_REDISH + directions.index(dir), dir[:1], '????') ))
-            # trigger - A unicode string of the text to match against the user's input.
-            # details - An optional unicode string, or list of unicode strings, containing limited inline HTML. Displayed below the trigger.
-            # annotation - An optional unicode string of a hint to draw to the right-hand side of the row.
-            # kind - An optional kind tuple – defaults to sublime.KIND_AMBIGUOUS. Otherwise KIND_KEYWORD, etc.
 
         self.window.show_quick_panel(items, self.on_done, on_highlight=self.on_highlight, placeholder="type here")
         # self.window.show_quick_panel(items, self.on_done, flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT, selected_index=2, on_highlight=self.on_highlight, placeholder="place-xxx")
@@ -340,10 +207,9 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
         self.count = 0
 
     def run(self, edit):
-        # Phantoms.
+        ### Phantoms.
         image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg")
         img_html = '<img src="file://' + image + '" width="16" height="16">'
-
         # Old way works too:
         # self.view.erase_phantoms("test")
         # for sel in self.view.sel():
@@ -352,10 +218,6 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
         # Clean first. Note - phantoms need to be managed externally rather than instantiate each time cmd is loaded.
         phantoms = []
         self.phantom_set.update(phantoms)
-
-        # sublime.LAYOUT_INLINE: Display in between the region and the point following.
-        # sublime.LAYOUT_BELOW: Display in space below the current line, left-aligned with the region.
-        # sublime.LAYOUT_BLOCK: Display in space below the current line, left-aligned with the beginning of the line.
 
         html = f'<div>|image LAYOUT_INLINE at 200:210|{img_html}|</div>'
         region = sublime.Region(200, 210)
@@ -382,7 +244,7 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
         self.phantom_set.update(phantoms)
 
-        # Annotations.
+        ### Annotations.
         regions = []
         anns = []
         for i in range(3):
@@ -395,64 +257,8 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
                               icon='circle', flags=sublime.RegionFlags.DRAW_STIPPLED_UNDERLINE)
 
     def nav(self, href):
-        # href attribute of the link clicked.
+        # href is attribute of the link clicked.
         pass
-
-
-#-----------------------------------------------------------------------------------
-def do_boom(view):
-
-    # Blow stuff up.
-    bing = bong
-    x = 1 / 0
-
-    # Force a handled exception.
-    sc.log_debug('Forcing handled exception!')
-    sc.start_file('not-a-real-file')
-
-    # Force an unhandled exception.
-    sc.log_debug('Forcing unhandled exception!')
-    i = 222 / 0
-
-    # ### stack stuff
-    # # Get stackframe info. This is supposedly the fastest way. https://gist.github.com/JettJones/c236494013f22723c1822126df944b12.
-    # frame = sys._getframe(0)
-    # fn = os.path.basename(frame.f_code.co_filename)
-    # func = frame.f_code.co_name
-    # line = frame.f_lineno
-
-    # dump_attrs(frame)
-    # # >>> f_back, f_builtins, f_code, f_globals, f_lasti, f_lineno, f_locals, f_trace, f_trace_lines, f_trace_opcodes, False
-    # dump_attrs(frame.f_code)
-    # # >>> co_argcount, co_cellvars, co_code, co_consts, co_filename, co_firstlineno, co_flags, co_freevars, co_kwonlyargcount,
-    # #    co_lnotab, co_name, co_names, co_nlocals, co_posonlyargcount, co_stacksize, co_varnames
-
-
-#-----------------------------------------------------------------------------------
-def do_folding(view):
-
-    ''' View
-    is_folded(region: Region) → bool
-    Returns: Whether the provided Region is folded.
-
-    folded_regions() → list[sublime.Region]
-    Returns: The list of folded regions.
-
-    fold(x: Region | list[sublime.Region]) → bool
-    Fold the provided Region(s).
-    Returns: False if the regions were already folded.
-
-    unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
-    Unfold all text in the provided Region(s).
-    Returns: The unfolded regions.
-    '''
-
-    regions = view.folded_regions()
-    text = ["folded_regions"]
-    for r in regions:
-        s = f'region:{r}'
-        text.append(s)
-    new_view = sc.create_new_view(view.window(), '\n'.join(text))
 
 
 #-----------------------------------------------------------------------------------
@@ -560,9 +366,3 @@ def dump_stack(cat):
         # End of stack.
         return
 
-
-#-----------------------------------------------------------------------------------
-def dump_attrs(obj):
-    ''' Diagnostics. '''
-    for attr in dir(obj):
-        print(f'{attr} = {getattr(obj, attr)}')

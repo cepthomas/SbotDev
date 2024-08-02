@@ -32,6 +32,9 @@
         "id": "dev",
         "children":
         [
+            { "caption": "Debug boom", "command": "sbot_debug", "args": { "what": "boom" } },
+            { "caption": "Debug rpdb", "command": "sbot_debug", "args": { "what": "rpdb" } },
+            { "caption": "-" },
             { "caption": "Git Diff", "command": "sbot_git", "args": { "git_cmd": "diff" } },
             { "caption": "Git Commit", "command": "sbot_git", "args": { "git_cmd": "commit" } },
             { "caption": "Git Push", "command": "sbot_git", "args": { "git_cmd": "push" } },
@@ -43,11 +46,9 @@
             { "caption": "Panel Input", "command": "sbot_test_panel_input" },
             { "caption": "Phantoms and Annotations", "command": "sbot_test_visuals" },
             { "caption": "-" },
-            { "caption": "Debug", "command": "sbot_debug" },
-            { "caption": "-" },
-            { "caption": "Sublime Commands", "command": "sbot_open", "args": {"paths": ["$OneDrive\\OneDriveDocuments\\tech\\sublime-commands.ntr"]} },
-            { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": {"paths": ["$OneDrive\\OneDriveDocuments\\tech\\lua-cheat-sheet.lua"]} },
-            { "caption": "Sbot Log", "command": "sbot_open", "args": {"paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },
+            { "caption": "Sublime Commands", "command": "sbot_open", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\sublime-commands.ntr"]} },
+            { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\lua-cheat-sheet.lua"]} },
+            { "caption": "Sbot Log", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },
         ],
     },
 ]

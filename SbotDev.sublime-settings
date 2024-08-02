@@ -1,15 +1,3 @@
 {
-    // "sort_tags_alpha": false,
-    // "mru_size": 5,
-    // "fixed_hl": [ [], [], [] ],
-    // "fixed_hl_whole_word": false,
-    // "section_marker_size": 1,
-    // "log_level": "DBG",
-
-    // "projects":
-    // [
-    //     // "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Notr\\example\\notr-demo.nproj"
-    //     "%APPDATA\\Sublime Text\\Packages\\Notr\\example\\notr-demo.nproj",
-    //     "$OneDrive\\OneDriveDocuments\\notes\\main.nproj",
-    // ],
+    "log_level": "DBG",
 }

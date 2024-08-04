@@ -13,31 +13,36 @@ DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    ''' Called once per plugin instance. '''
+    ''' Called once per plugin instance. Each module/file can have its own. '''
+    # If a plugin defines a module level function plugin_loaded(), this will be called when the API is ready to use.
     pass
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    ''' Called once per plugin instance. '''
+    ''' Ditto. '''
     pass
 
 
 #-----------------------------------------------------------------------------------
 class DevEvent(sublime_plugin.EventListener):
-    ''' General listener. '''
+    ''' General listener. https://www.sublimetext.com/docs/api_reference.html#sublime_plugin.EventListener '''
 
     def on_init(self, views):
-        ''' First thing that happens when plugin/window created. Initialize everything. '''
-
+        ''' Called once with a list of views that were loaded before the EventListener was instantiated. '''
+        # First thing that happens when plugin/window created. Initialize everything.
         settings = sublime.load_settings(DEV_SETTINGS_FILE)
         sc.set_log_level(sc.LL_DEBUG)
         sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
-    def on_selection_modified(self, view):
-        pass
+    def on_load(self, view):
+        ''' Called when the file is finished loading. '''
+        # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
+        if view.file_name() is not None and 'sbot.log' in view.file_name():
+            # view.run_command("move_to", {"to": "eof"})
+            view.show_at_center(view.size())
 
-    def on_query_completions(self, view, prefix, locations):  # suppress too many offerings?
+    def on_query_completions(self, view, prefix, locations):
         '''
         These are cryptic, hard to configure correctly. See also associated settings.
         on_query_completions(view: View, prefix: str, locations: List[Point]) 
@@ -45,6 +50,7 @@ class DevEvent(sublime_plugin.EventListener):
         https://forum.sublimetext.com/t/annoying-autocomplete-c/59082
         https://forum.sublimetext.com/t/how-to-stop-tab-auto-complete-on-4126/63222/2
         '''
+        # suppress too many offerings?
         # return ([], sublime.INHIBIT_WORD_COMPLETIONS)
         return ([], 0)
 
@@ -63,24 +69,17 @@ class DevEvent(sublime_plugin.EventListener):
     def on_hover_done(self, sel):
         print(f'DEV on_hover_done:{sel}')
 
-    # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
-    def on_load(self, view):
-        if view.file_name() is not None and 'sbot.log' in view.file_name():
-            # view.run_command("move_to", {"to": "eof"})
-            view.show_at_center(view.size())
-
 
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
-
         if what == 'rpdb':
-            print('--- Before running rpdb')
+            print('DEV Before running rpdb')
             try:
                 remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
             except Exception as e:
-                print(f'RPDB RemotePdb exception: {e}')
-            print('RPDB After running rpdb')
+                print(f'DEV RemotePdb exception: {e}')
+            print('DEV After running rpdb')
 
         elif what == 'boom':
             # Blow stuff up.

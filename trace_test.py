@@ -1,5 +1,4 @@
 
-# from . import sbot_common_master as sc
 from .sbot_common_master import *
 
 

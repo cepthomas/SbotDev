@@ -4,7 +4,7 @@ import subprocess
 import platform
 import sublime
 import sublime_plugin
-from . import sbot_common as sc
+from . import sbot_common_master as sc
 
 
 class SomeClass(object):

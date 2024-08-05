@@ -4,9 +4,11 @@ import subprocess
 import platform
 import sublime
 import sublime_plugin
-from . import sbot_common as sc
+from . import sbot_common_master as sc
 
 from . import remote_pdb
+
+from . import trace_test
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
@@ -64,12 +66,12 @@ class DevEvent(sublime_plugin.EventListener):
         sc.set_log_level(sc.LL_DEBUG)
         sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
-    def on_load(self, view):
-        ''' Called when the file is finished loading. '''
-        # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
-        if view.file_name() is not None and 'sbot.log' in view.file_name():
-            # view.run_command("move_to", {"to": "eof"})
-            view.show_at_center(view.size())
+    # def on_load(self, view):
+    #     ''' Called when the file is finished loading. '''
+    #     # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
+    #     if view.file_name() is not None and LOG_FILE_NAME in view.file_name():
+    #         # view.run_command("move_to", {"to": "eof"})
+    #         view.show_at_center(view.size())
 
     def on_query_completions(self, view, prefix, locations):
         '''
@@ -102,7 +104,10 @@ class DevEvent(sublime_plugin.EventListener):
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
-        if what == 'rpdb':
+        if what == 'trace':
+            trace_test.do_it()
+            
+        elif what == 'rpdb':
             print('DEV Before running rpdb')
             try:
                 remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()

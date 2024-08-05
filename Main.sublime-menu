@@ -32,6 +32,7 @@
         "id": "dev",
         "children":
         [
+            { "caption": "Debug trace", "command": "sbot_debug", "args": { "what": "trace" } },
             { "caption": "Debug boom", "command": "sbot_debug", "args": { "what": "boom" } },
             { "caption": "Debug rpdb", "command": "sbot_debug", "args": { "what": "rpdb" } },
             { "caption": "-" },
@@ -48,7 +49,7 @@
             { "caption": "-" },
             { "caption": "Sublime Commands", "command": "sbot_open", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\sublime-commands.ntr"]} },
             { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\lua-cheat-sheet.lua"]} },
-            { "caption": "Sbot Log", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },
+            { "caption": "Sbot Log", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot_log.txt"]} },
         ],
     },
 ]

@@ -151,7 +151,7 @@ def error_function(denom):
 
 #-------------------------- test start here --------------------------------
 
-# Open file now. Doing it on every write is too expensive. TODO1 clean like logger
+# Open file now. Doing it on every write is too expensive. TO-DO1 clean like logger
 with open(sc.get_store_fn('sbot.trc'), "a") as _ftrace:
     init_trace()
     time_str = f'{str(datetime.datetime.now())}'[0:-3]

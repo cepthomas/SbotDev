@@ -8,7 +8,6 @@ import platform
 import shutil
 import subprocess
 import sys
-import threading
 import time
 import traceback
 import sublime
@@ -40,7 +39,7 @@ _temp_view_id = None
 
 # Log defs.
 _LOG_FILE_NAME = 'sbot.log'
-_level_to_name = {LL_ERROR:'ERR', LL_WARN:'WRN', LL_INFO:'INF', LL_DEBUG:'DBG'}
+_level_to_name = {LL_ERROR: 'ERR', LL_WARN: 'WRN', LL_INFO: 'INF', LL_DEBUG: 'DBG'}
 _name_to_level = {v: k for k, v in _level_to_name.items()}
 _log_level = LL_INFO
 _tell_level = LL_INFO
@@ -73,10 +72,12 @@ def log_debug(message):
 
 def set_log_level(level):
     '''Set current log level.'''
+    global _log_level
     _log_level = _convert_log_level(level)
 
 def set_tell_level(level):
     '''Set level to send to stdout.'''
+    global _tell_level
     _tell_level = _convert_log_level(level)
 
 
@@ -239,7 +240,7 @@ def wait_load_file(window, fpath, line):
         vnew = window.open_file(fpath)
         _load(vnew)
     except Exception as e:
-        sc.log_error(f'Failed to open {fpath}: {e}')
+        log_error(f'Failed to open {fpath}: {e}')
         vnew = None
 
     return vnew

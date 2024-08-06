@@ -4,17 +4,12 @@ import time
 import traceback
 import functools
 import platform
-# import datetime
 import inspect
-# import pathlib
-# import shutil
-# import subprocess
-# import sublime
 
 from .sbot_common_master import *  # noqa: F403
 
 
-''' TODO add:
+''' TODO1 add:
 -----
 ic(foo(123))
 Prints
@@ -78,6 +73,7 @@ _ftrace = None
 # For elapsed time stamps.
 _trace_start_time = 0
 
+
 #-----------------------------------------------------------------------------------
 #---------------------------- Public trace functions -------------------------------
 #-----------------------------------------------------------------------------------
@@ -100,9 +96,11 @@ def start_trace(name, clean_file=True):
     _ftrace = open(trace_fn, 'a')
     _trace_start_time = _get_ns()
 
+    print(f'_ftrace 2 {_ftrace}')
+
 
 #---------------------------------------------------------------------------
-def stop_trace(): #TODO1 make sure this gets called!
+def stop_trace(): #TODO1 make sure this always gets called!
     '''Stop tracing.'''
     global _ftrace
 
@@ -113,46 +111,58 @@ def stop_trace(): #TODO1 make sure this gets called!
 
 
 #---------------------------------------------------------------------------
-def T(msg):
+def T(*msgs):
     '''Trace function for user code.'''
     if _ftrace is not None:
-        _trace(msg, stkpos=2)
+        # Dig out func and line.
+        frame = sys._getframe(1)
+        if 'self' in frame.f_locals:
+            class_name = frame.f_locals['self'].__class__.__name__
+            func = f'{class_name}.{frame.f_code.co_name}'
+        else:
+            func = frame.f_code.co_name  # could be '<module>'
+
+        msgl = []
+        for m in msgs:
+            msgl.append(m)
+
+        _trace(func, frame.f_lineno, msgl)
 
 
 #---------------------------------------------------------------------------
 def traced_function(f):
     '''Decorator to support function entry/exit tracing.'''
+
     # Check for enabled.
-    if _ftrace is None:
-        return f
+if _ftrace is None:
+    print(f'_ftrace 1 {_ftrace}')
+    return f
 
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        parts = []
-        parts.append(f'{f.__name__}:enter')
-
+        msgs = []
         if len(args) > 0:
             for i in range(len(args)):
-                parts.append(f'arg{i}:{args[i]}') # TODO nice to have name?
+                msgs.append(f'arg{i}:{args[i]}') # TODO nice to have name but difficult?
         if len(kwargs) > 0:
-            print(kwargs)
             for k,v in kwargs.items():
-                parts.append(f'kwarg {k}:{v}')
+                msgs.append(f'{k}:{v}')
 
-        s = ' '.join(parts)
-        _trace(s)
+        # s = ' '.join(msgs)
+        _trace(f.__name__, 'enter', msgs)
 
-        stat = 0
+        # Execute the wrapped function.
         res = None
+        ret = []
         try:
             res = f(*args, **kwargs)
+            ret.append(f'res:{res}')
         except Exception as e:
             # _trace(e)
-            _trace(traceback.format_exc())
-            stat = 1
+            _trace(f.__name__, 'exception', [e, traceback.format_exc()])
 
-        _trace(f'{f.__name__}:exit stat:{stat} res:{res} type:{type(res)}')
-        return (stat, res)
+        _trace(f.__name__, 'exit', ret)
+        return res
     return wrapper
 
 
@@ -162,32 +172,21 @@ def traced_function(f):
 
 
 #---------------------------------------------------------------------------
-def _trace(*msgs, **opts):  #stkpos=None):
-    '''Do one trace record. if stkpos not None determine the function/line info too.'''
+def _trace(func, line, msgs):
+    '''Do one trace record.'''
     elapsed = _get_ns() - _trace_start_time
     msec = elapsed // 1000000
     usec = elapsed // 1000
 
     parts = []
     parts.append(f'{msec:04}.{usec:03}')
-
-    if stkpos is not None:
-        frame = sys._getframe(stkpos)
-        if 'self' in frame.f_locals:
-            class_name = frame.f_locals['self'].__class__.__name__
-            func = f'{class_name}.{frame.f_code.co_name}'
-        else:
-            func = frame.f_code.co_name  # could be '<module>'
-        parts.append(f'{func}:{frame.f_lineno}')
-    # else:
-    #     parts = f'{msec:04}.{usec:03} {msg}\n'
+    parts.append(f'{func}:{line}')
 
     for m in msgs:
-        parts.append(f'{m}')
+        parts.append(f'[{m}]')
 
     parts.append('\n')
     s = ' '.join(parts)
-    print(s)
 
     # Write the record. TODO1 if file is locked by other process notify user that trace is one module only.
     _ftrace.write(s)

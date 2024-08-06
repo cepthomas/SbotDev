@@ -1,15 +1,12 @@
+import sys
+import os
+import traceback
+import platform
 import collections
 import datetime
-import functools
-import inspect
-import os
 import pathlib
-import platform
 import shutil
 import subprocess
-import sys
-import time
-import traceback
 import sublime
 
 
@@ -45,10 +42,6 @@ _log_level = LL_INFO
 _tell_level = LL_INFO
 _log_fn = None
 
-# Trace defs.
-_ftrace = None
-_trace_start_time = 0
-
 
 #-----------------------------------------------------------------------------------
 #---------------------------- Public logger functions ------------------------------
@@ -79,75 +72,6 @@ def set_tell_level(level):
     '''Set level to send to stdout.'''
     global _tell_level
     _tell_level = _convert_log_level(level)
-
-
-#-----------------------------------------------------------------------------------
-#---------------------------- Public trace functions -------------------------------
-#-----------------------------------------------------------------------------------
-
-#---------------------------------------------------------------------------
-def start_trace(name, clean_file=True):
-    '''Enables tracing and optionally clean file (default is True).'''
-    global _ftrace
-    global _trace_start_time
-
-    trace_fn = get_store_fn(f'sbot_trace_{name}.log')
-
-    if clean_file:
-        with open(trace_fn, 'w'):
-            pass
-
-    # Open file now. Doing it on every write is too expensive.
-    _ftrace = open(trace_fn, 'a')
-    _trace_start_time = _get_ns()
-
-
-#---------------------------------------------------------------------------
-def stop_trace(clean_file=True): 
-    '''Stop tracing.'''
-    global _ftrace
-
-    if _ftrace is not None:
-        _ftrace.flush()
-        _ftrace.close()
-        _ftrace = None
-
-
-#---------------------------------------------------------------------------
-def T(msg):
-    '''Trace function for user code.'''
-    if _ftrace is not None:
-        _trace(msg, 2)
-
-
-#---------------------------------------------------------------------------
-def traced_function(f):
-    '''Decorator to support function entry/exit tracing.'''
-    # Check for enabled.
-    # if _ftrace is None:
-    #     return f
-
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        parts = [f'{f.__name__}(enter)']
-        if len(args) > 0:
-            parts.append(f'args:{args}')
-        if len(kwargs) > 0:
-            parts.append(f'kwargs:{kwargs}')
-        _trace(' '.join(parts))
-
-        stat = 0
-        res = None
-        try:
-            res = f(*args, **kwargs)
-        except Exception as e:
-            # _trace(e)
-            _trace(traceback.format_exc())
-            stat = 1
-
-        _trace(f'{f.__name__}(exit) stat:{stat} res:{res} type:{type(res)}')
-        return (stat, res)
-    return wrapper
 
 
 #-----------------------------------------------------------------------------------
@@ -405,41 +329,6 @@ def _write_log(level, message):
         out_line = f'>>> {slvl} {fn}:{line} {message}'
         sys.stdout.write(out_line + '\n')
         sys.stdout.flush()
-
-
-#---------------------------------------------------------------------------
-def _get_ns():
-    '''Get current nanosecond.'''
-    if platform.system() == 'Darwin':
-        log_error('Sorry, we don\'t do Macs')
-    elif platform.system() == 'Windows':
-        return time.perf_counter_ns()
-    else:  # linux variants
-        return time.clock_gettime_ns(time.CLOCK_MONOTONIC)
-
-
-#---------------------------------------------------------------------------
-def _trace(msg, stkpos=None):
-    '''Do one trace record. if stkpos not None determine the function/line info too.'''
-    elapsed = _get_ns() - _trace_start_time
-    msec = elapsed // 1000000
-    usec = elapsed // 1000
-
-    if stkpos is not None:
-        frame = sys._getframe(stkpos)
-        if 'self' in frame.f_locals:
-            class_name = frame.f_locals['self'].__class__.__name__
-            func = f'{class_name}.{frame.f_code.co_name}'
-        else:
-            func = frame.f_code.co_name  # could be '<module>'
-        s = f'{msec:04}.{usec:03} {func}({frame.f_lineno}) {msg}\n'
-    else:
-        s = f'{msec:04}.{usec:03} {msg}\n'
-
-    print(s)        
-
-    # Write the record. TODO1 if file is locked by other process notify user that trace is one module only.
-    _ftrace.write(s)
 
 
 #-----------------------------------------------------------------------------------

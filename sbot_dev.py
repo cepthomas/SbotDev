@@ -13,10 +13,10 @@ from . import remote_pdb
 
 
 try:
-    from . import tracker
+    from . import tracer
 except ImportError:
 # except ModuleNotFoundError:
-    print('------------ Using fake tracker --------------')
+    print('------------ Using fake tracer --------------')
     def start_trace(fn):
         pass
     def stop_trace():
@@ -410,9 +410,9 @@ def _dump_me(stkpos=1):  # caller
     return '\n'.join(buff)
 
 #---------------------------------------------------------------------------
-def _tracker_test():
+def _tracer_test():
     # Mainly just to test optional import.
-    trace_fn = os.path.join(os.path.dirname(__file__), 'tracker.log')
+    trace_fn = os.path.join(os.path.dirname(__file__), 'tracer.log')
     start_trace(trace_fn)
 
     time_str = f'{str(datetime.datetime.now())}'[0:-3]
@@ -420,4 +420,4 @@ def _tracker_test():
 
     stop_trace()
 
-_tracker_test()
+_tracer_test()

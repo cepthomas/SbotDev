@@ -25,6 +25,7 @@ from .sbot_common_master import *  # noqa: F403
 # assert: A(condition) if false raise something
 # enable/disable T()/A(). production skips everything
 
+# optional marker like >>>?
 
 #-----------------------------------------------------------------------------------
 #---------------------------- Private fields ---------------------------------------
@@ -118,7 +119,7 @@ def traced_function(f):
                 ret.append(f'{res}')
             except Exception as e:
                 # _trace(e)
-                _trace(f.__name__, 'exception', [traceback.format_exc()])
+                _trace(f.__name__, 'exception', [traceback.format_exc()]) #TODO use , e.__traceback__ like log_error()?
 
             _trace(f.__name__, 'exit', ret)
         else:

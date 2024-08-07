@@ -2,6 +2,7 @@ import sys
 import os
 import subprocess
 import platform
+import traceback
 import sublime
 import sublime_plugin
 from . import sbot_common_master as sc
@@ -63,15 +64,14 @@ class DevEvent(sublime_plugin.EventListener):
         ''' Called once with a list of views that were loaded before the EventListener was instantiated. '''
         # First thing that happens when plugin/window created. Initialize everything.
         settings = sublime.load_settings(DEV_SETTINGS_FILE)
-        sc.set_log_level(sc.LL_DEBUG)
         sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
-    # def on_load(self, view):
-    #     ''' Called when the file is finished loading. '''
-    #     # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
-    #     if view.file_name() is not None and LOG_FILE_NAME in view.file_name():
-    #         # view.run_command("move_to", {"to": "eof"})
-    #         view.show_at_center(view.size())
+    def on_load(self, view):
+        ''' Called when the file is finished loading. '''
+        # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
+        if view.file_name() is not None and 'sbot.log' in view.file_name():
+            # view.run_command("move_to", {"to": "eof"})
+            view.show_at_center(view.size())
 
     def on_query_completions(self, view, prefix, locations):
         '''
@@ -117,16 +117,11 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
         elif what == 'boom':
             # Blow stuff up.
-            bing = bong
-            x = 1 / 0
 
-            # Force a handled exception.
-            sc.log_debug('Forcing handled exception!')
-            sc.start_file('not-a-real-file')
-
-            # Force an unhandled exception.
+            # Force unhandled exception.
             sc.log_debug('Forcing unhandled exception!')
-            i = 222 / 0
+            sc.open_path('not-a-real-file')
+            # i = 222 / 0
 
         elif what == 'api':
             do_api(edit)
@@ -400,27 +395,6 @@ def dump_stack(cat):
         return
 
 
-
-#-----------------------------------------------------------------------------------
-def _notify_exception(exc_type, exc_value, exc_traceback):
-    '''Process unhandled exceptions and notify user.'''
-
-    # Usage: Connect the last chance hook. Should be done once/global.
-    # sys.excepthook = _notify_exception
-
-    # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
-    if issubclass(exc_type, FileNotFoundError):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-
-    msg = f'Unhandled exception {exc_type.__name__}: {exc_value}'
-    stb = traceback.format_tb(exc_traceback)
-    stb.insert(0, msg)
-    stb = '\n'.join(stb)
-    log_error(stb)
-    sublime.error_message(msg)
-
-
 #---------------------------------------------------------------------------
 def _dump_me(stkpos=1):  # caller
     buff = []
@@ -447,4 +421,3 @@ def _dump_me(stkpos=1):  # caller
     # mod_name = frame.f_globals['__name__']  # SbotDev.sbot_dev
 
     return '\n'.join(buff)
-

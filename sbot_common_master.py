@@ -14,17 +14,11 @@ import sublime
 
 
 #-----------------------------------------------------------------------------------
-#---------------------------- Public defs ------------------------------------------
+#---------------------------- Public types -----------------------------------------
 #-----------------------------------------------------------------------------------
 
 # Data type.
 HighlightInfo = collections.namedtuple('HighlightInfo', 'scope_name, region_name, type')
-
-# Log defs.
-LL_ERROR = 0
-LL_WARN = 1
-LL_INFO = 2
-LL_DEBUG = 3
 
 
 #-----------------------------------------------------------------------------------
@@ -34,44 +28,27 @@ LL_DEBUG = 3
 # Internal flag.
 _temp_view_id = None
 
-# Log defs.
-_LOG_FILE_NAME = 'sbot.log'
-_level_to_name = {LL_ERROR: 'ERR', LL_WARN: 'WRN', LL_INFO: 'INF', LL_DEBUG: 'DBG'}
-_name_to_level = {v: k for k, v in _level_to_name.items()}
-_log_level = LL_INFO
-_tell_level = LL_INFO
+# Log stuff.
 _log_fn = None
+_log_levels = ['ERR', 'INF', 'DBG']
+_log_level = 2  # TODO need a flag to log debug for release?
 
 
 #-----------------------------------------------------------------------------------
 #---------------------------- Public logger functions ------------------------------
 #-----------------------------------------------------------------------------------
 
-def log_error(message):
+def log_error(message, tb=None):
     '''Convenience function.'''
-    _write_log(LL_ERROR, message)
-
-def log_warn(message):
-    '''Convenience function.'''
-    _write_log(LL_WARN, message)
+    _write_log(0, message, tb)
 
 def log_info(message):
     '''Convenience function.'''
-    _write_log(LL_INFO, message)
+    _write_log(1, message)
 
 def log_debug(message):
     '''Convenience function.'''
-    _write_log(LL_DEBUG, message)
-
-def set_log_level(level):
-    '''Set current log level.'''
-    global _log_level
-    _log_level = _convert_log_level(level)
-
-def set_tell_level(level):
-    '''Set level to send to stdout.'''
-    global _tell_level
-    _tell_level = _convert_log_level(level)
+    _write_log(2, message)
 
 
 #-----------------------------------------------------------------------------------
@@ -164,7 +141,7 @@ def wait_load_file(window, fpath, line):
         vnew = window.open_file(fpath)
         _load(vnew)
     except Exception as e:
-        log_error(f'Failed to open {fpath}: {e}')
+        log_error(f'Failed to open {fpath}: {e}', e.__traceback__)
         vnew = None
 
     return vnew
@@ -281,22 +258,9 @@ def open_terminal(where):
 #---------------------------- Private functions ------------------------------------
 #-----------------------------------------------------------------------------------
 
-#-----------------------------------------------------------------------------------
-def _convert_log_level(level):
-    '''Convert arg (str or int) into a valid log level.'''
-    new_level = -1
-    if type(level) is int:
-        new_level = level
-    elif type(level) is str:
-        if level in _name_to_level:
-            new_level = _name_to_level[level]
-    if new_level not in _level_to_name:
-        raise ValueError(f'Invalid log level: {level}')
-    return new_level
-
 
 #-----------------------------------------------------------------------------------
-def _write_log(level, message):
+def _write_log(level, message, tb=None):
     '''Format a standard message with caller info and log it.'''
     # Gates. Sometimes get stray empty lines.
     if len(message) == 0:
@@ -314,27 +278,48 @@ def _write_log(level, message):
     # f'mod_name = {frame.f_globals["__name__"]}'
     # f'class_name = {frame.f_locals["self"].__class__.__name__}'
 
-    slvl = _level_to_name[level] if level in _level_to_name else '???'
+    slvl = _log_levels[level] if level < len(_log_levels) else '???'
     time_str = f'{str(datetime.datetime.now())}'[0:-3]
 
-    # Write the record.
-    # I don't think file access needs to be synchronized. ST docs say that API runs on one thread. But?
+    # Write the record. No need to be synchronized across multiple sbot pugins
+    # as ST docs say that API runs on a single thread.
     with open(_log_fn, 'a') as log:
         out_line = f'{time_str} {slvl} {fn}:{line} {message}'
         log.write(out_line + '\n')
+        if tb is not None:
+            stb = '\n'.join(traceback.format_tb(tb))
+            log.write(stb)
         log.flush()
 
-    # Write to console also?
-    if level <= _tell_level:
-        out_line = f'>>> {slvl} {fn}:{line} {message}'
-        sys.stdout.write(out_line + '\n')
-        sys.stdout.flush()
+    # Write to console also?  INF and ERR only.
+    if level <= 1:
+        out_line = f'SBOT {slvl} {fn}:{line} {message}'
+        print(out_line)
+
+
+#-----------------------------------------------------------------------------------
+def _notify_exception(exc_type, exc_value, exc_traceback):
+    '''Process unhandled exceptions and notify user.'''
+
+    # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
+    if issubclass(exc_type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(exc_value):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    msg = f'Unhandled exception {exc_type.__name__}: {exc_value}'
+    log_error(msg, exc_traceback)
+    sublime.error_message(msg) # This goes to console too.
+
 
 #-----------------------------------------------------------------------------------
 #----------------------- Finish initialization -------------------------------------
 #-----------------------------------------------------------------------------------
 
-_log_fn = get_store_fn(_LOG_FILE_NAME)
+# Connect the last chance hook.
+# This should really be done only once rather than each plugin but *should* be ok.
+sys.excepthook = _notify_exception
+
+_log_fn = get_store_fn('sbot.log')
 
 # Maybe roll over log now.
 if os.path.exists(_log_fn) and os.path.getsize(_log_fn) > 50000:

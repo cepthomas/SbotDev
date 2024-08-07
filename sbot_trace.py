@@ -6,9 +6,9 @@ import functools
 import platform
 import inspect
 
-from .sbot_common_master import *  # noqa: F403
+# from .sbot_common_master import *  # noqa: F403
 
-# TODO1 doc:
+# TO-DO1 doc:
 # T(a, b, c, ...) printable things
 # 0000.110 a_test_class.__init__:10 [making one a_test_class] [5] 
 # sec.usec func-or-class.func:line-num [arg1] [arg2]...
@@ -20,7 +20,7 @@ from .sbot_common_master import *  # noqa: F403
 # 0000.159 test_class_do_something:exit [5-glom-5] 
 # sec.usec func-or-class.func:exit [result]
 
-# TODO1 add:
+# TO-DO1 add:
 # maybe A(func(xxx)) => sec.usec func:line-num [arg1] [result]
 # assert: A(condition) if false raise something
 # enable/disable T()/A(). production skips everything
@@ -43,14 +43,16 @@ _trace_start_time = 0
 #-----------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------
-def start_trace(log_name, clean_file=True):
+# def start_trace(log_name, clean_file=True):
+def start_trace(trace_fn, clean_file=True):
     '''Enables tracing and optionally clean file (default is True).'''
     global _ftrace
     global _trace_start_time
 
     stop_trace()  # just in case
 
-    trace_fn = get_store_fn(f'trace_{log_name}.log')
+    # trace_fn = get_store_fn(f'trace.log')
+    # trace_fn = get_store_fn(f'trace_{log_name}.log') TODO support more than one at a time? Doesn't seem useful.
 
     if clean_file:
         with open(trace_fn, 'w'):
@@ -62,7 +64,7 @@ def start_trace(log_name, clean_file=True):
 
 
 #---------------------------------------------------------------------------
-def stop_trace(): #TODO1 make sure this always gets called!
+def stop_trace(): #TO-DO1 make sure this always gets called!
     '''Stop tracing.'''
     global _ftrace
 
@@ -152,7 +154,7 @@ def _trace(func, line, msgs):
 
     s = ' '.join(parts) + '\n'
 
-    # Write the record. TODO1 if file is locked by other process notify user that trace is one module only.
+    # Write the record. TO-DO1 if file is locked by other process notify user that trace is one module only.
     _ftrace.write(s)
 
 

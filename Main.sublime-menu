@@ -49,7 +49,8 @@
             { "caption": "-" },
             { "caption": "Sublime Commands", "command": "sbot_open", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\sublime-commands.ntr"]} },
             { "caption": "Lua Cheatsheet", "command": "sbot_open", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\lua-cheat-sheet.lua"]} },
-            { "caption": "Sbot Log", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot_log.txt"]} },
+            { "caption": "Sbot Log", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },
+            { "caption": "Sbot Trace", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\trace.log"]} },
         ],
     },
 ]

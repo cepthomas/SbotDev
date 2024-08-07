@@ -281,7 +281,7 @@ def _write_log(level, message, tb=None):
     slvl = _log_levels[level] if level < len(_log_levels) else '???'
     time_str = f'{str(datetime.datetime.now())}'[0:-3]
 
-    # Write the record. No need to be synchronized across multiple sbot pugins
+    # Write the record. No need to be synchronized across multiple sbot plugins
     # as ST docs say that API runs on a single thread.
     with open(_log_fn, 'a') as log:
         out_line = f'{time_str} {slvl} {fn}:{line} {message}'

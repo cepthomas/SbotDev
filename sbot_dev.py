@@ -3,44 +3,31 @@ import os
 import subprocess
 import platform
 import traceback
+import datetime
 import sublime
 import sublime_plugin
+
 from . import sbot_common_master as sc
-
 from . import remote_pdb
+# from . import trace_test
 
-from . import trace_test
+
+try:
+    from . import tracker
+except ImportError:
+# except ModuleNotFoundError:
+    print('------------ Using fake tracker --------------')
+    def start_trace(fn):
+        pass
+    def stop_trace():
+        pass
+    def T(*msgs):
+        pass
+    def traced_function(f):
+        pass
+
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
-
-
-
-#---------------------------------------------------------------------------
-def _dump_me(stkpos=1):  # caller
-    buff = []
-    frame = sys._getframe(stkpos)
-    co = frame.f_code
-    buff.append(f'>>>>>> co_filename:{co.co_filename}')
-    buff.append(f'frame.f_locals:{frame.f_locals}')
-    buff.append(f'frame.f_lineno:{frame.f_lineno}')
-    buff.append(f'co_firstlineno:{co.co_firstlineno}')
-    buff.append(f'co_argcount:{co.co_argcount}')
-    buff.append(f'co_consts:{co.co_consts}')
-    buff.append(f'co_name:{co.co_name}')
-    buff.append(f'co_names:{co.co_names}')
-    buff.append(f'co_varnames:{co.co_varnames}')
-    # co_argcount = 2
-    # co_cellvars = ()
-    # co_freevars = ()
-    # co_kwonlyargcount = 0
-    # co_posonlyargcount = 0
-    # co_nlocals = 5
-    # co_stacksize = 6
-
-    # fn = os.path.basename(frame.f_code.co_filename)  # string
-    # mod_name = frame.f_globals['__name__']  # SbotDev.sbot_dev
-
-    return '\n'.join(buff)
 
 
 #-----------------------------------------------------------------------------------
@@ -146,7 +133,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
         ''' Simple git tools: diff, commit (TODO comment?), push? https://github.com/kemayo/sublime-text-git. '''
-
+        # TODO show previous version.
         fn = self.view.file_name()
 
         if fn is not None:
@@ -421,3 +408,16 @@ def _dump_me(stkpos=1):  # caller
     # mod_name = frame.f_globals['__name__']  # SbotDev.sbot_dev
 
     return '\n'.join(buff)
+
+#---------------------------------------------------------------------------
+def _tracker_test():
+    # Mainly just to test optional import.
+    trace_fn = os.path.join(os.path.dirname(__file__), 'tracker.log')
+    start_trace(trace_fn)
+
+    time_str = f'{str(datetime.datetime.now())}'[0:-3]
+    T(f'Dev start test at', time_str)
+
+    stop_trace()
+
+_tracker_test()

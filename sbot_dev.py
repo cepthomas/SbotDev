@@ -399,3 +399,52 @@ def dump_stack(cat):
         # End of stack.
         return
 
+
+
+#-----------------------------------------------------------------------------------
+def _notify_exception(exc_type, exc_value, exc_traceback):
+    '''Process unhandled exceptions and notify user.'''
+
+    # Usage: Connect the last chance hook. Should be done once/global.
+    # sys.excepthook = _notify_exception
+
+    # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
+    if issubclass(exc_type, FileNotFoundError):
+        sys.__excepthook__(exc_type, exc_value, exc_traceback)
+        return
+
+    msg = f'Unhandled exception {exc_type.__name__}: {exc_value}'
+    stb = traceback.format_tb(exc_traceback)
+    stb.insert(0, msg)
+    stb = '\n'.join(stb)
+    log_error(stb)
+    sublime.error_message(msg)
+
+
+#---------------------------------------------------------------------------
+def _dump_me(stkpos=1):  # caller
+    buff = []
+    frame = sys._getframe(stkpos)
+    co = frame.f_code
+    buff.append(f'>>>>>> co_filename:{co.co_filename}')
+    buff.append(f'frame.f_locals:{frame.f_locals}')
+    buff.append(f'frame.f_lineno:{frame.f_lineno}')
+    buff.append(f'co_firstlineno:{co.co_firstlineno}')
+    buff.append(f'co_argcount:{co.co_argcount}')
+    buff.append(f'co_consts:{co.co_consts}')
+    buff.append(f'co_name:{co.co_name}')
+    buff.append(f'co_names:{co.co_names}')
+    buff.append(f'co_varnames:{co.co_varnames}')
+    # co_argcount = 2
+    # co_cellvars = ()
+    # co_freevars = ()
+    # co_kwonlyargcount = 0
+    # co_posonlyargcount = 0
+    # co_nlocals = 5
+    # co_stacksize = 6
+
+    # fn = os.path.basename(frame.f_code.co_filename)  # string
+    # mod_name = frame.f_globals['__name__']  # SbotDev.sbot_dev
+
+    return '\n'.join(buff)
+

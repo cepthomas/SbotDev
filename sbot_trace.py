@@ -8,59 +8,22 @@ import inspect
 
 from .sbot_common_master import *  # noqa: F403
 
+# TODO1 doc:
+# T(a, b, c, ...) printable things
+# 0000.110 a_test_class.__init__:10 [making one a_test_class] [5] 
+# sec.usec func-or-class.func:line-num [arg1] [arg2]...
+# 
+# function decorator yields:
+# 0000.146 test_class_do_something:enter [<SbotDev.trace_test.a_test_class object at 0x000001B550FA7CD0>] [5] 
+# sec.usec func-or-class.func:enter [arg1] [arg2]...
+# 
+# 0000.159 test_class_do_something:exit [5-glom-5] 
+# sec.usec func-or-class.func:exit [result]
 
-''' TODO1 add:
------
-ic(foo(123))
-Prints
-ic| foo(123): 456
-
-
------
-d = {'key': {1: 'one'}}
-ic(d['key'][1])
-
-class klass():
-    attr = 'yep'
-ic(klass.attr)
-Prints
-ic| d['key'][1]: 'one'
-ic| klass.attr: 'yep'
-
-------
-def foo():
-    ic()
-    first()
-
-    if expression:
-        ic()
-        second()
-    else:
-        ic()
-        third()
-Prints
-ic| example.py:4 in foo()
-ic| example.py:11 in foo()
-
-
-------
-ic(1)
-ic.disable()
-ic(2)
-ic.enable()
-ic(3)
-
-
-------
-temperature = -1
-y.assert_(temperature > 0)
-This will raise an AttributeError.
-But
-y.enabled = False
-temperature = -1
-y.assert_(temperature > 0)
-will not.
-'''
+# TODO1 add:
+# maybe A(func(xxx)) => sec.usec func:line-num [arg1] [result]
+# assert: A(condition) if false raise something
+# enable/disable T()/A(). production skips everything
 
 
 #-----------------------------------------------------------------------------------
@@ -79,14 +42,14 @@ _trace_start_time = 0
 #-----------------------------------------------------------------------------------
 
 #---------------------------------------------------------------------------
-def start_trace(name, clean_file=True):
+def start_trace(log_name, clean_file=True):
     '''Enables tracing and optionally clean file (default is True).'''
     global _ftrace
     global _trace_start_time
 
     stop_trace()  # just in case
 
-    trace_fn = get_store_fn(f'trace_{name}.log')
+    trace_fn = get_store_fn(f'trace_{log_name}.log')
 
     if clean_file:
         with open(trace_fn, 'w'):
@@ -95,8 +58,6 @@ def start_trace(name, clean_file=True):
     # Open file now. Doing it on every write is too expensive.
     _ftrace = open(trace_fn, 'a')
     _trace_start_time = _get_ns()
-
-    print(f'_ftrace 2 {_ftrace}')
 
 
 #---------------------------------------------------------------------------
@@ -133,36 +94,39 @@ def T(*msgs):
 def traced_function(f):
     '''Decorator to support function entry/exit tracing.'''
 
-    # Check for enabled.
-if _ftrace is None:
-    print(f'_ftrace 1 {_ftrace}')
-    return f
-
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        msgs = []
-        if len(args) > 0:
-            for i in range(len(args)):
-                msgs.append(f'arg{i}:{args[i]}') # TODO nice to have name but difficult?
-        if len(kwargs) > 0:
-            for k,v in kwargs.items():
-                msgs.append(f'{k}:{v}')
-
-        # s = ' '.join(msgs)
-        _trace(f.__name__, 'enter', msgs)
-
-        # Execute the wrapped function.
         res = None
-        ret = []
-        try:
-            res = f(*args, **kwargs)
-            ret.append(f'res:{res}')
-        except Exception as e:
-            # _trace(e)
-            _trace(f.__name__, 'exception', [e, traceback.format_exc()])
 
-        _trace(f.__name__, 'exit', ret)
+        # Check for enabled.
+        if _ftrace is not None:
+            # Instrumented execution.
+            msgs = []
+            if len(args) > 0:
+                for i in range(len(args)):
+                    msgs.append(f'{args[i]}') # nice to have name but difficult
+            if len(kwargs) > 0:
+                for k,v in kwargs.items():
+                    msgs.append(f'{k}:{v}')
+
+            _trace(f.__name__, 'enter', msgs)
+
+            # Execute the wrapped function.
+            ret = []
+            try:
+                res = f(*args, **kwargs)
+                ret.append(f'{res}')
+            except Exception as e:
+                # _trace(e)
+                _trace(f.__name__, 'exception', [traceback.format_exc()])
+
+            _trace(f.__name__, 'exit', ret)
+        else:
+            # Simple execution.
+            res = f(*args, **kwargs)
+
         return res
+
     return wrapper
 
 
@@ -185,8 +149,7 @@ def _trace(func, line, msgs):
     for m in msgs:
         parts.append(f'[{m}]')
 
-    parts.append('\n')
-    s = ' '.join(parts)
+    s = ' '.join(parts) + '\n'
 
     # Write the record. TODO1 if file is locked by other process notify user that trace is one module only.
     _ftrace.write(s)

@@ -330,32 +330,11 @@ def _write_log(level, message):
         sys.stdout.write(out_line + '\n')
         sys.stdout.flush()
 
-
-#-----------------------------------------------------------------------------------
-def _notify_exception(exc_type, exc_value, exc_traceback):
-    '''Process unhandled exceptions and notify user.'''
-
-    # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
-    if issubclass(exc_type, FileNotFoundError):
-        sys.__excepthook__(exc_type, exc_value, exc_traceback)
-        return
-
-    msg = f'Unhandled exception {exc_type.__name__}: {exc_value}'
-    stb = traceback.format_tb(exc_traceback)
-    stb.insert(0, msg)
-    stb = '\n'.join(stb)
-    log_error(stb)
-    sublime.error_message(msg)
-
-
 #-----------------------------------------------------------------------------------
 #----------------------- Finish initialization -------------------------------------
 #-----------------------------------------------------------------------------------
 
 _log_fn = get_store_fn(_LOG_FILE_NAME)
-
-# Connect the last chance hook. TODO should be done once/global.
-# sys.excepthook = _notify_exception
 
 # Maybe roll over log now.
 if os.path.exists(_log_fn) and os.path.getsize(_log_fn) > 50000:

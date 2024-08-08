@@ -4,27 +4,77 @@ import subprocess
 import platform
 import traceback
 import datetime
+import importlib
 import sublime
 import sublime_plugin
 
-from . import sbot_common_master as sc
+
+# from . import sbot_common_master as sc
 from . import remote_pdb
 # from . import trace_test
 
+# def log_init(fn):
+#     '''Initialize logging.'''
+#     _log_fn = get_store_fn('sbot.log')
 
-try:
-    from . import tracer
-except ImportError:
-# except ModuleNotFoundError:
-    print('------------ Using fake tracer --------------')
-    def start_trace(fn):
-        pass
-    def stop_trace():
-        pass
-    def T(*msgs):
-        pass
-    def traced_function(f):
-        pass
+
+
+from .SbotCommon.test_xxx import *  # noqa: F403
+from .SbotCommon import utils as sc
+from .SbotCommon.tracer import *  # noqa: F403
+from .SbotCommon.logger import *  # noqa: F403
+
+# def log_init(fn):
+#     '''Initialize logging.'''
+#     _log_fn = get_store_fn('sbot.log')
+_log_fn = sc.get_store_fn('sbot.log')
+log_init(_log_fn):
+# from .SbotCommon import test_xxx
+
+
+# Reload if file changes. TODO1 what about import *?
+# importlib.reload(test_xxx)
+
+
+
+# print('### sys.modules:')
+# print(sys.modules)
+
+# print(f'### dir of {__name__}:')
+# print(dir(sys.modules[__name__]))
+
+# globals() — Return a dictionary representing the current global symbol table.
+#   This is always the dictionary of the current module (inside a function or method,
+#   this is the module where it is defined, not the module from which it is called).
+# print(f'### globals of {__name__}:')
+# print(globals())
+
+
+# test_xxx.do_something('111')
+do_something('222')
+
+
+# # Reload if file changes.
+# importlib.reload(test_xxx)
+
+# print(f'### globals of {__name__} after reload:')
+# print(globals())
+
+
+
+# try:
+#     from . import tracer
+# except ImportError:
+# # except ModuleNotFoundError:
+#     print('------------ Using fake tracer --------------')
+#     def start_trace(fn):
+#         pass
+#     def stop_trace():
+#         pass
+#     def T(*msgs):
+#         pass
+#     def traced_function(f):
+#         pass
 
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
@@ -92,7 +142,8 @@ class DevEvent(sublime_plugin.EventListener):
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
         if what == 'trace':
-            trace_test.do_it()
+            # trace_test.do_it()
+            pass
             
         elif what == 'rpdb':
             print('DEV Before running rpdb')
@@ -420,4 +471,4 @@ def _tracer_test():
 
     stop_trace()
 
-_tracer_test()
+# _tracer_test()

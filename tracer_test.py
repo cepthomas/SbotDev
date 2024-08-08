@@ -1,13 +1,11 @@
 import sys
-from .sbot_common_master import *  # noqa: F403
-from .sbot_trace import *  # noqa: F403
+import datetime
+from .SbotCommon.tracer import *  # noqa: F403
 
 
 #-------------------------- trace test code --------------------------------------
 
 class TestClass(object):
-    name: str
-    tags: []
 
     def __init__(self, name, tags, arg):
         T('making one TestClass', name, tags, arg)
@@ -64,15 +62,19 @@ def error_function(denom):
 
 #-------------------------- test start here --------------------------------
 
-def do_it():
-    start_trace('dev')
+# def do_it():
 
-    time_str = f'{str(datetime.datetime.now())}'[0:-3]
-    T(f'!!! Start test at', time_str)
-    do_a_suite(nuber=911, alpha='abcd')  # named args
-    # T(do_a_suite.__name__)
-    # T(do_a_suite.__doc__)
+#     trace_fn = os.path.join(os.path.dirname(__file__), 'tracer.log')
+#     # trace_fn = sc.get_store_fn(f'trace_{log_name}.log') TODO support more than one at a time? Doesn't seem useful.
 
-    stop_trace()
+#     start_trace(trace_fn)
+
+#     time_str = f'{str(datetime.datetime.now())}'[0:-3]
+#     T(f'!!! Start test at', time_str)
+#     do_a_suite(nuber=911, alpha='abcd')  # named args
+#     # T(do_a_suite.__name__)
+#     # T(do_a_suite.__doc__)
+
+#     stop_trace()
     
-do_it()
+# do_it()

@@ -1,6 +1,6 @@
 import sys
 import datetime
-from .SbotCommon.tracer import *  # noqa: F403
+from .tracer import *  # noqa: F403
 
 
 #-------------------------- trace test code --------------------------------------

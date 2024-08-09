@@ -128,8 +128,8 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Project files
-
-
 # VS
 .vs/
+
+# Project files
+_tracer.log

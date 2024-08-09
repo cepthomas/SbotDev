@@ -9,72 +9,40 @@ import sublime
 import sublime_plugin
 
 
-# from . import sbot_common_master as sc
-from . import remote_pdb
-# from . import trace_test
-
-# def log_init(fn):
-#     '''Initialize logging.'''
-#     _log_fn = get_store_fn('sbot.log')
-
-
-
-from .SbotCommon.test_xxx import *  # noqa: F403
 from .SbotCommon import utils as sc
-from .SbotCommon.tracer import *  # noqa: F403
-from .SbotCommon.logger import *  # noqa: F403
+from .SbotCommon.tracer import *
+from .SbotCommon.logger import *
 
-# def log_init(fn):
-#     '''Initialize logging.'''
-#     _log_fn = get_store_fn('sbot.log')
-_log_fn = sc.get_store_fn('sbot.log')
-log_init(_log_fn):
+# Initialize logging.
+log_init(sc.get_store_fn('sbot.log'))
+
+# Dev stuff
 # from .SbotCommon import test_xxx
-
-
-# Reload if file changes. TODO1 what about import *?
-# importlib.reload(test_xxx)
-
-
-
-# print('### sys.modules:')
-# print(sys.modules)
-
-# print(f'### dir of {__name__}:')
-# print(dir(sys.modules[__name__]))
-
-# globals() — Return a dictionary representing the current global symbol table.
-#   This is always the dictionary of the current module (inside a function or method,
-#   this is the module where it is defined, not the module from which it is called).
-# print(f'### globals of {__name__}:')
-# print(globals())
-
-
 # test_xxx.do_something('111')
+from .SbotCommon.test_xxx import *
 do_something('222')
 
 
-# # Reload if file changes.
+from . import tracer_test
+
+from . import remote_pdb
+
+
+
+
+# print(f'### sys.modules:\n{sys.modules}')
+# print(f'### dir of {__name__}:\n{sys.modules[__name__]}')
+
+# globals() — The dictionary of the current module.
+# print(f'### globals of {__name__}:\n{globals()}')
+
+# TODO1 Reload if file changes.
+# This works but what about import *?
 # importlib.reload(test_xxx)
 
-# print(f'### globals of {__name__} after reload:')
-# print(globals())
+# print(f'### globals of {__name__} after reload:\n{globals()}')
 
 
-
-# try:
-#     from . import tracer
-# except ImportError:
-# # except ModuleNotFoundError:
-#     print('------------ Using fake tracer --------------')
-#     def start_trace(fn):
-#         pass
-#     def stop_trace():
-#         pass
-#     def T(*msgs):
-#         pass
-#     def traced_function(f):
-#         pass
 
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
@@ -82,14 +50,13 @@ DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
-    ''' Called once per plugin instance. Each module/file can have its own. '''
-    # If a plugin defines a module level function plugin_loaded(), this will be called when the API is ready to use.
-    pass
+    '''Called per plugin instance.'''
+    log_info(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    ''' Ditto. '''
+    '''Ditto.'''
     pass
 
 
@@ -101,7 +68,6 @@ class DevEvent(sublime_plugin.EventListener):
         ''' Called once with a list of views that were loaded before the EventListener was instantiated. '''
         # First thing that happens when plugin/window created. Initialize everything.
         settings = sublime.load_settings(DEV_SETTINGS_FILE)
-        sc.log_debug(f'Starting up with python {platform.python_version()} on {platform.platform()}')
 
     def on_load(self, view):
         ''' Called when the file is finished loading. '''
@@ -142,8 +108,9 @@ class DevEvent(sublime_plugin.EventListener):
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
         if what == 'trace':
-            # trace_test.do_it()
-            pass
+            trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
+            # trace_fn = sc.get_store_fn(f'trace_{log_name}.log')
+            tracer_test.do_it(trace_fn)
             
         elif what == 'rpdb':
             print('DEV Before running rpdb')
@@ -154,10 +121,8 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
             print('DEV After running rpdb')
 
         elif what == 'boom':
-            # Blow stuff up.
-
-            # Force unhandled exception.
-            sc.log_debug('Forcing unhandled exception!')
+            # Blow stuff up. Force unhandled exception.
+            log_debug('Forcing unhandled exception!')
             sc.open_path('not-a-real-file')
             # i = 222 / 0
 
@@ -230,7 +195,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        # sc.log_debug('abra')
+        # log_debug('abra')
         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
 
         items = []
@@ -260,7 +225,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
 
     def on_done(self, text):
         sc.create_new_view(self.window, text)
-        sc.log_debug(f'Got:{text}')
+        log_debug(f'Got:{text}')
 
 
 #-----------------------------------------------------------------------------------
@@ -349,19 +314,19 @@ def do_api(edit):
     reg = sublime.Region(5, 8)
 
     ret = view.rowcol(12)
-    sc.log_debug(f'>0> {ret}')  # (1, 3)
+    log_debug(f'>0> {ret}')  # (1, 3)
     ret = view.text_point(2, 4)
-    sc.log_debug(f'>0> {ret}')  # 17
+    log_debug(f'>0> {ret}')  # 17
     ret = view.find('78', 5)
-    sc.log_debug(f'>0> {ret}')  # (9, 11)
+    log_debug(f'>0> {ret}')  # (9, 11)
     ret = view.substr(11)
-    sc.log_debug(f'>0> |{len(ret)}|{ret[0]}|{ret}|')  # |1|9|9|
+    log_debug(f'>0> |{len(ret)}|{ret[0]}|{ret}|')  # |1|9|9|
     ret = view.word(13)
-    sc.log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (13, 17)|UUUU|
+    log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (13, 17)|UUUU|
     ret = view.line(3)
-    sc.log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (0, 8)|012 3456|
+    log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (0, 8)|012 3456|
     ret = view.full_line(12)
-    sc.log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (9, 13)|789
+    log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (9, 13)|789
 
     ### Empty buffer.
     view = sc.create_new_view(sublime.active_window(), '')
@@ -369,21 +334,21 @@ def do_api(edit):
     reg = sublime.Region(pt, pt)
 
     ret = view.rowcol(pt)
-    sc.log_debug(f'>1> {ret}')  # (0, 0)
+    log_debug(f'>1> {ret}')  # (0, 0)
     ret = view.text_point(pt, pt)
-    sc.log_debug(f'>1> {ret}')  # 0
+    log_debug(f'>1> {ret}')  # 0
     ret = view.split_by_newlines(reg)
-    sc.log_debug(f'>1> {ret}')  # [Region(0, 0)] ???
+    log_debug(f'>1> {ret}')  # [Region(0, 0)] ???
     ret = view.find('pattern', pt)
-    sc.log_debug(f'>1> {ret}')  # (-1, -1)
+    log_debug(f'>1> {ret}')  # (-1, -1)
     ret = view.substr(pt)
-    sc.log_debug(f'>1> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
+    log_debug(f'>1> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
     ret = view.word(pt)
-    sc.log_debug(f'>1> {ret}|{view.substr(ret)}|')  # nada - see previous
+    log_debug(f'>1> {ret}|{view.substr(ret)}|')  # nada - see previous
     ret = view.line(pt)
-    sc.log_debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    log_debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
     ret = view.full_line(pt)
-    sc.log_debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    log_debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
     
     return
 
@@ -393,25 +358,25 @@ def do_api(edit):
     reg = sublime.Region(pt, pt + 1)
 
     ret = view.rowcol(pt)
-    sc.log_debug(f'>2> {ret}')  # (0, 10)
+    log_debug(f'>2> {ret}')  # (0, 10)
     ret = view.text_point(pt, pt)
-    sc.log_debug(f'>2> {ret}')  # 10
+    log_debug(f'>2> {ret}')  # 10
     ret = view.insert(edit, pt, 'booga')
-    sc.log_debug(f'>2> {ret}')  # 0
+    log_debug(f'>2> {ret}')  # 0
     ret = view.replace(edit, reg, 'xyzzy')
-    sc.log_debug(f'>2> {ret}')  # None
+    log_debug(f'>2> {ret}')  # None
     ret = view.split_by_newlines(reg)
-    sc.log_debug(f'>2> {ret}')  # [Region(10, 10)]
+    log_debug(f'>2> {ret}')  # [Region(10, 10)]
     ret = view.find('pattern', pt)
-    sc.log_debug(f'>2> {ret}')  # (-1, -1)
+    log_debug(f'>2> {ret}')  # (-1, -1)
     ret = view.substr(pt)
-    sc.log_debug(f'>2> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
+    log_debug(f'>2> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
     ret = view.word(pt)
-    sc.log_debug(f'>2> {ret}|{view.substr(ret)}|')  # nada - see previous
+    log_debug(f'>2> {ret}|{view.substr(ret)}|')  # nada - see previous
     ret = view.line(pt)
-    sc.log_debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+    log_debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
     ret = view.full_line(pt)
-    sc.log_debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+    log_debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
 
 
 #-----------------------------------------------------------------------------------

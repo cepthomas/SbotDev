@@ -6,6 +6,12 @@ import sublime
 import sublime_plugin
 from .SbotCommon import utils as sc
 
+#-----------------------------------------------------------------------------------
+def plugin_loaded():
+    ''' Called once per plugin instance. Each module/file can have its own. '''
+    print(f'plugin_loaded(): {__name__}')
+
+
 
 class SomeClass(object):
     # https://www.pythonlikeyoumeanit.com/Module4_OOP/Special_Methods.html

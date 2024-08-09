@@ -18,6 +18,12 @@ from pdb import Pdb
 ### log = logging.getLogger(__name__)
 
 
+#-----------------------------------------------------------------------------------
+def plugin_loaded():
+    ''' Called once per plugin instance. Each module/file can have its own. '''
+    print(f'plugin_loaded(): {__name__}')
+
+
 def cry(message, stderr=sys.__stderr__):
     ### log.critical(message)
     ### print(message, file=stderr)

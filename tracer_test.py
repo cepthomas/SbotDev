@@ -1,6 +1,6 @@
 import sys
 import datetime
-from .tracer import *  # noqa: F403
+from .SbotCommon.tracer import *
 
 
 #-------------------------- trace test code --------------------------------------
@@ -48,7 +48,7 @@ def do_a_suite(alpha, nuber):
     T('something sweet')
     # T(a_test_function(5, 9.126))
     ret = a_test_function(5, 9.126)
-    # error_function(0)
+    error_function(0)
     a_traceless_function('can you see me?')
     ret = another_test_function([33, 'tyu', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
     return ret
@@ -62,19 +62,14 @@ def error_function(denom):
 
 #-------------------------- test start here --------------------------------
 
-# def do_it():
+def do_it(trace_fn):
 
-#     trace_fn = os.path.join(os.path.dirname(__file__), 'tracer.log')
-#     # trace_fn = sc.get_store_fn(f'trace_{log_name}.log') TODO support more than one at a time? Doesn't seem useful.
+    start_trace(trace_fn)
 
-#     start_trace(trace_fn)
+    time_str = f'{str(datetime.datetime.now())}'[0:-3]
+    T(f'!!! Start test at {time_str} !!!')
+    do_a_suite(nuber=911, alpha='abcd')  # named args
+    # T(do_a_suite.__name__)
+    # T(do_a_suite.__doc__)
 
-#     time_str = f'{str(datetime.datetime.now())}'[0:-3]
-#     T(f'!!! Start test at', time_str)
-#     do_a_suite(nuber=911, alpha='abcd')  # named args
-#     # T(do_a_suite.__name__)
-#     # T(do_a_suite.__doc__)
-
-#     stop_trace()
-    
-# do_it()
+    stop_trace()  # make sure this always gets called!

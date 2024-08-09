@@ -8,8 +8,9 @@ import socket
 import sys
 from pdb import Pdb
 
-# TODO my hacked version of https://github.com/ionelmc/python-remote-pdb
+# TODO my hacked version of https://github.com/ionelmc/python-remote-pdb. ### indicates edited.
 # TODO add colors like debugger.lua?
+# TODO move to SbotCommon
 
 
 ### __version__ = '2.1.0'

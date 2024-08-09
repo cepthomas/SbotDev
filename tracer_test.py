@@ -2,8 +2,9 @@ import sys
 import datetime
 from .SbotCommon.tracer import *
 
+# TODO relocate?
 
-#-------------------------- trace test code --------------------------------------
+#-------------------------- tracer test code --------------------------------------
 
 class TestClass(object):
 
@@ -23,8 +24,9 @@ class TestClass(object):
         s = f'TestClass:{self._name} tags:{self._tags} arg:{self._arg}'
         return s
 
+
 def a_traceless_function(s):
-    T(f'I got this => "{s}"')
+    T(f'I still can do this => "{s}"')
 
 
 @traced_function

@@ -7,8 +7,6 @@ import datetime
 import importlib
 import sublime
 import sublime_plugin
-
-
 from .SbotCommon import utils as sc
 from .SbotCommon.tracer import *
 from .SbotCommon.logger import *
@@ -16,19 +14,22 @@ from .SbotCommon.logger import *
 # Initialize logging.
 log_init(sc.get_store_fn('sbot.log'))
 
-# Dev stuff
+
+# TOSCDO
+# Integrate tracer with simple logger too? With rdb?
+
+
+
+#------------------- Dev stuff ----------------------
 # from .SbotCommon import test_xxx
 # test_xxx.do_something('111')
+# or
 from .SbotCommon.test_xxx import *
 do_something('222')
-
 
 from . import tracer_test
 
 from . import remote_pdb
-
-
-
 
 # print(f'### sys.modules:\n{sys.modules}')
 # print(f'### dir of {__name__}:\n{sys.modules[__name__]}')
@@ -41,8 +42,6 @@ from . import remote_pdb
 # importlib.reload(test_xxx)
 
 # print(f'### globals of {__name__} after reload:\n{globals()}')
-
-
 
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
@@ -187,8 +186,8 @@ class SbotGitCommand(sublime_plugin.TextCommand):
             new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
 
     def is_visible(self):
+        # Could test for .git folder.
         return True
-        # return self.view.settings().get('syntax') == 'Packages/Markdown/Markdown.sublime-syntax'
 
 
 #-----------------------------------------------------------------------------------
@@ -399,7 +398,7 @@ def dump_stack(cat):
 
 
 #---------------------------------------------------------------------------
-def _dump_me(stkpos=1):  # caller
+def dump_caller(stkpos=1):
     buff = []
     frame = sys._getframe(stkpos)
     co = frame.f_code
@@ -425,15 +424,3 @@ def _dump_me(stkpos=1):  # caller
 
     return '\n'.join(buff)
 
-#---------------------------------------------------------------------------
-def _tracer_test():
-    # Mainly just to test optional import.
-    trace_fn = os.path.join(os.path.dirname(__file__), 'tracer.log')
-    start_trace(trace_fn)
-
-    time_str = f'{str(datetime.datetime.now())}'[0:-3]
-    T(f'Dev start test at', time_str)
-
-    stop_trace()
-
-# _tracer_test()

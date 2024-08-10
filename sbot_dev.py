@@ -15,8 +15,9 @@ from .SbotCommon.logger import *
 log_init(sc.get_store_fn('sbot.log'))
 
 
-# TOSCDO
-# Integrate tracer with simple logger too? With rdb?
+# TODO1 SbotCommon README.md Finish/clean. Maybe move test_tracer.py here and document the file and the output.
+# TODO Integrate tracer with simple logger too? With rpdb?
+# TODO production disables tracing and sets log level to >debug.
 
 
 
@@ -27,7 +28,7 @@ log_init(sc.get_store_fn('sbot.log'))
 from .SbotCommon.test_xxx import *
 do_something('222')
 
-from . import tracer_test
+from . import test_tracer
 
 from . import remote_pdb
 
@@ -109,7 +110,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         if what == 'trace':
             trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
             # trace_fn = sc.get_store_fn(f'trace_{log_name}.log')
-            tracer_test.do_it(trace_fn)
+            test_tracer.do_it(trace_fn)
             
         elif what == 'rpdb':
             print('DEV Before running rpdb')
@@ -147,7 +148,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit (TODO comment?), push? https://github.com/kemayo/sublime-text-git. '''
+        ''' Simple git tools: diff, commit (TODO with comment?), push? https://github.com/kemayo/sublime-text-git. '''
         # TODO show previous version.
         fn = self.view.file_name()
 

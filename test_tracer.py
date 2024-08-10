@@ -50,21 +50,41 @@ def a_test_function(a1: int, a2: float):
 
 
 @traced_function
-def error_function():
+def test_exception_function():
     '''Cause exception and handling.'''
     i = 0
     return 1 / i
+# 0000.533 test_exception_function:enter
+# 0002.2359 test_exception_function:exception |Traceback (most recent call last):
+#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\SbotCommon\tracer.py", line 115, in wrapper
+#     res = f(*args, **kwargs)
+#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\test_tracer.py", line 57, in test_exception_function
+#     return 1 / i
+# ZeroDivisionError: division by zero
+# |
 
 
 @traced_function
-def assert_function():
+def test_assert_function():
     '''Assert processing.'''
     i = 10
     j = 10
 
-    A(i == j)  # ok
+    A(i == j)  # ok - no trace
     i += 1
     A(i == j)  # assert
+
+# stkpos = 3
+# 0000.936 test_assert_function:enter
+# 0001.1087 test_assert_function:exception |Traceback (most recent call last):
+#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\SbotCommon\tracer.py", line 123, in wrapper
+#     res = f(*args, **kwargs)
+#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\test_tracer.py", line 75, in test_assert_function
+#     A(i == j)  # assert
+#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\SbotCommon\tracer.py", line 96, in A
+#     raise AssertionError(site)
+# AssertionError: test_assert_function:75
+# |
 
 
 @traced_function
@@ -73,63 +93,33 @@ def do_a_suite(alpha, number):
     T('something sweet')
     ret = a_test_function(5, 9.126)
 
-    error_function()
+    test_exception_function()
 
-    assert_function()
+    test_assert_function()
 
     a_traceless_function('can you see me?')
     ret = another_test_function([33, 'tyu', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
     return ret
 
 
-
-#--------------------------  --------------------------------
+#----------------------------------------------------------
 
 def do_trace_test(trace_fn):
     '''Test starts here.'''
     start_trace(trace_fn)
-    try:
-        T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__}', str(datetime.datetime.now()))
-        do_a_suite(number=911, alpha='abcd')  # named args
-    except:
-        pass
-    finally:
-        stop_trace()  # Always clean up resources!!
+
+    T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__}', str(datetime.datetime.now()))
+    do_a_suite(number=911, alpha='abcd')  # named args
+    stop_trace()  # Always clean up resources!!
+
+    # try:
+    #     T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__}', str(datetime.datetime.now()))
+    #     do_a_suite(number=911, alpha='abcd')  # named args
+    # except:
+    #     pass
+    # finally:
+    #     stop_trace()  # Always clean up resources!!
 
 
-# Doc Output:
-# 0000.071 do_trace_test:94 |Start do_a_suite:Make a nice suite with entry/exit and return value.| |2024-08-10 10:15:58.800860|
-# 0000.142 do_a_suite:enter |number:911| |alpha:abcd|
-# 0000.175 do_a_suite:74 |something sweet|
-# 0000.218 a_test_function:enter |5| |9.126|
-# 0000.254 TestClass.__init__:14 |making one TestClass| |number 1| |[45, 78, 23]| |5|
-# 0000.299 a_test_function:46 |TestClass:number 1 tags:[45, 78, 23] arg:5|
-# 0000.336 TestClass.__init__:14 |making one TestClass| |number 2| |[100, 101, 102]| |9.126|
-# 0000.373 a_test_function:48 |TestClass:number 2 tags:[100, 101, 102] arg:9.126|
-# 0000.415 test_class_do_something:enter |TestClass:number 1 tags:[45, 78, 23] arg:5| |5|
-# 0000.438 test_class_do_something:exit |5-user-5|
-# 0000.468 test_class_do_something:enter |TestClass:number 2 tags:[100, 101, 102] arg:9.126| |9.126|
-# 0000.493 test_class_do_something:exit |9.126-user-9.126|
-# 0000.513 a_test_function:exit |answer is cl1:5-user-5...cl2:9.126-user-9.126|
-# 0000.533 error_function:enter
-# 0002.2359 error_function:exception |Traceback (most recent call last):
-#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\SbotCommon\tracer.py", line 115, in wrapper
-#     res = f(*args, **kwargs)
-#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\test_tracer.py", line 57, in error_function
-#     return 1 / i
-# ZeroDivisionError: division by zero
-# |
-# 0002.2412 assert_function:enter
-# 0002.2957 assert_function:exception |Traceback (most recent call last):
-#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\SbotCommon\tracer.py", line 115, in wrapper
-#     res = f(*args, **kwargs)
-#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\test_tracer.py", line 68, in assert_function
-#     A(i == j)  # assert
-#   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\SbotCommon\tracer.py", line 88, in A
-#     raise AssertionError(site)
-# AssertionError: wrapper:115
-# |
-# 0003.3029 a_traceless_function:33 |I still can do this => "can you see me?"|
-# 0003.3084 another_test_function:enter |[33, 'tyu', 3.56]| |{'aaa': 111, 'bbb': 222, 'ccc': 333}|
-# 0003.3111 another_test_function:exit |6|
-# 0003.3132 do_a_suite:exit |6|
+# Output looks like this:
+# 

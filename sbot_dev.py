@@ -25,7 +25,7 @@ log_init(sc.get_store_fn('sbot.log'))
 # from .SbotCommon import test_xxx
 # test_xxx.do_something('111')
 # or
-from .SbotCommon.test_xxx import *
+from .test_xxx import *
 do_something('222')
 
 from . import test_tracer
@@ -110,7 +110,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         if what == 'trace':
             trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
             # trace_fn = sc.get_store_fn(f'trace_{log_name}.log')
-            test_tracer.do_it(trace_fn)
+            test_tracer.do_trace_test(trace_fn)
             
         elif what == 'rpdb':
             print('DEV Before running rpdb')

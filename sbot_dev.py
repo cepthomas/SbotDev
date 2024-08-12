@@ -388,9 +388,8 @@ def dump_stack(cat):
             frame = sys._getframe(depth)
             fn = os.path.basename(frame.f_code.co_filename)
             func = frame.f_code.co_name
-
             # smsg = f'{cat}{depth} __name__:{frame.f_globals["__name__"]} FILE:{fn}  LINE:{frame.f_lineno}  FUNCTION:{frame.f_code.co_name}'
-            smsg = f'{cat}{depth} FU:{func} FILE:{fn} LINE:{frame.f_lineno}  '
+            smsg = f'{cat}{depth} FUNC:{func} FILE:{fn} LINE:{frame.f_lineno}  '
             print(smsg)
             depth += 1
     except:

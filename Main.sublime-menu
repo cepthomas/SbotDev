@@ -32,7 +32,7 @@
         "id": "dev",
         "children":
         [
-            { "caption": "Debug reload", "command": "sbot_debug", "args": { "what": "reload" } },
+            // { "caption": "Debug reload", "command": "sbot_debug", "args": { "what": "reload" } },
             { "caption": "Debug trace", "command": "sbot_debug", "args": { "what": "trace" } },
             { "caption": "Debug boom", "command": "sbot_debug", "args": { "what": "boom" } },
             { "caption": "Debug rpdb", "command": "sbot_debug", "args": { "what": "rpdb" } },

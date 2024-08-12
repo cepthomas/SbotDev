@@ -18,11 +18,10 @@ log_init(sc.get_store_fn('sbot.log'))
 
 print(f'>>> loaded {__name__}')
 
-
+# TODO1 
 # TODO1 SbotCommon README.md Finish/clean. Maybe move test_tracer.py here and document the file and the output.
 # TODO Integrate tracer with simple logger too? With rpdb?
 # TODO production disables tracing and sets log level to >debug.
-
 
 
 #------------------- Dev stuff ----------------------
@@ -38,22 +37,10 @@ def _dump(txt):
         f.flush()
 
 
-# Stuff like this works:
-ff = sc.expand_vars
-s9 = ff('I am $USERNAME')
-print('>>>', s9)
-
-# This file in the same dir gets reloaded when saved...
-from . import test_xxx
-test_xxx.do_test_func('111')
-# ... but this one in subdir doesn't
-# from .test import test_yyy
-# test_yyy.do_test_func_yyy('222')
-
-# Do this for loose imports:
-from .test.test_yyy import *
-do_test_func_yyy('555')
-
+# # Stuff like this works:
+# ff = sc.expand_vars
+# s9 = ff('I am $USERNAME')
+# print('>>>', s9)
 
 # globals() — The dictionary of the current module.
 # _dump(f'### globals of {__name__}:\n{globals()}')
@@ -73,32 +60,6 @@ def plugin_loaded():
 def plugin_unloaded():
     '''Ditto.'''
     log_info(f'Unloading {__package__}')
-
-
-
-
-from watchdog.observers import Observer
-from watchdog.events import FileSystemEventHandler
-
-class FileModifiedHandler(FileSystemEventHandler):
-
-    def __init__(self, path, file_name, callback):
-        self.file_name = file_name
-        self.callback = callback
-
-        # set observer to watch for changes in the directory
-        self.observer = Observer()
-        self.observer.schedule(self, path, recursive=False)
-        self.observer.start()
-        self.observer.join()
-
-    def on_modified(self, event): 
-        # only act on the change that we're looking for
-        if not event.is_directory and event.src_path.endswith(self.file_name):
-            self.observer.stop() # stop watching
-            self.callback() # call callback
-
-
 
 
 #-----------------------------------------------------------------------------------
@@ -149,10 +110,16 @@ class DevEvent(sublime_plugin.EventListener):
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
         if what == 'reload':
-            # This works:
-            importlib.reload(test_yyy)
-            do_test_func_yyy('333')
-            # test_yyy.do_test_func_yyy('333')
+            # TODO1 reload imports in subdirs when the file changes
+            # This works if imported like from .SbotCommon import utils as sc
+            # importlib.reload(sc)
+            # This also:
+            # import .SbotCommon.tracer
+            # importlib.reload(tracer)
+            # but this doesn't because the module itself is not imported:
+            # from .SbotCommon.tracer import *
+            # importlib.reload(tracer)
+            pass
 
         elif what == 'trace':
             from . import test_tracer

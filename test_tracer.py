@@ -8,7 +8,7 @@ from .SbotCommon.tracer import *
 class TestClass(object):
     ''' Dummy for testing class function tracing.'''
 
-    # TODO don't do this here: @traced_function
+    # TODO don't use this here: @traced_function
     def __init__(self, name, tags, arg):
         '''Construct.'''
         T('making one TestClass', name, tags, arg)

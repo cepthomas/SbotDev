@@ -7,12 +7,16 @@ import datetime
 import importlib
 import sublime
 import sublime_plugin
+
 from .SbotCommon import utils as sc
 from .SbotCommon.tracer import *
 from .SbotCommon.logger import *
 
 # Initialize logging.
 log_init(sc.get_store_fn('sbot.log'))
+
+
+print(f'>>> loaded {__name__}')
 
 
 # TODO1 SbotCommon README.md Finish/clean. Maybe move test_tracer.py here and document the file and the output.
@@ -22,27 +26,38 @@ log_init(sc.get_store_fn('sbot.log'))
 
 
 #------------------- Dev stuff ----------------------
-# from .SbotCommon import test_xxx
-# test_xxx.do_something('111')
-# or
-from .test_xxx import *
-do_something('222')
+# Clean dump file.
+_dump_fn = os.path.join(os.path.dirname(__file__), '_dump.log')
+with open(_dump_fn, 'w'):
+    pass
 
-from . import test_tracer
+# Write dump file.
+def _dump(txt):
+    with open(_dump_fn, 'a') as f:
+        f.write(txt + '\n')
+        f.flush()
 
-from . import remote_pdb
 
-# print(f'### sys.modules:\n{sys.modules}')
-# print(f'### dir of {__name__}:\n{sys.modules[__name__]}')
+# Stuff like this works:
+ff = sc.expand_vars
+s9 = ff('I am $USERNAME')
+print('>>>', s9)
+
+# This file in the same dir gets reloaded when saved...
+from . import test_xxx
+test_xxx.do_test_func('111')
+# ... but this one in subdir doesn't
+# from .test import test_yyy
+# test_yyy.do_test_func_yyy('222')
+
+# Do this for loose imports:
+from .test.test_yyy import *
+do_test_func_yyy('555')
+
 
 # globals() — The dictionary of the current module.
-# print(f'### globals of {__name__}:\n{globals()}')
-
-# TODO1 Reload if file changes.
-# This works but what about import *?
-# importlib.reload(test_xxx)
-
-# print(f'### globals of {__name__} after reload:\n{globals()}')
+# _dump(f'### globals of {__name__}:\n{globals()}')
+# print(f'### dir of {__name__}:\n{sys.modules[__name__]}')
 
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
@@ -57,7 +72,33 @@ def plugin_loaded():
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
     '''Ditto.'''
-    pass
+    log_info(f'Unloading {__package__}')
+
+
+
+
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+class FileModifiedHandler(FileSystemEventHandler):
+
+    def __init__(self, path, file_name, callback):
+        self.file_name = file_name
+        self.callback = callback
+
+        # set observer to watch for changes in the directory
+        self.observer = Observer()
+        self.observer.schedule(self, path, recursive=False)
+        self.observer.start()
+        self.observer.join()
+
+    def on_modified(self, event): 
+        # only act on the change that we're looking for
+        if not event.is_directory and event.src_path.endswith(self.file_name):
+            self.observer.stop() # stop watching
+            self.callback() # call callback
+
+
 
 
 #-----------------------------------------------------------------------------------
@@ -107,13 +148,21 @@ class DevEvent(sublime_plugin.EventListener):
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
-        if what == 'trace':
+        if what == 'reload':
+            # This works:
+            importlib.reload(test_yyy)
+            do_test_func_yyy('333')
+            # test_yyy.do_test_func_yyy('333')
+
+        elif what == 'trace':
+            from . import test_tracer
             trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
             # trace_fn = sc.get_store_fn(f'trace_{log_name}.log')
             test_tracer.do_trace_test(trace_fn)
             
         elif what == 'rpdb':
             print('DEV Before running rpdb')
+            from . import remote_pdb
             try:
                 remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
             except Exception as e:

@@ -10,7 +10,8 @@ import inspect
 # Just for import experiments.
 
 # The trace file.
-_just_a_var = 0
+_just_a_var = 200
+
 
 print(f'>>> loaded {__name__}')
 
@@ -24,9 +25,9 @@ def plugin_loaded():
 
 
 #---------------------------------------------------------------------------
-def do_test_func(msg):
+def do_test_func_yyy(msg):
     '''Test.'''
     global _just_a_var
     _just_a_var += 1
-    print(f'>>> do_test_func({msg}):{_just_a_var}')
+    print(f'>>> do_test_func_yyy({msg}):{_just_a_var}')
 

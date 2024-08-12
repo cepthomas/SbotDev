@@ -1,4 +1,6 @@
 # My hacked version of https://github.com/ionelmc/python-remote-pdb. ### indicates edited.
+# TODO1 add colors like debugger.lua?
+# TODO1 move to SbotCommon
 
 from __future__ import print_function
 
@@ -10,27 +12,19 @@ import socket
 import sys
 from pdb import Pdb
 
-# TODO1 add colors like debugger.lua?
-# TODO1 move to SbotCommon
-
-
 ### __version__ = '2.1.0'
 
 ### PY3 = sys.version_info[0] == 3
 ### log = logging.getLogger(__name__)
 
-
-#-----------------------------------------------------------------------------------
-def plugin_loaded():
-    ''' Called once per plugin instance. Each module/file can have its own. '''
-    print(f'plugin_loaded(): {__name__}')
+print(f'>>> loaded {__name__}')
 
 
 def cry(message, stderr=sys.__stderr__):
     ### log.critical(message)
     ### print(message, file=stderr)
     ### stderr.flush()
-    print(f'RPDB {message}')
+    print(f'>>> RPDB {message}')
 
 
 class LF2CRLF_FileWrapper(object):

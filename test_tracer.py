@@ -98,6 +98,7 @@ def do_trace_test(trace_fn):
     do_a_suite(number=911, alpha='abcd')  # named args
     stop_trace()  # Always clean up resources!!
 
+
 # Output looks like this:
 # 0000.071 do_trace_test:97 |Start do_a_suite:Make a nice suite with entry/exit and return value.| |2024-08-11 17:56:39.064581|
 # 0000.157 do_a_suite:enter |number:911| |alpha:abcd|

@@ -1,6 +1,31 @@
 import sys
 import datetime
-from .SbotCommon.tracer import *
+import importlib
+
+# from .SbotCommon.tracer import *
+
+from .SbotCommon.tracer import _Y
+from .SbotCommon import tracer as tr
+trfunc = tr.trfunc
+T = tr.T
+
+
+print(f'>>> loaded {__name__}')
+
+
+importlib.reload(tr)
+
+# TODO1 test enable()
+
+
+# y = y.new(ignore_json=True)
+# # @y(show_enter=False, show_exit=False)
+# @y
+# def test_one_arguments(capsys):
+#     hello = "world"
+#     result = y(hello)
+#     y(hello)
+
 
 
 #-------------------------- tracer test code --------------------------------------
@@ -8,7 +33,7 @@ from .SbotCommon.tracer import *
 class TestClass(object):
     ''' Dummy for testing class function tracing.'''
 
-    # TODO don't use this here: @traced_function
+    # TODO don't use this here: @trfunc
     def __init__(self, name, tags, arg):
         '''Construct.'''
         T('making one TestClass', name, tags, arg)
@@ -16,18 +41,18 @@ class TestClass(object):
         self._tags = tags
         self._arg = arg
 
-    @traced_function
+    @trfunc
     def do_something(self, arg):
         '''Entry/exit is traced with args and return value.'''
         res = f'{self._arg}-user-{arg}'
         return res
 
-    @traced_function
+    @trfunc
     def do_class_assert(self, arg):
         '''Entry/exit is traced with args and return value.'''
         A(1 == 2)
 
-    @traced_function
+    @trfunc
     def do_class_exception(self, arg):
         '''Entry/exit is traced with args and return value.'''
         x = 1 / 0
@@ -41,12 +66,12 @@ def a_traceless_function(s):
     '''Entry/exit is not traced but explicit traces are ok.'''
     T(f'I still can do this => "{s}"')
 
-@traced_function
+@trfunc
 def another_test_function(a_list, a_dict):
     '''Entry/exit is traced with args and return value.'''
     return len(a_list) + len(a_dict)
 
-@traced_function
+@trfunc
 def a_test_function(a1: int, a2: float):
     '''Entry/exit is traced with args and return value.'''
     cl1 = TestClass('number 1', [45, 78, 23], a1)
@@ -59,13 +84,13 @@ def a_test_function(a1: int, a2: float):
     ret = f'{cl1.do_class_exception(a2)}'
     return ret
 
-@traced_function
+@trfunc
 def test_exception_function():
     '''Cause exception and handling.'''
     i = 0
     return 1 / i
 
-@traced_function
+@trfunc
 def test_assert_function():
     '''Assert processing.'''
     i = 10
@@ -75,7 +100,7 @@ def test_assert_function():
     i += 1
     A(i == j)  # assert
 
-@traced_function
+@trfunc
 def do_a_suite(alpha, number):
     '''Make a nice suite with entry/exit and return value.'''
     T('something sweet')
@@ -92,11 +117,11 @@ def do_a_suite(alpha, number):
 #----------------------------------------------------------
 def do_trace_test(trace_fn):
     '''Test starts here.'''
-    start_trace(trace_fn)
+    tr.start(trace_fn)
 
     T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__}', str(datetime.datetime.now()))
     do_a_suite(number=911, alpha='abcd')  # named args
-    stop_trace()  # Always clean up resources!!
+    tr.stop()  # Always clean up resources!!
 
 
 # Output looks like this:

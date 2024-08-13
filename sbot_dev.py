@@ -7,21 +7,27 @@ import datetime
 import importlib
 import sublime
 import sublime_plugin
+from .SbotCommon import common as sc
+from .SbotCommon import logger as log
+# from .SbotCommon import tracer as tr
+from . import test_tracer as tt
 
-from .SbotCommon import utils as sc
-from .SbotCommon.tracer import *
-from .SbotCommon.logger import *
+# from .SbotCommon.tracer import *
+# import .SbotCommon.tracer
+# importlib.reload(tracer)
+
+
+print(f'>>> (re)load {__name__}')
+importlib.reload(sc)
+importlib.reload(log)
+importlib.reload(tt)
 
 # Initialize logging.
-log_init(sc.get_store_fn('sbot.log'))
+log.init(sc.get_store_fn('sbot.log'))
 
 
-print(f'>>> loaded {__name__}')
-
-# TODO1 
 # TODO1 SbotCommon README.md Finish/clean. Maybe move test_tracer.py here and document the file and the output.
-# TODO Integrate tracer with simple logger too? With rpdb?
-# TODO production disables tracing and sets log level to >debug.
+# TODO production (not DEBUG) disables all tracing and sets log level to > debug.
 
 
 #------------------- Dev stuff ----------------------
@@ -47,19 +53,22 @@ def _dump(txt):
 # print(f'### dir of {__name__}:\n{sys.modules[__name__]}')
 
 
+#------------------- Real stuff ----------------------
+
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     '''Called per plugin instance.'''
-    log_info(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
+    log.info(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
     '''Ditto.'''
-    log_info(f'Unloading {__package__}')
+    # log.info(f'Unloading {__package__}')
+    pass
 
 
 #-----------------------------------------------------------------------------------
@@ -124,7 +133,6 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         elif what == 'trace':
             from . import test_tracer
             trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
-            # trace_fn = sc.get_store_fn(f'trace_{log_name}.log')
             test_tracer.do_trace_test(trace_fn)
             
         elif what == 'rpdb':
@@ -138,7 +146,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
         elif what == 'boom':
             # Blow stuff up. Force unhandled exception.
-            log_debug('Forcing unhandled exception!')
+            log.debug('Forcing unhandled exception!')
             sc.open_path('not-a-real-file')
             # i = 222 / 0
 
@@ -211,7 +219,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        # log_debug('abra')
+        # log.debug('abra')
         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
 
         items = []
@@ -241,7 +249,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
 
     def on_done(self, text):
         sc.create_new_view(self.window, text)
-        log_debug(f'Got:{text}')
+        log.debug(f'Got:{text}')
 
 
 #-----------------------------------------------------------------------------------
@@ -330,19 +338,19 @@ def do_api(edit):
     reg = sublime.Region(5, 8)
 
     ret = view.rowcol(12)
-    log_debug(f'>0> {ret}')  # (1, 3)
+    log.debug(f'>0> {ret}')  # (1, 3)
     ret = view.text_point(2, 4)
-    log_debug(f'>0> {ret}')  # 17
+    log.debug(f'>0> {ret}')  # 17
     ret = view.find('78', 5)
-    log_debug(f'>0> {ret}')  # (9, 11)
+    log.debug(f'>0> {ret}')  # (9, 11)
     ret = view.substr(11)
-    log_debug(f'>0> |{len(ret)}|{ret[0]}|{ret}|')  # |1|9|9|
+    log.debug(f'>0> |{len(ret)}|{ret[0]}|{ret}|')  # |1|9|9|
     ret = view.word(13)
-    log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (13, 17)|UUUU|
+    log.debug(f'>0> {ret}|{view.substr(ret)}|')  # (13, 17)|UUUU|
     ret = view.line(3)
-    log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (0, 8)|012 3456|
+    log.debug(f'>0> {ret}|{view.substr(ret)}|')  # (0, 8)|012 3456|
     ret = view.full_line(12)
-    log_debug(f'>0> {ret}|{view.substr(ret)}|')  # (9, 13)|789
+    log.debug(f'>0> {ret}|{view.substr(ret)}|')  # (9, 13)|789
 
     ### Empty buffer.
     view = sc.create_new_view(sublime.active_window(), '')
@@ -350,21 +358,21 @@ def do_api(edit):
     reg = sublime.Region(pt, pt)
 
     ret = view.rowcol(pt)
-    log_debug(f'>1> {ret}')  # (0, 0)
+    log.debug(f'>1> {ret}')  # (0, 0)
     ret = view.text_point(pt, pt)
-    log_debug(f'>1> {ret}')  # 0
+    log.debug(f'>1> {ret}')  # 0
     ret = view.split_by_newlines(reg)
-    log_debug(f'>1> {ret}')  # [Region(0, 0)] ???
+    log.debug(f'>1> {ret}')  # [Region(0, 0)] ???
     ret = view.find('pattern', pt)
-    log_debug(f'>1> {ret}')  # (-1, -1)
+    log.debug(f'>1> {ret}')  # (-1, -1)
     ret = view.substr(pt)
-    log_debug(f'>1> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
+    log.debug(f'>1> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:13:37.992 DBG sbot_dev.py:144 >1> (0, 0)||
     ret = view.word(pt)
-    log_debug(f'>1> {ret}|{view.substr(ret)}|')  # nada - see previous
+    log.debug(f'>1> {ret}|{view.substr(ret)}|')  # nada - see previous
     ret = view.line(pt)
-    log_debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    log.debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
     ret = view.full_line(pt)
-    log_debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
+    log.debug(f'>1> {ret}|{view.substr(ret)}|')  # (0, 0)
     
     return
 
@@ -374,25 +382,25 @@ def do_api(edit):
     reg = sublime.Region(pt, pt + 1)
 
     ret = view.rowcol(pt)
-    log_debug(f'>2> {ret}')  # (0, 10)
+    log.debug(f'>2> {ret}')  # (0, 10)
     ret = view.text_point(pt, pt)
-    log_debug(f'>2> {ret}')  # 10
+    log.debug(f'>2> {ret}')  # 10
     ret = view.insert(edit, pt, 'booga')
-    log_debug(f'>2> {ret}')  # 0
+    log.debug(f'>2> {ret}')  # 0
     ret = view.replace(edit, reg, 'xyzzy')
-    log_debug(f'>2> {ret}')  # None
+    log.debug(f'>2> {ret}')  # None
     ret = view.split_by_newlines(reg)
-    log_debug(f'>2> {ret}')  # [Region(10, 10)]
+    log.debug(f'>2> {ret}')  # [Region(10, 10)]
     ret = view.find('pattern', pt)
-    log_debug(f'>2> {ret}')  # (-1, -1)
+    log.debug(f'>2> {ret}')  # (-1, -1)
     ret = view.substr(pt)
-    log_debug(f'>2> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
+    log.debug(f'>2> |{len(ret)}|{ret[0]}|{ret}|')  # |1|2023-06-24 09:06:19.561 DBG sbot_dev.py:175 >2> (10000, 10000)||
     ret = view.word(pt)
-    log_debug(f'>2> {ret}|{view.substr(ret)}|')  # nada - see previous
+    log.debug(f'>2> {ret}|{view.substr(ret)}|')  # nada - see previous
     ret = view.line(pt)
-    log_debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+    log.debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
     ret = view.full_line(pt)
-    log_debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
+    log.debug(f'>2> {ret}|{view.substr(ret)}|')  # (9990, 10000)||
 
 
 #-----------------------------------------------------------------------------------

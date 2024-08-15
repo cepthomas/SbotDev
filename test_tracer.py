@@ -1,11 +1,12 @@
 import sys
 import datetime
 import importlib
-from .SbotCommon.tracer import _Y
+# from .SbotCommon.tracer import _Y
 from .SbotCommon import tracer as tr
 trfunc = tr.trfunc
+A = tr.A
 T = tr.T
-
+Y = tr._Y
 
 print(f'>>> (re)load {__name__}')
 
@@ -15,13 +16,15 @@ importlib.reload(tr)
 # TODO1 test enable()
 
 
-# y = y.new(ignore_json=True)
-# # @y(show_enter=False, show_exit=False)
-# @y
-# def test_one_arguments(capsys):
-#     hello = "world"
-#     result = y(hello)
-#     y(hello)
+# y = Y.new(arg1=True)
+
+
+# @y(show_enter=False, show_exit=False)
+@trfunc
+def test_one_arguments():
+    result = Y("hello 1")
+    Y("hello 2")
+
 
 
 
@@ -30,7 +33,7 @@ importlib.reload(tr)
 class TestClass(object):
     ''' Dummy for testing class function tracing.'''
 
-    # TODO don't use this here: @trfunc
+    # Note: don't use @trfunc on constructor.
     def __init__(self, name, tags, arg):
         '''Construct.'''
         T('making one TestClass', name, tags, arg)

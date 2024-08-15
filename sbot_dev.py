@@ -12,11 +12,8 @@ from .SbotCommon import logger as log
 # from .SbotCommon import tracer as tr
 from . import test_tracer as tt
 
-# from .SbotCommon.tracer import *
-# import .SbotCommon.tracer
-# importlib.reload(tracer)
 
-
+# Reload in case this is not initial load. Harmless if the first.
 print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
 importlib.reload(log)
@@ -25,39 +22,22 @@ importlib.reload(tt)
 # Initialize logging.
 log.init(sc.get_store_fn('sbot.log'))
 
-
-# TODO1 SbotCommon README.md Finish/clean. Maybe move test_tracer.py here and document the file and the output.
-# TODO production (not DEBUG) disables all tracing and sets log level to > debug.
-
-
-
-
-#------------------- Dev stuff ----------------------
 # Clean dump file.
 _dump_fn = os.path.join(os.path.dirname(__file__), '_dump.log')
 with open(_dump_fn, 'w'):
     pass
 
-# Write dump file.
+# Write to dump file.
 def _dump(txt):
     with open(_dump_fn, 'a') as f:
         f.write(txt + '\n')
         f.flush()
 
 
-# # Stuff like this works:
-# ff = sc.expand_vars
-# s9 = ff('I am $USERNAME')
-# print('>>>', s9)
-
-# globals() — The dictionary of the current module.
-# _dump(f'### globals of {__name__}:\n{globals()}')
-# print(f'### dir of {__name__}:\n{sys.modules[__name__]}')
-
-
-#------------------- Real stuff ----------------------
-
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
+
+# TODO1 production disables all tracing and sets log level to GT debug.
+#   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
 
 
 #-----------------------------------------------------------------------------------
@@ -92,7 +72,7 @@ class DevEvent(sublime_plugin.EventListener):
     def on_query_completions(self, view, prefix, locations):
         '''
         These are cryptic, hard to configure correctly. See also associated settings.
-        on_query_completions(view: View, prefix: str, locations: List[Point]) 
+        on_query_completions(view: View, prefix: str, locations: List[Point])
                    -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
         https://forum.sublimetext.com/t/annoying-autocomplete-c/59082
         https://forum.sublimetext.com/t/how-to-stop-tab-auto-complete-on-4126/63222/2
@@ -105,7 +85,7 @@ class DevEvent(sublime_plugin.EventListener):
         # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone:
         #    TEXT = 1 The mouse is hovered over the text.
         #    GUTTER = 2 The mouse is hovered over the gutter.
-        #    MARGIN = 3 The mouse is hovered in the white space to the right of a line.        
+        #    MARGIN = 3 The mouse is hovered in the white space to the right of a line.
         items = ['ietm1', 'item2', 'item3', 'item4']
         # view.show_popup_menu(items, self.on_hover_done)
         #   Show a popup menu at the caret, for selecting an item in a list.
@@ -114,14 +94,17 @@ class DevEvent(sublime_plugin.EventListener):
         #   Show a popup displaying HTML content.
 
     def on_hover_done(self, sel):
-        print(f'on_hover_done:{sel}')
+        print(f'>>> on_hover_done:{sel}')
 
 
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
-        if what == 'reload':
-            # TODO1 reload imports in subdirs when the file changes
+        if what == 'tb':
+            _fun_with_traceback()
+
+        elif what == 'reload':
+            # Reload imports in subdirs when the file changes
             # This works if imported like from .SbotCommon import utils as sc
             # importlib.reload(sc)
             # This also:
@@ -136,7 +119,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
             from . import test_tracer
             trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
             test_tracer.do_trace_test(trace_fn)
-            
+
         elif what == 'rpdb':
             print('>>> Before running rpdb')
             from . import remote_pdb
@@ -153,7 +136,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
             # i = 222 / 0
 
         elif what == 'folding':
-            ''' 
+            '''
             is_folded(region: Region) → bool
             folded_regions() → list[sublime.Region]
             fold(x: Region | list[sublime.Region]) → bool
@@ -171,8 +154,10 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit (TODO with comment?), push? https://github.com/kemayo/sublime-text-git. '''
-        # TODO show previous version.
+        ''' Simple git tools: diff, commit (TODO with comment?), push.
+        TODO show previous version.
+        https://github.com/kemayo/sublime-text-git.
+        '''
         fn = self.view.file_name()
 
         if fn is not None:
@@ -316,14 +301,85 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
+def _fun_with_traceback():
+
+    # tb => traceback object.
+    # limit => Print up to limit stack trace entries (starting from the invocation point) if limit is positive.
+    #   Otherwise, print the last abs(limit) entries. If limit is omitted or None, all entries are printed.
+    # f => optional argument can be used to specify an alternate stack frame to start. Otherwise uses current.
+    # FrameSummary attributes of interest: 'filename', 'line', 'lineno', 'locals', 'name'.
+
+    # [FrameSummary] traceback.extract_tb(tb, limit=None)  Useful for alternate formatting of stack traces.
+    # [FrameSummary] traceback.extract_stack(f=None, limit=None)  Extract the raw traceback from the current stack frame.
+    # [string] traceback.format_list([FrameSummary])  Kind of ugly printable format with dangling newlines.
+    # [string] traceback.format_tb(tb, limit=None)  A shorthand for format_list(extract_tb(tb, limit)).
+    # [string] traceback.format_stack(f=None, limit=None)  A shorthand for format_list(extract_stack(f, limit)).
+
+    def my_frame_formatter(frame):
+        return(f'file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}')
+
+    # Get most recent frame => traceback.extract_tb(tb)[:-1], traceback.extract_stack()[:-1]
+
+    _dump('====== Dump a stack - most recent last')
+    for f in traceback.extract_stack():
+        _dump(my_frame_formatter(f))
+
+    _dump('====== Dump a traceback - most recent last')
+    try:
+        1 / 0
+    except Exception as e:
+        for f in traceback.extract_tb(e.__traceback__):
+            _dump(my_frame_formatter(f))
+
+    _dump('====== Dump stack detail using sys._getframe()')
+    stkpos = 0
+    buff = []
+    try:
+        while True:
+            frame = sys._getframe(stkpos)
+            code = frame.f_code
+            buff.append(f'>>> stkpos:{stkpos}')
+            buff.append(f'    file:{code.co_filename}')
+            # buff.append(f'    frame.f_locals:{frame.f_locals}')
+            buff.append(f'    lineno:{frame.f_lineno}')
+            buff.append(f'    first lineno:{code.co_firstlineno}')
+            buff.append(f'    argcount:{code.co_argcount}')
+            # buff.append(f'    co_consts:{code.co_consts}')
+            if 'self' in frame.f_locals:
+                buff.append(f'    class:{frame.f_locals["self"].__class__.__name__}')
+            buff.append(f'    func:{code.co_name}')
+            # buff.append(f'    co_names:{code.co_names}')
+            buff.append(f'    varnames:{code.co_varnames}')
+            # co_cellvars = ()
+            # co_freevars = ()
+            # co_kwonlyargcount = 0
+            # co_posonlyargcount = 0
+            # co_nlocals = 5
+            # co_stacksize = 6
+
+            stkpos += 1
+    except:
+        # End of stack.
+        _dump('\n'.join(buff))
+        pass
+
+
+#-----------------------------------------------------------------------------------
 def _notify_exception(type, value, tb):
-    '''Process unhandled exceptions and notify user. log full stack.'''
+    '''Process unhandled exceptions. This catches for all current plugins and is mainly
+    used for debugging the sbot panteon. Logs the full stack and pops up a message box
+    with summary.'''
+
+    # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
+    if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
+        sys.__excepthook__(type, value, traceback)
+        return
+
     msg = f'Unhandled exception {type.__name__}: {value}'
     log.error(msg, tb)
 
-    # Show the user some info.
+    # Show the user some context info.
     frame = traceback.extract_tb(tb)[-1]
-
     info = [msg]
     info.append(f'at {frame.name}({frame.lineno})')
     info.append(f'See the log for detail')

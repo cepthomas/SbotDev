@@ -1,6 +1,6 @@
 # My hacked version of https://github.com/ionelmc/python-remote-pdb. ### indicates edited.
 # TODO1 add colors like debugger.lua?
-# TODO1 move to SbotCommon
+# TODO1 move to SbotCommon?
 
 from __future__ import print_function
 

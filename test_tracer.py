@@ -1,16 +1,13 @@
 import sys
 import datetime
 import importlib
-
-# from .SbotCommon.tracer import *
-
 from .SbotCommon.tracer import _Y
 from .SbotCommon import tracer as tr
 trfunc = tr.trfunc
 T = tr.T
 
 
-print(f'>>> loaded {__name__}')
+print(f'>>> (re)load {__name__}')
 
 
 importlib.reload(tr)

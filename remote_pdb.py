@@ -17,7 +17,7 @@ from pdb import Pdb
 ### PY3 = sys.version_info[0] == 3
 ### log = logging.getLogger(__name__)
 
-print(f'>>> loaded {__name__}')
+print(f'>>> (re)load {__name__}')
 
 
 def cry(message, stderr=sys.__stderr__):

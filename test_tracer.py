@@ -1,19 +1,19 @@
 import sys
 import datetime
 import importlib
+
+from .remote_pdb import RemotePdb
+
 # from .SbotCommon.tracer import _Y
 from .SbotCommon import tracer as tr
 trfunc = tr.trfunc
 A = tr.A
 T = tr.T
-Y = tr._Y
+Y = tr.Y
 
 print(f'>>> (re)load {__name__}')
 
-
 importlib.reload(tr)
-
-# TODO1 test enable()
 
 
 # y = Y.new(arg1=True)
@@ -29,6 +29,7 @@ def test_one_arguments():
 
 
 #-------------------------- tracer test code --------------------------------------
+
 
 class TestClass(object):
     ''' Dummy for testing class function tracing.'''
@@ -50,11 +51,15 @@ class TestClass(object):
     @trfunc
     def do_class_assert(self, arg):
         '''Entry/exit is traced with args and return value.'''
+        # breakpoint()
+        # RemotePdb(host='127.0.0.1', port=4444).set_trace()
         A(1 == 2)
 
     @trfunc
     def do_class_exception(self, arg):
         '''Entry/exit is traced with args and return value.'''
+        # breakpoint()
+        # RemotePdb(host='127.0.0.1', port=4444).set_trace()
         x = 1 / 0
 
     def __str__(self):
@@ -79,8 +84,9 @@ def a_test_function(a1: int, a2: float):
     T(cl1)
     T(cl2)
     ret = f'answer is cl1:{cl1.do_something(a1)}...cl2:{cl2.do_something(a2)}'
-    # This blows up.
+
     ret = f'{cl1.do_class_assert(a1)}'
+
     ret = f'{cl1.do_class_exception(a2)}'
     return ret
 
@@ -114,39 +120,41 @@ def do_a_suite(alpha, number):
     ret = another_test_function([33, 'tyu', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
     return ret
 
+
 #----------------------------------------------------------
 def do_trace_test(trace_fn):
     '''Test starts here.'''
-    tr.start(trace_fn)
+
+    tr.start(trace_fn, clean_file=True, stop_on_exception=True, sep=('(', ')'))
 
     T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__}', str(datetime.datetime.now()))
     do_a_suite(number=911, alpha='abcd')  # named args
     tr.stop()  # Always clean up resources!!
 
 
-# Output looks like this:
-# 0000.071 do_trace_test:97 |Start do_a_suite:Make a nice suite with entry/exit and return value.| |2024-08-11 17:56:39.064581|
-# 0000.157 do_a_suite:enter |number:911| |alpha:abcd|
-# 0000.200 do_a_suite:81 |something sweet|
-# 0000.293 a_test_function:enter |5| |9.126|
-# 0000.379 TestClass.__init__:14 |making one TestClass| |number 1| |[45, 78, 23]| |5|
-# 0000.479 TestClass.__init__:14 |making one TestClass| |number 2| |[100, 101, 102]| |9.126|
-# 0000.538 a_test_function:54 |TestClass:number 1 tags:[45, 78, 23] arg:5|
-# 0000.601 a_test_function:55 |TestClass:number 2 tags:[100, 101, 102] arg:9.126|
-# 0000.738 TestClass.do_something:enter |TestClass:number 1 tags:[45, 78, 23] arg:5| |5|
-# 0000.776 TestClass.do_something:exit |5-user-5|
-# 0000.838 TestClass.do_something:enter |TestClass:number 2 tags:[100, 101, 102] arg:9.126| |9.126|
-# 0000.914 TestClass.do_something:exit |9.126-user-9.126|
-# 0000.977 TestClass.do_class_assert:enter |TestClass:number 1 tags:[45, 78, 23] arg:5| |5|
-# 0001.1087 TestClass.do_class_assert:28:assert
-# 0001.1325 TestClass.do_class_exception:enter |TestClass:number 1 tags:[45, 78, 23] arg:5| |9.126|
-# 0003.3679 do_class_exception:33 |exception: division by zero|
-# 0003.3740 a_test_function:exit |None|
-# 0003.3775 test_exception_function:enter
-# 0004.4238 test_exception_function:66 |exception: division by zero|
-# 0004.4290 test_assert_function:enter
-# 0004.4336 test_assert_function:76:assert
-# 0004.4370 a_traceless_function:42 |I still can do this => "can you see me?"|
-# 0004.4432 another_test_function:enter |[33, 'tyu', 3.56]| |{'aaa': 111, 'bbb': 222, 'ccc': 333}|
-# 0004.4462 another_test_function:exit |6|
-# 0004.4487 do_a_suite:exit |6|
+# Output looks like this - stop on error is false:
+# 0000.021 do_trace_test:136 (Start do_a_suite:Make a nice suite with entry/exit and return value.) (2024-08-15 12:42:28.108274)
+# 0000.045 do_a_suite:enter (number:911) (alpha:abcd)
+# 0000.054 do_a_suite:112 (something sweet)
+# 0000.073 a_test_function:enter (5) (9.126)
+# 0000.085 TestClass.__init__:40 (making one TestClass) (number 1) ([45, 78, 23]) (5)
+# 0000.098 TestClass.__init__:40 (making one TestClass) (number 2) ([100, 101, 102]) (9.126)
+# 0000.109 a_test_function:84 (TestClass:number 1 tags:[45, 78, 23] arg:5)
+# 0000.118 a_test_function:85 (TestClass:number 2 tags:[100, 101, 102] arg:9.126)
+# 0000.130 TestClass.do_something:enter (TestClass:number 1 tags:[45, 78, 23] arg:5) (5)
+# 0000.136 TestClass.do_something:exit (5-user-5)
+# 0000.145 TestClass.do_something:enter (TestClass:number 2 tags:[100, 101, 102] arg:9.126) (9.126)
+# 0000.151 TestClass.do_something:exit (9.126-user-9.126)
+# 0000.159 TestClass.do_class_assert:enter (TestClass:number 1 tags:[45, 78, 23] arg:5) (5)
+# 0000.169 TestClass.do_class_assert:56:assert
+# 0000.180 TestClass.do_class_exception:enter (TestClass:number 1 tags:[45, 78, 23] arg:5) (9.126)
+# 0000.654 do_class_exception:63 (exception: division by zero)
+# 0000.665 a_test_function:exit (None)
+# 0000.671 test_exception_function:enter
+# 0000.780 test_exception_function:97 (exception: division by zero)
+# 0000.789 test_assert_function:enter
+# 0000.798 test_assert_function:107:assert
+# 0000.805 a_traceless_function:72 (I still can do this => "can you see me?")
+# 0000.817 another_test_function:enter ([33, 'tyu', 3.56]) ({'aaa': 111, 'bbb': 222, 'ccc': 333})
+# 0000.824 another_test_function:exit (6)
+# 0000.828 do_a_suite:exit (6)

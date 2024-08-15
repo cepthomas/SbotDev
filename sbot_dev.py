@@ -9,7 +9,7 @@ import sublime
 import sublime_plugin
 from .SbotCommon import common as sc
 from .SbotCommon import logger as log
-# from .SbotCommon import tracer as tr
+from .SbotCommon import tracer as tr
 from . import test_tracer as tt
 
 
@@ -17,6 +17,7 @@ from . import test_tracer as tt
 print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
 importlib.reload(log)
+importlib.reload(tr)
 importlib.reload(tt)
 
 # Initialize logging.
@@ -36,7 +37,7 @@ def _dump(txt):
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
-# TODO1 production disables all tracing and sets log level to GT debug.
+# TODO1 PRODUCTION disables all tracing and sets log level to GT debug.
 #   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
 
 
@@ -48,7 +49,7 @@ def plugin_loaded():
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
-    '''Ditto.'''
+    '''Called per plugin instance.'''
     # log.info(f'Unloading {__package__}')
     pass
 

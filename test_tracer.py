@@ -110,6 +110,10 @@ def test_assert_function():
 def do_a_suite(alpha, number):
     '''Make a nice suite with entry/exit and return value.'''
     T('something sweet')
+
+    RemotePdb('127.0.0.1', 4444).set_trace()
+    # TODO can't use breakpoint() for ST flavor python.
+
     ret = a_test_function(5, 9.126)
 
     test_exception_function()

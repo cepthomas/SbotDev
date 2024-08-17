@@ -109,22 +109,22 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
             trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
             test_tracer.do_trace_test(trace_fn)
 
-        elif what == 'stpdb':
-            # run: "C:\Program Files\PuTTY\kitty-0.76.1.13.exe" -load "sbot_dev"
-            # TODO1 make it easier to run and Close+restart.
-            # https://the.earth.li/~sgtatham/putty/0.81/htmldoc/Chapter3.html#using-cmdline
-            # https://www.9bis.net/kitty/#!pages/CommandLine.md
+        # elif what == 'stpdb':
+        #     # run: "C:\Program Files\PuTTY\kitty-0.76.1.13.exe" -load "sbot_dev"
+        #     # make it easier to run and Close+restart.
+        #     # https://the.earth.li/~sgtatham/putty/0.81/htmldoc/Chapter3.html#using-cmdline
+        #     # https://www.9bis.net/kitty/#!pages/CommandLine.md
 
-            # TODO1 Unhandled exception BdbQuit when q(uit) not c(ont). https://stackoverflow.com/a/34936583
+        #     # Unhandled exception BdbQuit when q(uit) not c(ont). https://stackoverflow.com/a/34936583
 
-            from . import stpdb
-            try:
-                # stpdb.StPdb()  # shorter
-                stpdb.set_trace()
-                # stpdb.StPdb('127.0.0.1', 4444).set_trace()
-            except Exception as e:
-                dir(e)
-                log.error(f'StPdb exception: {e}')
+        #     from . import stpdb
+        #     try:
+        #         # stpdb.StPdb()  # shorter
+        #         stpdb.set_trace()
+        #         # stpdb.StPdb('127.0.0.1', 4444).set_trace()
+        #     except Exception as e:
+        #         dir(e)
+        #         log.error(f'StPdb exception: {e}')
 
         elif what == 'boom':
             # Blow stuff up. Force unhandled exception.

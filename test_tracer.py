@@ -1,9 +1,8 @@
 import sys
 import datetime
 import importlib
-
-from .stpdb import StPdb
 from .SbotCommon import tracer as tr
+
 # Some optional shorthand.
 trfunc = tr.trfunc
 A = tr.A
@@ -13,7 +12,6 @@ T = tr.T
 # print(f'>>> (re)load {__name__}')
 
 importlib.reload(tr)
-# importlib.reload(stpdb)
 
 # @trfunc
 # def test_one_arguments():

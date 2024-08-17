@@ -2,10 +2,9 @@ import sys
 import datetime
 import importlib
 
-from .remote_pdb import RemotePdb
-
-# from .SbotCommon.tracer import _Y
+from .stpdb import StPdb
 from .SbotCommon import tracer as tr
+# Some optional shorthand.
 trfunc = tr.trfunc
 A = tr.A
 T = tr.T
@@ -14,22 +13,15 @@ Y = tr.Y
 print(f'>>> (re)load {__name__}')
 
 importlib.reload(tr)
+# importlib.reload(stpdb)
 
-
-# y = Y.new(arg1=True)
-
-
-# @y(show_enter=False, show_exit=False)
 @trfunc
 def test_one_arguments():
     result = Y("hello 1")
     Y("hello 2")
 
 
-
-
 #-------------------------- tracer test code --------------------------------------
-
 
 class TestClass(object):
     ''' Dummy for testing class function tracing.'''
@@ -51,15 +43,13 @@ class TestClass(object):
     @trfunc
     def do_class_assert(self, arg):
         '''Entry/exit is traced with args and return value.'''
-        # breakpoint()
-        # RemotePdb(host='127.0.0.1', port=4444).set_trace()
+        # StPdb().set_trace()
         A(1 == 2)
 
     @trfunc
     def do_class_exception(self, arg):
         '''Entry/exit is traced with args and return value.'''
-        # breakpoint()
-        # RemotePdb(host='127.0.0.1', port=4444).set_trace()
+        # StPdb().set_trace()
         x = 1 / 0
 
     def __str__(self):
@@ -111,8 +101,7 @@ def do_a_suite(alpha, number):
     '''Make a nice suite with entry/exit and return value.'''
     T('something sweet')
 
-    RemotePdb('127.0.0.1', 4444).set_trace()
-    # TODO can't use breakpoint() for ST flavor python.
+    # StPdb().set_trace()
 
     ret = a_test_function(5, 9.126)
 

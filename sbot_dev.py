@@ -13,7 +13,7 @@ from .SbotCommon import tracer as tr
 from . import test_tracer as tt
 
 
-# Reload in case this is not initial load. Harmless if the first.
+# Reload in case this is not initial load. Harmless if the former.
 print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
 importlib.reload(log)
@@ -104,31 +104,22 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         if what == 'tb':
             _fun_with_traceback()
 
-        elif what == 'reload':
-            # Reload imports in subdirs when the file changes
-            # This works if imported like from .SbotCommon import utils as sc
-            # importlib.reload(sc)
-            # This also:
-            # import .SbotCommon.tracer
-            # importlib.reload(tracer)
-            # but this doesn't because the module itself is not imported:
-            # from .SbotCommon.tracer import *
-            # importlib.reload(tracer)
-            pass
-
         elif what == 'trace':
             from . import test_tracer
             trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
             test_tracer.do_trace_test(trace_fn)
 
-        elif what == 'rpdb':
-            print('>>> Before running rpdb')
-            from . import remote_pdb
+        elif what == 'stpdb':
+            # run: "C:\Program Files\PuTTY\kitty-0.76.1.13.exe" -load "sbot_dev"
+            # https://the.earth.li/~sgtatham/putty/0.81/htmldoc/Chapter3.html#using-cmdline
+            # https://www.9bis.net/kitty/#!pages/CommandLine.md
+
+            from .stpdb import StPdb
             try:
-                remote_pdb.RemotePdb(host='127.0.0.1', port=4444).set_trace()
+                # stpdb.StPdb()  # shorter
+                StPdb().set_trace()
             except Exception as e:
-                print(f'>>> RemotePdb exception: {e}')
-            print('>>> After running rpdb')
+                log.error(f'StPdb exception: {e}')
 
         elif what == 'boom':
             # Blow stuff up. Force unhandled exception.
@@ -204,7 +195,6 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        # log.debug('abra')
         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
 
         items = []
@@ -367,9 +357,11 @@ def _fun_with_traceback():
 
 #-----------------------------------------------------------------------------------
 def _notify_exception(type, value, tb):
-    '''Process unhandled exceptions. This catches for all current plugins and is mainly
+    '''
+    Process unhandled exceptions. This catches for all current plugins and is mainly
     used for debugging the sbot panteon. Logs the full stack and pops up a message box
-    with summary.'''
+    with summary.
+    '''
 
     # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
     if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):

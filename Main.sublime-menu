@@ -35,7 +35,7 @@
             // { "caption": "Debug traceback", "command": "sbot_debug", "args": { "what": "tb" } },
             { "caption": "Debug trace", "command": "sbot_debug", "args": { "what": "trace" } },
             { "caption": "Debug boom", "command": "sbot_debug", "args": { "what": "boom" } },
-            { "caption": "Debug rpdb", "command": "sbot_debug", "args": { "what": "rpdb" } },
+            { "caption": "Debug stpdb", "command": "sbot_debug", "args": { "what": "stpdb" } },
             { "caption": "Sbot Log", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },
             { "caption": "Sbot Trace", "command": "sbot_open", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\trace.log"]} },
             { "caption": "-" },

@@ -8,17 +8,17 @@ from .SbotCommon import tracer as tr
 trfunc = tr.trfunc
 A = tr.A
 T = tr.T
-Y = tr.Y
+# Y = tr.Y
 
 print(f'>>> (re)load {__name__}')
 
 importlib.reload(tr)
 # importlib.reload(stpdb)
 
-@trfunc
-def test_one_arguments():
-    result = Y("hello 1")
-    Y("hello 2")
+# @trfunc
+# def test_one_arguments():
+#     result = Y("hello 1")
+#     Y("hello 2")
 
 
 #-------------------------- tracer test code --------------------------------------

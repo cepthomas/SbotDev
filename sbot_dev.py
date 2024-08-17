@@ -13,7 +13,7 @@ from .SbotCommon import tracer as tr
 from . import test_tracer as tt
 
 
-# Reload in case this is not initial load. Harmless if the former.
+# Reload in case this is not initial load. Harmless if initial.
 print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
 importlib.reload(log)
@@ -37,7 +37,7 @@ def _dump(txt):
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
-# TODO1 PRODUCTION disables all tracing and sets log level to GT debug.
+# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable allstpdb set_trace().
 #   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
 
 
@@ -111,14 +111,21 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 
         elif what == 'stpdb':
             # run: "C:\Program Files\PuTTY\kitty-0.76.1.13.exe" -load "sbot_dev"
+            # TODO1 make it easier to run and Close+restart.
             # https://the.earth.li/~sgtatham/putty/0.81/htmldoc/Chapter3.html#using-cmdline
             # https://www.9bis.net/kitty/#!pages/CommandLine.md
 
-            from .stpdb import StPdb
+            # TODO1 Unhandled exception BdbQuit:
+            # https://stackoverflow.com/a/34936583
+            # happens when q(uit) not c(ont)
+
+            from . import stpdb
             try:
                 # stpdb.StPdb()  # shorter
-                StPdb().set_trace()
+                stpdb.set_trace()
+                # stpdb.StPdb('127.0.0.1', 4444).set_trace()
             except Exception as e:
+                dir(e)
                 log.error(f'StPdb exception: {e}')
 
         elif what == 'boom':

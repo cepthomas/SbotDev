@@ -14,7 +14,7 @@ from . import test_tracer as tt
 
 
 # Reload in case this is not initial load. Harmless if initial.
-print(f'>>> (re)load {__name__}')
+# print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
 importlib.reload(log)
 importlib.reload(tr)
@@ -115,9 +115,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
             # https://the.earth.li/~sgtatham/putty/0.81/htmldoc/Chapter3.html#using-cmdline
             # https://www.9bis.net/kitty/#!pages/CommandLine.md
 
-            # TODO1 Unhandled exception BdbQuit:
-            # https://stackoverflow.com/a/34936583
-            # happens when q(uit) not c(ont)
+            # TODO1 Unhandled exception BdbQuit when q(uit) not c(ont). https://stackoverflow.com/a/34936583
 
             from . import stpdb
             try:

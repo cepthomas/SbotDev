@@ -10,7 +10,7 @@ A = tr.A
 T = tr.T
 # Y = tr.Y
 
-print(f'>>> (re)load {__name__}')
+# print(f'>>> (re)load {__name__}')
 
 importlib.reload(tr)
 # importlib.reload(stpdb)

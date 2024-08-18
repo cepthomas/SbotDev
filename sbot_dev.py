@@ -37,7 +37,7 @@ def _dump(txt):
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
-# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable allstpdb set_trace().
+# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable all stpdb.set_trace().
 #   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
 
 
@@ -152,7 +152,7 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
         ''' Simple git tools: diff, commit (TODO with comment?), push.
-        TODO show previous version.
+        TODO show previous version?
         https://github.com/kemayo/sublime-text-git.
         '''
         fn = self.view.file_name()

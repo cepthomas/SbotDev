@@ -7,21 +7,17 @@ import datetime
 import importlib
 import sublime
 import sublime_plugin
-from .SbotCommon import common as sc
-from .SbotCommon import logger as log
-from .SbotCommon import tracer as tr
+from . import sbot_common as sc
+from . import tracer as tr
 from . import test_tracer as tt
 
 
 # Reload in case this is not initial load. Harmless if initial.
 # print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
-importlib.reload(log)
 importlib.reload(tr)
 importlib.reload(tt)
 
-# Initialize logging.
-log.init(sc.get_store_fn('sbot.log'))
 
 # Clean dump file.
 _dump_fn = os.path.join(os.path.dirname(__file__), '_dump.log')
@@ -44,13 +40,13 @@ DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     '''Called per plugin instance.'''
-    log.info(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
+    sc.info(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
     '''Called per plugin instance.'''
-    # log.info(f'Unloading {__package__}')
+    # sc.info(f'Unloading {__package__}')
     pass
 
 
@@ -124,11 +120,11 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         #         # stpdb.StPdb('127.0.0.1', 4444).set_trace()
         #     except Exception as e:
         #         dir(e)
-        #         log.error(f'StPdb exception: {e}')
+        #         sc.error(f'StPdb exception: {e}')
 
         elif what == 'boom':
             # Blow stuff up. Force unhandled exception.
-            log.debug('Forcing unhandled exception!')
+            sc.debug('Forcing unhandled exception!')
             sc.open_path('not-a-real-file')
             # i = 222 / 0
 
@@ -229,7 +225,7 @@ class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
 
     def on_done(self, text):
         sc.create_new_view(self.window, text)
-        log.debug(f'Got:{text}')
+        sc.debug(f'Got:{text}')
 
 
 #-----------------------------------------------------------------------------------
@@ -374,7 +370,7 @@ def _notify_exception(type, value, tb):
         return
 
     msg = f'Unhandled exception {type.__name__}: {value}'
-    log.error(msg, tb)
+    sc.error(msg, tb)
 
     # Show the user some context info.
     frame = traceback.extract_tb(tb)[-1]

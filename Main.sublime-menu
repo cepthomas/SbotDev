@@ -32,13 +32,10 @@
         "id": "dev",
         "children":
         [
-            // { "caption": "Debug traceback", "command": "sbot_debug", "args": { "what": "tb" } },
-            { "caption": "Debug trace", "command": "sbot_debug", "args": { "what": "trace" } },
+            { "caption": "Debug traceback", "command": "sbot_debug", "args": { "what": "tb" } },
             { "caption": "Debug boom", "command": "sbot_debug", "args": { "what": "boom" } },
-            // { "caption": "Debug stpdb", "command": "sbot_debug", "args": { "what": "stpdb" } },
-            { "caption": "Debug sbot_pdb", "command": "sbot_pdb_test" },
-            { "caption": "Sbot Log", "command": "sbot_click", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },
-            { "caption": "Sbot Trace", "command": "sbot_click", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\trace.log"]} },
+            { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },
+            { "caption": "Open Trace", "command": "sbot_click", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\trace.log"]} },
             { "caption": "-" },
             { "caption": "Git Diff", "command": "sbot_git", "args": { "git_cmd": "diff" } },
             { "caption": "Git Commit", "command": "sbot_git", "args": { "git_cmd": "commit" } },

@@ -8,15 +8,15 @@ import importlib
 import sublime
 import sublime_plugin
 from . import sbot_common as sc
-from . import tracer as tr
-from . import test_tracer as tt
+# from . import tracer as tr
+# from . import test_tracer as tt
 
 
 # Reload in case this is not initial load. Harmless if initial.
 # print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
-importlib.reload(tr)
-importlib.reload(tt)
+# importlib.reload(tr)
+# importlib.reload(tt)
 
 
 # Clean dump file.
@@ -99,28 +99,6 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
         if what == 'tb':
             _fun_with_traceback()
-
-        elif what == 'trace':
-            from . import test_tracer
-            trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
-            test_tracer.do_trace_test(trace_fn)
-
-        # elif what == 'stpdb':
-        #     # run: "C:\Program Files\PuTTY\kitty-0.76.1.13.exe" -load "sbot_dev"
-        #     # make it easier to run and Close+restart.
-        #     # https://the.earth.li/~sgtatham/putty/0.81/htmldoc/Chapter3.html#using-cmdline
-        #     # https://www.9bis.net/kitty/#!pages/CommandLine.md
-
-        #     # Unhandled exception BdbQuit when q(uit) not c(ont). https://stackoverflow.com/a/34936583
-
-        #     from . import stpdb
-        #     try:
-        #         # stpdb.StPdb()  # shorter
-        #         stpdb.set_trace()
-        #         # stpdb.StPdb('127.0.0.1', 4444).set_trace()
-        #     except Exception as e:
-        #         dir(e)
-        #         sc.error(f'StPdb exception: {e}')
 
         elif what == 'boom':
             # Blow stuff up. Force unhandled exception.
@@ -360,7 +338,7 @@ def _fun_with_traceback():
 def _notify_exception(type, value, tb):
     '''
     Process unhandled exceptions. This catches for all current plugins and is mainly
-    used for debugging the sbot panteon. Logs the full stack and pops up a message box
+    used for debugging the sbot pantheon. Logs the full stack and pops up a message box
     with summary.
     '''
 

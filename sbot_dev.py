@@ -8,15 +8,10 @@ import importlib
 import sublime
 import sublime_plugin
 from . import sbot_common as sc
-# from . import tracer as tr
-# from . import test_tracer as tt
-
 
 # Reload in case this is not initial load. Harmless if initial.
 # print(f'>>> (re)load {__name__}')
 importlib.reload(sc)
-# importlib.reload(tr)
-# importlib.reload(tt)
 
 
 # Clean dump file.
@@ -33,7 +28,7 @@ def _dump(txt):
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
-# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable all stpdb.set_trace().
+# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable all sbot_pdb.set_trace().
 #   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
 
 

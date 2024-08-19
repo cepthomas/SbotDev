@@ -32,6 +32,7 @@
         "id": "dev",
         "children":
         [
+            { "caption": "Debug sbot_pdb", "command": "sbot_pdb_test" },
             { "caption": "Debug traceback", "command": "sbot_debug", "args": { "what": "tb" } },
             { "caption": "Debug boom", "command": "sbot_debug", "args": { "what": "boom" } },
             { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$ST_PKGS\\User\\.SbotStore\\sbot.log"]} },

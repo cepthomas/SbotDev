@@ -9,11 +9,14 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
-# Reload in case this is not initial load. Harmless if initial.
-# print(f'>>> (re)load {__name__}')
+# Benign reload in case of edited.
 importlib.reload(sc)
 
 
+# TODO1 insert/delete lua dbg() and pdb.set_trace() from ST.
+
+
+#-----------------------------------------------------------------------------------
 # Clean dump file.
 _dump_fn = os.path.join(os.path.dirname(__file__), '_dump.log')
 with open(_dump_fn, 'w'):
@@ -86,7 +89,7 @@ class DevEvent(sublime_plugin.EventListener):
         #   Show a popup displaying HTML content.
 
     def on_hover_done(self, sel):
-        print(f'>>> on_hover_done:{sel}')
+        pass
 
 
 #-----------------------------------------------------------------------------------

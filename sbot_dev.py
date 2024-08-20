@@ -13,7 +13,11 @@ from . import sbot_common as sc
 importlib.reload(sc)
 
 
-# TODO1 insert/delete lua dbg() and pdb.set_trace() from ST.
+# TODO1 insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
+# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable all sbot_pdb.set_trace().
+#   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
+
+DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 
 #-----------------------------------------------------------------------------------
@@ -27,12 +31,6 @@ def _dump(txt):
     with open(_dump_fn, 'a') as f:
         f.write(txt + '\n')
         f.flush()
-
-
-DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
-
-# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable all sbot_pdb.set_trace().
-#   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
 
 
 #-----------------------------------------------------------------------------------

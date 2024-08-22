@@ -5,6 +5,7 @@ import platform
 import traceback
 import datetime
 import importlib
+import bdb
 import sublime
 import sublime_plugin
 from . import sbot_common as sc
@@ -16,6 +17,7 @@ importlib.reload(sc)
 # TODO1 insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
 # TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable all sbot_pdb.set_trace().
 #   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
+
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
@@ -340,6 +342,11 @@ def _notify_exception(type, value, tb):
 
     # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
     if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
+        sys.__excepthook__(type, value, traceback)
+        return
+
+    # This happens with hard shutdown of SbotPdb.
+    if issubclass(type, bdb.BdbQuit):
         sys.__excepthook__(type, value, traceback)
         return
 

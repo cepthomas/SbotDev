@@ -14,7 +14,7 @@ from . import sbot_common as sc
 importlib.reload(sc)
 
 
-# TODO1 insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
+# TODO insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
 
 
 
@@ -365,4 +365,4 @@ def _notify_exception(type, value, tb):
 #-----------------------------------------------------------------------------------
 
 # Connect the last chance hook.
-sys.excepthook = _notify_exception
+# sys.excepthook = _notify_exception

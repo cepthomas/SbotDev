@@ -365,4 +365,4 @@ def _notify_exception(type, value, tb):
 #-----------------------------------------------------------------------------------
 
 # Connect the last chance hook.
-# sys.excepthook = _notify_exception
+sys.excepthook = _notify_exception

@@ -15,8 +15,6 @@ importlib.reload(sc)
 
 
 # TODO1 insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
-# TODO1 PRODUCTION flag disables all tracing, sets log level to >= info, disable all sbot_pdb.set_trace().
-#   => https://stackoverflow.com/questions/13352677/python-equivalent-for-ifdef-debug
 
 
 

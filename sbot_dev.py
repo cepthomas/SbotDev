@@ -16,6 +16,8 @@ importlib.reload(sc)
 
 # TODO insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
 
+# ctrl+k, n - next linter error
+# ctrl+k, p - previous linter error
 
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"

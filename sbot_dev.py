@@ -13,8 +13,6 @@ from . import sbot_common as sc
 # Benign reload in case of edited.
 importlib.reload(sc)
 
-# TODO1 most/all need Default.sublime-commands
-
 
 # TODO insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
 

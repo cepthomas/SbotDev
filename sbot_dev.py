@@ -124,8 +124,8 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit (TODO with comment?), push.
-        TODO show previous version?
+        ''' Simple git tools: diff, commit (TODO with comment), push.
+        TODO show previous version of file.
         https://github.com/kemayo/sublime-text-git.
         '''
         fn = self.view.file_name()

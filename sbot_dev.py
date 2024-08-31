@@ -96,6 +96,7 @@ class DevEvent(sublime_plugin.EventListener):
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
+
         if what == 'tb':
             _fun_with_traceback()
 

@@ -32,7 +32,7 @@
         "id": "dev",
         "children":
         [
-            { "caption": "Debug sbot_pdb", "command": "sbot_pdb_debug" },
+            { "caption": "Run sbot_pdb", "command": "sbot_pdb_debug" },
             { "caption": "Debug traceback", "command": "sbot_debug", "args": { "what": "tb" } },
             { "caption": "Debug boom", "command": "sbot_debug", "args": { "what": "boom" } },
             { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },

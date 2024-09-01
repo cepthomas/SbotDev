@@ -25,7 +25,7 @@ DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 #-----------------------------------------------------------------------------------
 # Clean dump file.
-_dump_fn = os.path.join(os.path.dirname(__file__), '_dump.log')
+_dump_fn = os.path.join(os.path.dirname(__file__), 'out', '_dump.log')
 with open(_dump_fn, 'w'):
     pass
 

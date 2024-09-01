@@ -104,7 +104,7 @@ def do_a_suite(alpha, number):
 
 def do_trace_test():
     '''Test starts here.'''
-    trace_fn = os.path.join(os.path.dirname(__file__), '_tracer.log')
+    trace_fn = os.path.join(os.path.dirname(__file__), 'out', '_tracer.log')
     tr.start(trace_fn, clean_file=True, stop_on_exception=True, sep=('(', ')'))
 
     T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__}', str(datetime.datetime.now()))

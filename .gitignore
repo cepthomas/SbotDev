@@ -134,3 +134,4 @@ dmypy.json
 # Project files
 _dump.log
 _tracer.log
+out/

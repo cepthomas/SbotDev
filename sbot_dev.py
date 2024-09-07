@@ -16,10 +16,6 @@ importlib.reload(sc)
 
 # TODO insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
 
-# ctrl+k, n - next linter error
-# ctrl+k, p - previous linter error
-
-
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 
 
@@ -335,7 +331,7 @@ def _fun_with_traceback():
 
 
 #-----------------------------------------------------------------------------------
-def _notify_exception(type, value, tb):
+def excepthook(type, value, tb):
     '''
     Process unhandled exceptions. This catches for all current plugins and is mainly
     used for debugging the sbot pantheon. Logs the full stack and pops up a message box
@@ -344,23 +340,16 @@ def _notify_exception(type, value, tb):
 
     # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
     if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
-        sys.__excepthook__(type, value, traceback)
         return
 
     # This happens with hard shutdown of SbotPdb.
-    if issubclass(type, bdb.BdbQuit):
-        sys.__excepthook__(type, value, traceback)
+    # except ConnectionError: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
+    if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
         return
 
     msg = f'Unhandled exception {type.__name__}: {value}'
     sc.error(msg, tb)
-
-    # Show the user some context info.
-    frame = traceback.extract_tb(tb)[-1]
-    info = [msg]
-    info.append(f'at {frame.name}({frame.lineno})')
-    info.append(f'See the log for detail')
-    sublime.error_message('\n'.join(info))  # This goes to console too.
+    sys.__excepthook__(type, value, traceback)
 
 
 #-----------------------------------------------------------------------------------
@@ -368,4 +357,4 @@ def _notify_exception(type, value, tb):
 #-----------------------------------------------------------------------------------
 
 # Connect the last chance hook.
-sys.excepthook = _notify_exception
+sys.excepthook = excepthook

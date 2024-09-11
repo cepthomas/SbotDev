@@ -8,6 +8,7 @@ from unittest.mock import MagicMock
 import sublime
 import sublime_plugin
 
+# from . import sbot_common as sc
 from SbotDev import sbot_common as sc
 from SbotFormat import sbot_format
 from SbotHighlight import sbot_highlight

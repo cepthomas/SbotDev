@@ -2,7 +2,7 @@ import sys
 import os
 import datetime
 import importlib
-from . import tracer as tr
+from SbotDev import tracer as tr
 
 # Benign reload in case of edited.
 importlib.reload(tr)
@@ -112,7 +112,7 @@ def do_trace_test():
     tr.stop()  # Always clean up resources!!
 
 # Uncomment this to run.
-# do_trace_test()
+do_trace_test()
 
 
 # Output looks like this - stop on error is false:

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>56224532-0e9c-4b7c-9778-7a7e97187dad</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>test_sbot.py</StartupFile>
+    <StartupFile>test_tracer.py</StartupFile>
     <SearchPath>..\..\;test_files;st_sim</SearchPath>
     <!-- Execute from the parent directory. -->
     <WorkingDirectory>..</WorkingDirectory>
@@ -32,7 +32,8 @@
   <ItemGroup>
     <Compile Include="sbot_common.py" />
     <Compile Include="test_sbot.py" />
-    <!-- <Compile Include="test_table.py" /> -->
+    <Compile Include="test_tracer.py" />
+    <Compile Include="test_table.py" />
     <Compile Include="test_files\sublime.py" />
     <Compile Include="test_files\sublime_plugin.py" />
     <Compile Include="$(APPDATA)\Sublime Text\Packages\Notr\notr.py" />

@@ -1,15 +1,10 @@
 echo off
 
 :: Run unit tests from the command line. MY_PATH=%~dp0
-rem set ST_PKGS="%APPDATA%\Sublime Text\Packages"
 set PYTHONPATH=%~dp0test_files;%~dp0st_sim;
-
-rem python test_sbot.py
-rem exit
-
-:: Execute from the parent dir ST_PKGS.
+:: Execute from the parent dir ST_PKGS="%APPDATA%\Sublime Text\Packages".
 pushd ..
-:: Execute all tests in a suite.
+:: Execute all tests in a suite.  test_sbot.py  test_table.py  test_tracer.py
 python SbotDev\test_sbot.py
 :: Restore
 popd

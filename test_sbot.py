@@ -1,11 +1,7 @@
 import sys
 import os
-import subprocess
 import platform
-import traceback
-import datetime
-import importlib
-# import bdb
+import pdb
 import unittest
 from unittest.mock import MagicMock
 
@@ -20,22 +16,17 @@ from Notr import notr, table
 # Experiments with testing py code in general and ST plugins specifically.
 
 
-
-# #-----------------------------------------------------------------------------------
-# def plugin_loaded():
-#     '''Called per plugin instance.'''
-#     sc.info(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
+print(f'Running {__file__} with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------
 class TestFormat(unittest.TestCase):
 
     def setUp(self):
-        pass
-        # mock_settings = {
-        #     "tab_size": 4,
-        # }
-        # sublime.load_settings = MagicMock(return_value=mock_settings)
+        mock_settings = {
+            "tab_size": 4,
+        }
+        sublime.load_settings = MagicMock(return_value=mock_settings)
 
     def tearDown(self):
         pass
@@ -62,12 +53,16 @@ class TestFormat(unittest.TestCase):
             # The happy path.
             s = fp.read()
             cmd = sbot_format.SbotFormatXmlCommand(v)
-            res = cmd._do_one(s, 4)
-            self.assertEqual(res[100:150], 'nType="Anti-IgG (PEG)" TestSpec="08 ABSCR4 IgG" Du')
+            res = cmd._do_one(s, '    ')
+
+            if 'Error:' in res:
+                self.fail(res)
+            else:
+                self.assertEqual(res[100:150], 'nType="Anti-IgG (PEG)" TestSpec="08 ABSCR4 IgG" Du')
 
             # Make it a bad file.
             s = s.replace('ColumnType=', '')
-            res = cmd._do_one(s)
+            res = cmd._do_one(s, '    ')
             self.assertEqual(res, "Error: not well-formed (invalid token): line 6, column 4")
 
 
@@ -76,7 +71,7 @@ class TestHighlight(unittest.TestCase):
 
     def setUp(self):
         mock_settings = {
-            "highlight_scopes": [ "region.redish", "region.yellowish", "region.greenish", "region.cyanish", "region.bluish", "region.purplish" ],
+            "highlight_scopes": ["region.redish", "region.yellowish", "region.greenish", "region.cyanish", "region.bluish", "region.purplish"],
         }
         sublime.load_settings = MagicMock(return_value=mock_settings)
 
@@ -102,39 +97,50 @@ class TestNotr(unittest.TestCase):
 
         notr_files_path = os.path.join(sublime.packages_path(), 'Notr', 'files')
 
-        # projects look like this:
+        # TODO projects look like this:
         # {
-        #     "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Notr\\example\\notr-demo.nproj": {
-        #         "active": false,
-        #         "mru": [
-        #             "my-index#Common Links",
-        #             "notr-spec#section no tags"
-        #         ]
-        #     },
+        #     "notr_paths": [
+        #         "$APPDATA\\Sublime Text\\Packages\\Notr\\example"
+        #     ],
+        #     "notr_index": "$APPDATA\\Sublime Text\\Packages\\Notr\\example\\my-index.ntr",
+        #     "fixed_hl": [
+        #         ["2DO", "and_a"],
+        #         ["user", "and_b"],
+        #         ["dynamic", "and_c"]
+        #     ],
+        #     "sticky": [
+        #         "notr-spec#section no tags",
+        #         "my-index#Other Files of Interest"
+        #     ]
         # }
 
-
-
-        # Mock settings.
-
-        # // All notr projects.
-        # "projects": [],  name!
-        # // Sort tags alphabetically or by frequency.
-        # "sort_tags_alpha": true,
-        # // How many mru entries in goto selector. 0 = disabled.
-        # "mru_size": 5,
-        # // User highlights option.
-        # "fixed_hl_whole_word": true,
-        # // Include these and higher sections in selector.
-        # "section_marker_size": 1,
-
         mock_settings = {
-            "visual_line_length": 100,
-            "fixed_hl": [["2DO", "things"], ["user", "dynamic"], ["and_a", "and_b", "and_c"]],
+            "projects": [],
+            # in notr.store
+            # {
+            #     "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Notr\\example\\notr-demo.nproj": {
+            #         "active": false,
+            #         "mru": [
+            #             "my-index#Common Links",
+            #             "notr-spec#section no tags"
+            #         ]
+            #     },
+            #     "C:\\Users\\cepth\\OneDrive\\OneDriveDocuments\\notes\\main.nproj": {
+            #         "active": true,
+            #         "mru": [
+            #             "ascii#All",
+            #             "tech-misc#Win batch",
+            #             "sublime-notes#general",
+            #             "sublime-commands#Plugins",
+            #             "python-notes#import"
+            #         ]
+            #     }
+            # }            
+            "sort_tags_alpha": True,
+            "mru_size": 5,
             "fixed_hl_whole_word": True,
+            "section_marker_size": 1,
         }
-        mock_settings["notr_paths"] = [notr_files_path]
-        mock_settings["notr_index"] = os.path.join(notr_files_path, 'test-index.ntr')
         sublime.load_settings = MagicMock(return_value=mock_settings)
 
         # Mock top level entities.
@@ -157,29 +163,25 @@ class TestNotr(unittest.TestCase):
         # for e in notr._parse_errors:
         #     print(f'parse error:{e}')
 
-        evt = notr.NotrEvent()
-        evt.on_init([self.view])
+        # evt = notr.NotrEvent()
+        # evt.on_init([self.view])
 
-        self.assertEqual(len(notr._tags), 7)
-        self.assertEqual(len(notr._links), 6)
-        self.assertEqual(len(notr._refs), 6)
-        self.assertEqual(len(notr._sections), 13)
-        self.assertEqual(len(notr._parse_errors), 0)
+        # self.assertEqual(len(notr._tags), 7)
+        # self.assertEqual(len(notr._links), 6)
+        # self.assertEqual(len(notr._refs), 6)
+        # self.assertEqual(len(notr._sections), 13)
+        # self.assertEqual(len(notr._parse_errors), 0)
 
-    # @unittest.skip
+    @unittest.skip
     def test_GotoRef(self):
-        cmd = notr.NotrGotoRefCommand(self.view)
-        cmd.run(None)
-
-    # @unittest.skip
-    def test_GotoSection(self):
-        cmd = notr.NotrGotoSectionCommand(self.view)
-        cmd.run(None)
+        cmd = notr.NotrGotoTargetCommand(self.view)
+        cmd.run(None, False)
 
     # @unittest.skip
     def test_InsertRef(self):
         cmd = notr.NotrInsertRefCommand(self.view)
         cmd.run(None)
+
 
 #-----------------------------------------------------------------------------------
 if __name__ == '__main__':

@@ -1,4 +1,3 @@
-
 import sys
 import os
 import unittest
@@ -31,7 +30,7 @@ class TestTable(unittest.TestCase):
     #------------------------------------------------------------
     def setUp(self):
         # Get test text.
-        with open('./test_files/test_table.ntr', 'r') as f:
+        with open('SbotDev/test_files/test_table.ntr', 'r') as f:
             self.test_text = f.readlines()
         # String version.
         self.test_text_str = ''.join(self.test_text)

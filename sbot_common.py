@@ -92,7 +92,8 @@ def get_store_fn_for_project(project_fn, file_ext):
 def get_single_caret(view):
     '''Get current caret position for one only region. If multiples, return None.'''
     if len(view.sel()) == 0:
-        raise RuntimeError('No data')
+        # raise RuntimeError('No data')
+        return None
     elif len(view.sel()) == 1:  # single sel
         return view.sel()[0].b
     else:  # multi sel

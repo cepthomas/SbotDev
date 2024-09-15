@@ -10,9 +10,6 @@ import subprocess
 import sublime
 
 
-# Note: This file is copied from SbotDev. Any edits will be overwritten.
-
-
 #-----------------------------------------------------------------------------------
 #---------------------------- Public types -----------------------------------------
 #-----------------------------------------------------------------------------------
@@ -148,10 +145,10 @@ def wait_load_file(window, fpath, line):
     vnew = None
 
     def _load(view):
-        if vnew.is_loading():
-            sublime.set_timeout(lambda: _load(vnew), 10)  # maybe not forever?
+        if view.is_loading():
+            sublime.set_timeout(lambda: _load(view), 10)  # maybe not forever?
         else:
-            vnew.run_command("goto_line", {"line": line})
+            view.run_command("goto_line", {"line": line})
 
     # Open the file in a new view.
     try:
@@ -178,12 +175,12 @@ def get_highlight_info(which='all'):
 
 
 #-----------------------------------------------------------------------------------
-def expand_vars(s: str):
+def expand_vars(s):
     '''Smarter version of builtin. Returns expanded string or None if bad var name.'''
     done = False
     count = 0
     while not done:
-        if '$' in s:
+        if s is not None and '$' in s:
             sexp = os.path.expandvars(s)
             if s == sexp:
                 # Invalid var.
@@ -265,10 +262,9 @@ def open_terminal(where):
     if platform.system() == 'Darwin':
         error('Sorry, we don\'t do Macs')
     elif platform.system() == 'Windows':
-        cmd = f'wt -d "{where}"'  # W10+
+        subprocess.run(f'wt -d "{where}"', shell=False, check=False)  # W10+
     else:  # linux
-        cmd = f'gnome-terminal --working-directory="{where}"'
-    subprocess.run(cmd, shell=False, check=False)
+        subprocess.run(f'gnome-terminal --working-directory="{where}"', shell=False, check=False)
 
 
 #-----------------------------------------------------------------------------------

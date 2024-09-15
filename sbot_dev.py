@@ -10,6 +10,7 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
+
 # Benign reload in case of edited.
 importlib.reload(sc)
 
@@ -92,6 +93,9 @@ class DevEvent(sublime_plugin.EventListener):
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit, what):
+
+        # print(os.environ.get('PYTHONPATH', "???"))
+        # sc.info(f'>>>>>>> os.environ: {os.environ}')
 
         if what == 'tb':
             _fun_with_traceback()

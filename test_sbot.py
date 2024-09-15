@@ -17,7 +17,7 @@ from Notr import notr, table
 # Experiments with testing py code in general and ST plugins specifically.
 
 
-print(f'Running {__file__} with python {platform.python_version()} on {platform.platform()}')
+# print(f'Running {__file__} with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------

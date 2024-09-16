@@ -180,7 +180,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
         for dir in directions:
             items.append(sublime.QuickPanelItem(
                 trigger=dir,
-                details=["<i>details</i>", "<b>more</b>"],
+                details="<i>details</i><b>more</b>",
                 annotation=f"look_{dir}",
                 kind=(sublime.KIND_ID_COLOR_REDISH + directions.index(dir), dir[:1], '????') ))
 
@@ -296,7 +296,7 @@ def _fun_with_traceback():
 
     _dump('====== Dump a traceback - most recent last')
     try:
-        1 / 0
+        x = 1 / 0
     except Exception as e:
         for f in traceback.extract_tb(e.__traceback__):
             _dump(my_frame_formatter(f))
@@ -353,7 +353,7 @@ def excepthook(type, value, tb):
 
     msg = f'Unhandled exception {type.__name__}: {value}'
     sc.error(msg, tb)
-    sys.__excepthook__(type, value, traceback)
+    sys.__excepthook__(type, value, tb)
 
 
 #-----------------------------------------------------------------------------------

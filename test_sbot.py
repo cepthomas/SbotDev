@@ -8,14 +8,12 @@ from unittest.mock import MagicMock
 import sublime
 import sublime_plugin
 
-# from . import sbot_common as sc
-from SbotDev import sbot_common as sc
+from . import sbot_common as sc
 from SbotFormat import sbot_format
 from SbotHighlight import sbot_highlight
 from Notr import notr, table
 
 # Experiments with testing py code in general and ST plugins specifically.
-
 
 # print(f'Running {__file__} with python {platform.python_version()} on {platform.platform()}')
 
@@ -83,7 +81,7 @@ class TestHighlight(unittest.TestCase):
         window = sublime.Window(900)
         view = sublime.View(901)
 
-        view._window = MagicMock(return_value=window)
+        view.window = MagicMock(return_value=window)
         view.file_name = MagicMock(return_value='file123.abc')
 
         # Do the test.
@@ -98,45 +96,8 @@ class TestNotr(unittest.TestCase):
 
         notr_files_path = os.path.join(sublime.packages_path(), 'Notr', 'files')
 
-        # TODO projects look like this:
-        # {
-        #     "notr_paths": [
-        #         "$APPDATA\\Sublime Text\\Packages\\Notr\\example"
-        #     ],
-        #     "notr_index": "$APPDATA\\Sublime Text\\Packages\\Notr\\example\\my-index.ntr",
-        #     "fixed_hl": [
-        #         ["2DO", "and_a"],
-        #         ["user", "and_b"],
-        #         ["dynamic", "and_c"]
-        #     ],
-        #     "sticky": [
-        #         "notr-spec#section no tags",
-        #         "my-index#Other Files of Interest"
-        #     ]
-        # }
-
         mock_settings = {
             "projects": [],
-            # in notr.store
-            # {
-            #     "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Notr\\example\\notr-demo.nproj": {
-            #         "active": false,
-            #         "mru": [
-            #             "my-index#Common Links",
-            #             "notr-spec#section no tags"
-            #         ]
-            #     },
-            #     "C:\\Users\\cepth\\OneDrive\\OneDriveDocuments\\notes\\main.nproj": {
-            #         "active": true,
-            #         "mru": [
-            #             "ascii#All",
-            #             "tech-misc#Win batch",
-            #             "sublime-notes#general",
-            #             "sublime-commands#Plugins",
-            #             "python-notes#import"
-            #         ]
-            #     }
-            # }            
             "sort_tags_alpha": True,
             "mru_size": 5,
             "fixed_hl_whole_word": True,
@@ -147,7 +108,7 @@ class TestNotr(unittest.TestCase):
         # Mock top level entities.
         self.view = sublime.View(10)
         self.window = sublime.Window(20)
-        self.view._window = MagicMock(return_value=self.window)
+        self.view.window = MagicMock(return_value=self.window)
 
         # Mock syntax interrogation.
         self.syntax = sublime.Syntax('', 'Notr', False, '')
@@ -156,9 +117,9 @@ class TestNotr(unittest.TestCase):
     def tearDown(self):
         pass
 
-    # @unittest.skip
+    # @unittest.skip('')
     def test_parsing(self):
-        ''' Tests the ntr file parsing. '''
+        ''' Tests the .ntr file parsing. '''
 
         # notr._process_notr_files()
         # for e in notr._parse_errors:
@@ -173,15 +134,16 @@ class TestNotr(unittest.TestCase):
         # self.assertEqual(len(notr._sections), 13)
         # self.assertEqual(len(notr._parse_errors), 0)
 
-    @unittest.skip
+    @unittest.skip('')
     def test_GotoRef(self):
         cmd = notr.NotrGotoTargetCommand(self.view)
         cmd.run(None, False)
 
-    # @unittest.skip
-    def test_InsertRef(self):
-        cmd = notr.NotrInsertRefCommand(self.view)
-        cmd.run(None)
+    # @unittest.skip('')
+    # def test_InsertRef(self):
+    #     cmd = notr.NotrInsertRefCommand(self.view)
+    #     edit = sublime.Edit
+    #     cmd.run(edit)
 
 
 #-----------------------------------------------------------------------------------

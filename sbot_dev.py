@@ -36,7 +36,7 @@ def _dump(txt):
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     '''Called per plugin instance.'''
-    sc.info(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
+    sc.debug(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------
@@ -350,6 +350,23 @@ def excepthook(type, value, tb):
     # except ConnectionError: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
     if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
         return
+
+    # This is impolite when closing a second instance of ST. TODO1
+    if type is TypeError:
+        return
+    # sc.debug(f'>>>>>>>>>>{dir(tb)}')
+    # for f in traceback.walk_tb(tb):
+    #     sc.debug(f'>>>>>>>>>>{f}')
+    # 2024-09-18 16:28:45.589 ERR sbot_dev.py:355 Unhandled exception TypeError: 'NoneType' object is not iterable
+    #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Installed Packages\LSP.sublime-package\plugin/documents.py", line 1014, in clear_async
+    #     session_view.on_before_remove()
+    #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Installed Packages\LSP.sublime-package\plugin/session_view.py", line 87, in on_before_remove
+    #     self._code_lenses.clear_view()
+    #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Installed Packages\LSP.sublime-package\plugin/code_lens.py", line 132, in clear_view
+    #     self._phantom.update([])
+    #   File "C:\Program Files\Sublime Text\Lib\python38\sublime.py", line 3938, in update
+    #     for phantom, region in zip(self.phantoms, regions):
+
 
     msg = f'Unhandled exception {type.__name__}: {value}'
     sc.error(msg, tb)

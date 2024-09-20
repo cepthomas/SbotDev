@@ -347,13 +347,14 @@ def excepthook(type, value, tb):
         return
 
     # This happens with hard shutdown of SbotPdb.
-    # except ConnectionError: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
+    # BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
     if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
         return
 
-    # This is impolite when closing a second instance of ST. TODO1
-    if type is TypeError:
-        return
+    # LSP is sometimes impolite when closing a second instance of ST. TODO handle this better.
+    # if type is TypeError and 'object is not iterable' in str(value):
+    #     return
+        
     # sc.debug(f'>>>>>>>>>>{dir(tb)}')
     # for f in traceback.walk_tb(tb):
     #     sc.debug(f'>>>>>>>>>>{f}')
@@ -367,7 +368,9 @@ def excepthook(type, value, tb):
     #   File "C:\Program Files\Sublime Text\Lib\python38\sublime.py", line 3938, in update
     #     for phantom, region in zip(self.phantoms, regions):
 
+    sublime.error_message(f'Unhandled exception {type.__name__}: {value}')  # From sc.error()
 
+    # Otherwise let nature take its course.
     msg = f'Unhandled exception {type.__name__}: {value}'
     sc.error(msg, tb)
     sys.__excepthook__(type, value, tb)

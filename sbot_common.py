@@ -79,16 +79,6 @@ def get_store_fn(fn):
 
 
 #-----------------------------------------------------------------------------------
-def get_store_fn_for_project(project_fn, file_ext):
-    '''Get store file name based on ST project name.'''
-    store_fn = None
-    if project_fn is not None:
-        fn = os.path.basename(project_fn).replace('.sublime-project', file_ext)
-        store_fn = get_store_fn(fn)
-    return store_fn
-
-
-#-----------------------------------------------------------------------------------
 def get_single_caret(view):
     '''Get current caret position for one only region. If multiples, return None.'''
     if len(view.sel()) == 0:
@@ -228,11 +218,12 @@ def get_path_parts(window, paths):
 
     if path is not None:
         exp_path = expand_vars(path)
-        if os.path.isdir(exp_path):
-            dir = exp_path
-        else:
-            dir, fn = os.path.split(exp_path)
-        path = exp_path
+        if exp_path is not None:
+            if os.path.isdir(exp_path):
+                dir = exp_path
+            else:
+                dir, fn = os.path.split(exp_path)
+            path = exp_path
 
     return (dir, fn, path)
 

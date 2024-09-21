@@ -4,15 +4,11 @@
         "id": "dev",
         "children":
         [
-            { "caption": "Run my pdb test", "command": "sbot_pdb_test" },
             { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
             { "caption": "Open Trace", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\trace.log"]} },
             { "caption": "-" },
-            { "caption": "Debug Traceback", "command": "sbot_debug", "args": { "what": "tb" } },
-            { "caption": "Debug Boom", "command": "sbot_debug", "args": { "what": "boom" } },
-            { "caption": "Test Panel", "command": "sbot_test_panel" },
-            { "caption": "Test Panel Input", "command": "sbot_test_panel_input" },
-            { "caption": "Test Phantoms and Annotations", "command": "sbot_test_visuals" },
+            { "caption": "Debug", "command": "sbot_debug" },
+            { "caption": "Run pdb test", "command": "sbot_pdb_test" },
             { "caption": "-" },
             { "caption": "Sublime Commands", "command": "sbot_click", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\sublime-commands.ntr"]} },
             { "caption": "Lua Cheatsheet", "command": "sbot_click", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\lua-cheat-sheet.lua"]} },
@@ -20,6 +16,10 @@
             { "caption": "Git Diff", "command": "sbot_git", "args": { "git_cmd": "diff" } },
             { "caption": "Git Commit", "command": "sbot_git", "args": { "git_cmd": "commit" } },
             { "caption": "Git Push", "command": "sbot_git", "args": { "git_cmd": "push" } },
+            { "caption": "-" },
+            { "caption": "Test Panel", "command": "sbot_test_panel" },
+            { "caption": "Test Panel Input", "command": "sbot_test_panel_input" },
+            { "caption": "Test Phantoms and Annotations", "command": "sbot_test_visuals" },
         ],
     },
 ]

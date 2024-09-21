@@ -48,10 +48,10 @@ def error(message, tb=None):
 
     # Show the user some context info.
     info = [message]
-    if tb is not None:
-        frame = traceback.extract_tb(tb)[-1]
-        info.append(f'at {frame.name}({frame.lineno})')
-        info.append('See the log for detail')
+    # if tb is not None:
+    #     frame = traceback.extract_tb(tb)[-1]
+    #     info.append(f'at {frame.name}({frame.lineno})')
+    info.append('See the log for details')
     sublime.error_message('\n'.join(info))  # This goes to console too.
 
 

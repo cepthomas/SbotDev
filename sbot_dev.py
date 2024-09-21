@@ -92,33 +92,39 @@ class DevEvent(sublime_plugin.EventListener):
 
 #-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
-    def run(self, edit, what):
+    def run(self, edit):
 
-        # print(os.environ.get('PYTHONPATH', "???"))
-        # sc.info(f'>>>>>>> os.environ: {os.environ}')
+        # Blow stuff up. Force unhandled exception.
+        sc.debug('Forcing unhandled exception!')
+        sc.open_path('not-a-real-file')
+        # i = 222 / 0
 
-        if what == 'tb':
-            _fun_with_traceback()
 
-        elif what == 'boom':
-            # Blow stuff up. Force unhandled exception.
-            sc.debug('Forcing unhandled exception!')
-            sc.open_path('not-a-real-file')
-            # i = 222 / 0
+        # _dump('====== Dump a stack - most recent last')
+        # for f in traceback.extract_stack():
+        #     _dump(_frame_formatter(f))
 
-        elif what == 'folding':
-            '''
-            is_folded(region: Region) → bool
-            folded_regions() → list[sublime.Region]
-            fold(x: Region | list[sublime.Region]) → bool
-            unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
-            '''
-            regions = self.view.folded_regions()
-            text = ["folded_regions"]
-            for r in regions:
-                s = f'region:{r}'
-                text.append(s)
-            new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
+
+        # _dump('====== Dump a traceback - most recent last')
+        # try:
+        #     x = 1 / 0
+        # except Exception as e:
+        #     for f in traceback.extract_tb(e.__traceback__):
+        #         _dump(_frame_formatter(f))
+
+
+        # '''
+        # is_folded(region: Region) → bool
+        # folded_regions() → list[sublime.Region]
+        # fold(x: Region | list[sublime.Region]) → bool
+        # unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
+        # '''
+        # regions = self.view.folded_regions()
+        # text = ["folded_regions"]
+        # for r in regions:
+        #     s = f'region:{r}'
+        #     text.append(s)
+        # new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
 
 
 #-----------------------------------------------------------------------------------
@@ -271,7 +277,23 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
-def _fun_with_traceback():
+def _frame_formatter(frame, stkpos=-1):
+    if stkpos >= 0:
+        # extra info please
+        s = f'stkpos:{stkpos} file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
+    else:
+        s = f'file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
+    # Other frame.f_code attributes:
+    # co_filename, co_firstlineno, co_argcount, co_name, co_varnames, co_consts, co_names
+    # co_cellvars, co_freevars, co_kwonlyargcount, co_posonlyargcount, co_nlocals, co_stacksize
+    return s
+
+
+#-----------------------------------------------------------------------------------
+def _dump_stack(stkpos=1):
+    # Default is caller frame -> 1.
+
+    buff = []
 
     # tb => traceback object.
     # limit => Print up to limit stack trace entries (starting from the invocation point) if limit is positive.
@@ -285,53 +307,22 @@ def _fun_with_traceback():
     # [string] traceback.format_tb(tb, limit=None)  A shorthand for format_list(extract_tb(tb, limit)).
     # [string] traceback.format_stack(f=None, limit=None)  A shorthand for format_list(extract_stack(f, limit)).
 
-    def my_frame_formatter(frame):
-        return(f'file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}')
-
     # Get most recent frame => traceback.extract_tb(tb)[:-1], traceback.extract_stack()[:-1]
 
-    _dump('====== Dump a stack - most recent last')
-    for f in traceback.extract_stack():
-        _dump(my_frame_formatter(f))
+    # try:
+    #     while True:
+    #         frame = sys._getframe(stkpos)  ??? this doesn't work any more
+    #         buff.append(f'{_frame_formatter(frame, stkpos)}')
+    #         stkpos += 1
+    # except:
+    #     # End of stack.
+    #     pass
 
-    _dump('====== Dump a traceback - most recent last')
-    try:
-        x = 1 / 0
-    except Exception as e:
-        for f in traceback.extract_tb(e.__traceback__):
-            _dump(my_frame_formatter(f))
 
-    _dump('====== Dump stack detail using sys._getframe()')
-    stkpos = 0
-    buff = []
-    try:
-        while True:
-            frame = sys._getframe(stkpos)
-            code = frame.f_code
-            buff.append(f'>>> stkpos:{stkpos}')
-            buff.append(f'    file:{code.co_filename}')
-            # buff.append(f'    frame.f_locals:{frame.f_locals}')
-            buff.append(f'    lineno:{frame.f_lineno}')
-            buff.append(f'    first lineno:{code.co_firstlineno}')
-            buff.append(f'    argcount:{code.co_argcount}')
-            # buff.append(f'    co_consts:{code.co_consts}')
-            if 'self' in frame.f_locals:
-                buff.append(f'    class:{frame.f_locals["self"].__class__.__name__}')
-            buff.append(f'    func:{code.co_name}')
-            # buff.append(f'    co_names:{code.co_names}')
-            buff.append(f'    varnames:{code.co_varnames}')
-            # co_cellvars = ()
-            # co_freevars = ()
-            # co_kwonlyargcount = 0
-            # co_posonlyargcount = 0
-            # co_nlocals = 5
-            # co_stacksize = 6
+    for frame in traceback.extract_stack():
+        buff.append(f'{_frame_formatter(frame)}')
 
-            stkpos += 1
-    except:
-        # End of stack.
-        _dump('\n'.join(buff))
-        pass
+    return buff
 
 
 #-----------------------------------------------------------------------------------
@@ -346,18 +337,13 @@ def excepthook(type, value, tb):
     if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
         return
 
-    # This happens with hard shutdown of SbotPdb.
-    # BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
+    # This happens with hard shutdown of SbotPdb: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
     if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
         return
 
     # LSP is sometimes impolite when closing a second instance of ST. TODO handle this better.
     # if type is TypeError and 'object is not iterable' in str(value):
     #     return
-        
-    # sc.debug(f'>>>>>>>>>>{dir(tb)}')
-    # for f in traceback.walk_tb(tb):
-    #     sc.debug(f'>>>>>>>>>>{f}')
     # 2024-09-18 16:28:45.589 ERR sbot_dev.py:355 Unhandled exception TypeError: 'NoneType' object is not iterable
     #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Installed Packages\LSP.sublime-package\plugin/documents.py", line 1014, in clear_async
     #     session_view.on_before_remove()
@@ -368,12 +354,16 @@ def excepthook(type, value, tb):
     #   File "C:\Program Files\Sublime Text\Lib\python38\sublime.py", line 3938, in update
     #     for phantom, region in zip(self.phantoms, regions):
 
-    sublime.error_message(f'Unhandled exception {type.__name__}: {value}')  # From sc.error()
 
-    # Otherwise let nature take its course.
-    msg = f'Unhandled exception {type.__name__}: {value}'
-    sc.error(msg, tb)
-    sys.__excepthook__(type, value, tb)
+    # Me take charge.
+    handle_exc = True
+
+    if handle_exc:
+        msg = f'Unhandled exception {type.__name__}: {value}'
+        sc.error(msg, tb)
+    else:
+        # Otherwise let nature take its course.
+        sys.__excepthook__(type, value, tb)
 
 
 #-----------------------------------------------------------------------------------

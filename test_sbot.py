@@ -18,6 +18,31 @@ from Notr import notr, table
 # print(f'Running {__file__} with python {platform.python_version()} on {platform.platform()}')
 
 
+# Exclude unittests from production builds
+# ->
+# # git
+# .github/ export-ignore
+# .git export-ignore
+# .gitignore export-ignore
+# .gitattributes export-ignore
+# # development utilities
+# /dev/ export-ignore
+# .travis.yml export-ignore
+# tox.ini export-ignore
+# # unittests
+# tests/ export-ignore
+# # example files
+# /example-*.json export-ignore
+
+# Add root unittesting.json:
+# {
+#     "tests_dir": "package_control/tests",
+#     "pattern": "test*.py",
+#     "verbosity": 1
+# }
+
+
+
 #-----------------------------------------------------------------------------------
 class TestFormat(unittest.TestCase):
 

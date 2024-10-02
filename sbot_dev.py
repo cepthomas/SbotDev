@@ -14,10 +14,29 @@ from . import sbot_common as sc
 # Benign reload in case of edited.
 importlib.reload(sc)
 
+# https://github.com/cepthomas/SbotDev/blob/main/sbot_common.py
+# https://raw.githubusercontent.com/cepthomas/SbotDev/refs/heads/main/sbot_common.py
+
+# https://docs.python.org/3/library/unittest.html#command-line-interface
+# python -m unittest test_module1 test_module2
+
+
+# TODO package unit tests? sim ST - Use mock instead?
+# Searching 144 files for "st_sim" (case sensitive)
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\go.cmd:
+#     4: set PYTHONPATH=%~dp0test_files;%~dp0st_sim;
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\sbot_dev.sublime-project:
+#    60:             // "env": { "PYTHONPATH": "$project_path\\test_files;$project_path\\st_sim;" },
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\test_sbot.py:
+#    80:     def test_simple(self):
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\VsTester.pyproj:
+#     8:     <SearchPath>..\..\;test_files;st_sim</SearchPath>
+#    18:     <Environment>PYTHONPATH=test_files;st_sim</Environment>
+
 
 # TODO There's a few `# pyright: ignore` in repos that could be cleaned up.
-# TODO package unit tests? sim ST - Use mock instead?
 # TODO better home for tracer? table.py (needs sbot_common)?
+
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 

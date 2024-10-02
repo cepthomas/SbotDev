@@ -15,7 +15,9 @@ from . import sbot_common as sc
 importlib.reload(sc)
 
 
-# TODO insert/delete lua dbg() and sbot_pdb.set_trace() from ST.
+# TODO There's a few `# pyright: ignore` in repos that could be cleaned up.
+# TODO package unit tests? sim ST - Use mock instead?
+# TODO better home for tracer? table.py (needs sbot_common)?
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 

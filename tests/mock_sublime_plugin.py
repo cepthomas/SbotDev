@@ -43,3 +43,8 @@ class EventListener():
 class ViewEventListener():
     def __init__(self, view):
         self.view = view
+
+
+class ZipImporter:
+    pass
+

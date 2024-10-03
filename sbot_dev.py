@@ -10,28 +10,11 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
+# TODO1 distribute test_files to package tests.
+
 
 # Benign reload in case of edited.
 importlib.reload(sc)
-
-# https://github.com/cepthomas/SbotDev/blob/main/sbot_common.py
-# https://raw.githubusercontent.com/cepthomas/SbotDev/refs/heads/main/sbot_common.py
-
-# https://docs.python.org/3/library/unittest.html#command-line-interface
-# python -m unittest test_module1 test_module2
-
-
-# TODO package unit tests? sim ST - Use mock instead?
-# Searching 144 files for "st_sim" (case sensitive)
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\go.cmd:
-#     4: set PYTHONPATH=%~dp0test_files;%~dp0st_sim;
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\sbot_dev.sublime-project:
-#    60:             // "env": { "PYTHONPATH": "$project_path\\test_files;$project_path\\st_sim;" },
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\test_sbot.py:
-#    80:     def test_simple(self):
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\VsTester.pyproj:
-#     8:     <SearchPath>..\..\;test_files;st_sim</SearchPath>
-#    18:     <Environment>PYTHONPATH=test_files;st_sim</Environment>
 
 
 # TODO There's a few `# pyright: ignore` in repos that could be cleaned up.
@@ -44,8 +27,12 @@ DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
 #-----------------------------------------------------------------------------------
 # Clean dump file.
 _dump_fn = os.path.join(os.path.dirname(__file__), 'out', '_dump.log')
-with open(_dump_fn, 'w'):
-    pass
+try:
+    os.remove(_dump_fn)
+except:
+    pass    
+# with open(_dump_fn, 'w'):
+#     pass
 
 # Write to dump file.
 def _dump(txt):
@@ -57,14 +44,13 @@ def _dump(txt):
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     '''Called per plugin instance.'''
-    sc.debug(f'Loading {__package__} with python {platform.python_version()} on {platform.platform()}')
+    sc.debug(f'plugin_loaded {__package__} with python {platform.python_version()} on {platform.platform()}')
 
 
 #-----------------------------------------------------------------------------------
 def plugin_unloaded():
     '''Called per plugin instance.'''
-    # sc.info(f'Unloading {__package__}')
-    pass
+    sc.info(f'plugin_unloaded {__package__}')
 
 
 #-----------------------------------------------------------------------------------
@@ -109,6 +95,10 @@ class DevEvent(sublime_plugin.EventListener):
 
     def on_hover_done(self, sel):
         pass
+
+    def on_exit(self):
+        # Called once after the API has shut down, immediately before the plugin_host process exits
+        sc.info(f'on_exit {__package__}')
 
 
 #-----------------------------------------------------------------------------------
@@ -354,37 +344,29 @@ def excepthook(type, value, tb):
     with summary.
     '''
 
-    # Sometimes gets this on shutdown: FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
-    if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
-        return
+    # Sometimes gets these on shutdown:
+
+    # FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
+    # if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
+    #     return
 
     # This happens with hard shutdown of SbotPdb: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
-    if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
-        return
+    # if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
+    #     return
 
-    # LSP is sometimes impolite when closing a second instance of ST. TODO handle this better.
+    # LSP is sometimes impolite when closing.
+    # 2024-10-03 13:03:31.177 ERR sbot_dev.py:384 Unhandled exception TypeError: 'NoneType' object is not iterable
     # if type is TypeError and 'object is not iterable' in str(value):
     #     return
-    # 2024-09-18 16:28:45.589 ERR sbot_dev.py:355 Unhandled exception TypeError: 'NoneType' object is not iterable
-    #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Installed Packages\LSP.sublime-package\plugin/documents.py", line 1014, in clear_async
-    #     session_view.on_before_remove()
-    #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Installed Packages\LSP.sublime-package\plugin/session_view.py", line 87, in on_before_remove
-    #     self._code_lenses.clear_view()
-    #   File "C:\Users\cepth\AppData\Roaming\Sublime Text\Installed Packages\LSP.sublime-package\plugin/code_lens.py", line 132, in clear_view
-    #     self._phantom.update([])
-    #   File "C:\Program Files\Sublime Text\Lib\python38\sublime.py", line 3938, in update
-    #     for phantom, region in zip(self.phantoms, regions):
 
-
-    # Me take charge.
-    handle_exc = True
-
-    if handle_exc:
+    # Crude shutdown detection.
+    if len(sublime.windows()) > 0:
         msg = f'Unhandled exception {type.__name__}: {value}'
         sc.error(msg, tb)
-    else:
-        # Otherwise let nature take its course.
-        sys.__excepthook__(type, value, tb)
+
+
+    # # Otherwise let nature take its course.
+    # sys.__excepthook__(type, value, tb)
 
 
 #-----------------------------------------------------------------------------------

@@ -13,6 +13,10 @@ from SbotFormat import sbot_format
 from SbotHighlight import sbot_highlight
 from Notr import notr, table
 
+
+# TODO1 relocate to other packages.
+
+
 # Experiments with testing py code in general and ST plugins specifically.
 
 # print(f'Running {__file__} with python {platform.python_version()} on {platform.platform()}')

@@ -6,6 +6,10 @@ import sublime
 import sublime_plugin
 from Notr import table
 
+
+# TODO1 relocate to notr package.
+
+
 #-----------------------------------------------------------------------------------
 class TestTable(unittest.TestCase):
 

@@ -11,6 +11,7 @@ import sublime_plugin
 from . import sbot_common as sc
 
 # TODO1 distribute test_files to package tests.
+# TODO1 build system to run a file in debugger.
 
 
 # Benign reload in case of edited.
@@ -31,8 +32,6 @@ try:
     os.remove(_dump_fn)
 except:
     pass    
-# with open(_dump_fn, 'w'):
-#     pass
 
 # Write to dump file.
 def _dump(txt):

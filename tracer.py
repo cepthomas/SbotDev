@@ -48,8 +48,10 @@ def start(trace_fn, clean_file=True, stop_on_exception=True, sep=('(', ')')):
     stop()  # just in case
 
     if clean_file:
-        with open(trace_fn, 'w'):
-            pass
+        try:
+            os.remove(trace_fn)
+        except:
+            pass    
 
     # Open file now and keep it open. Open/close on every write is too expensive.
     # Note that each instance requires its own file.

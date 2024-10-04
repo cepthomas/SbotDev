@@ -249,7 +249,7 @@ class View():
     def run_command(self, cmd, args=None):
         # Run the named TextCommand 
         # run_command("goto_line", {"line": line})
-        raise NotImplementedError()
+        _etrace(f'View.run_command():{cmd} {args}')
 
     def sel(self):
         # return self._selection

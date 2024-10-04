@@ -2,7 +2,7 @@ import sys
 import os
 import datetime
 import importlib
-# import unittest
+import unittest
 # from unittest.mock import MagicMock
 
 # Add path to code under test.
@@ -10,15 +10,8 @@ test_path = os.path.join(os.path.dirname(__file__), '..')
 if test_path not in sys.path:
       sys.path.insert(0, test_path)
 
-# # Now import the sublime mocks.
-# import mock_sublime
-# import mock_sublime_plugin
-# sys.modules["sublime"] = mock_sublime
-# sys.modules["sublime_plugin"] = mock_sublime_plugin
-
 # Now import the code under test.
 import tracer as tr
-# from SbotDev import tracer as tr
 
 # Benign reload in case of edited.
 importlib.reload(tr)
@@ -30,15 +23,15 @@ A = tr.A
 T = tr.T
 
 
-#-------------------------- tracer test code --------------------------------------
+#------------------------ Dummy test objects ------------------------------------------
 
-class TestClass(object):
-    ''' Dummy for testing class function tracing.'''
+class TracerExample(object):
+    ''' Class function tracing.'''
 
     # Note: don't use @trfunc on constructor!
     def __init__(self, name, tags, arg):
         '''Construction.'''
-        T('making one TestClass', name, tags, arg)
+        T('making one TracerExample', name, tags, arg)
         self._name = name
         self._tags = tags
         self._arg = arg
@@ -61,7 +54,7 @@ class TestClass(object):
 
     def __str__(self):
         '''Required for readable trace.'''
-        s = f'TestClass:{self._name} tags:{self._tags} arg:{self._arg}'
+        s = f'TracerExample:{self._name} tags:{self._tags} arg:{self._arg}'
         return s
 
 def no_trfunc_function(s):
@@ -76,8 +69,8 @@ def another_test_function(a_list, a_dict):
 @trfunc
 def a_test_function(a1: int, a2: float):
     '''Entry/exit is traced with args and return value.'''
-    cl1 = TestClass('number 1', [45, 78, 23], a1)
-    cl2 = TestClass('number 2', [100, 101, 102], a2)
+    cl1 = TracerExample('number 1', [45, 78, 23], a1)
+    cl2 = TracerExample('number 2', [100, 101, 102], a2)
     T(cl1)
     T(cl2)
     ret = f'answer is cl1:{cl1.do_something(a1)}...cl2:{cl2.do_something(a2)}'
@@ -118,14 +111,28 @@ def do_a_suite(alpha, number):
     ret = another_test_function([33, 'tyu', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
     return ret
 
-def do_trace_test():
-    '''Test starts here.'''
-    trace_fn = os.path.join(os.path.dirname(__file__), 'out', '_tracer.log')
-    tr.start(trace_fn, clean_file=True, stop_on_exception=True, sep=('(', ')'))
 
-    T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__}', str(datetime.datetime.now()))
-    do_a_suite(number=911, alpha='abcd')  # named args
-    tr.stop()  # Always clean up resources!!
+#-----------------------------------------------------------------------------------
 
-# Uncomment this to run. TODO1 make into unittest?
-do_trace_test()
+class TestTracer(unittest.TestCase):
+
+    def setUp(self):
+        pass
+
+    def tearDown(self):
+        pass
+
+    def test_success(self):
+        trace_fn = os.path.join(os.path.dirname(__file__), 'out', '_tracer.log')
+        tr.start(trace_fn, clean_file=True, stop_on_exception=True, sep=('(', ')'))
+
+        T(f'Start {do_a_suite.__name__}:{do_a_suite.__doc__} {datetime.datetime.now()}')
+        do_a_suite(number=911, alpha='abcd')  # named args
+        tr.stop()  # Always clean up resources!!
+
+        # Examine generated contents.
+        lines = []
+        with open(trace_fn) as f:
+            lines = f.readlines()
+
+        self.assertEqual(len(lines), 25)

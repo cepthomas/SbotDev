@@ -10,8 +10,7 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
-# TODO1 distribute test_files to package tests.
-# TODO1 build system to run a file in debugger.
+# TODO1 build system to run a file in SbotPdb.
 
 
 # Benign reload in case of edited.

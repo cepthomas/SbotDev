@@ -4,8 +4,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>56224532-0e9c-4b7c-9778-7a7e97187dad</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>test_tracer.py</StartupFile>
-    <SearchPath>..\..\;test_files;st_sim</SearchPath>
+    <StartupFile>tests\test_tracer.py</StartupFile>
+    <SearchPath>..\..\;tests</SearchPath>
     <!-- Execute from the parent directory. -->
     <WorkingDirectory>..</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -15,7 +15,7 @@
     <InterpreterId />
     <SuppressConfigureTestFrameworkPrompt>true</SuppressConfigureTestFrameworkPrompt>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
-    <Environment>PYTHONPATH=test_files;st_sim</Environment>
+    <Environment>PYTHONPATH=tests</Environment>
     <TestFramework>unittest</TestFramework>
     <UnitTestPattern>test_*.py</UnitTestPattern>
     <UnitTestRootDirectory>.</UnitTestRootDirectory>
@@ -31,11 +31,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="sbot_common.py" />
-    <Compile Include="test_sbot.py" />
+    <!-- <Compile Include="test_sbot.py" />
     <Compile Include="test_tracer.py" />
-    <Compile Include="test_table.py" />
-    <Compile Include="test_files\sublime.py" />
-    <Compile Include="test_files\sublime_plugin.py" />
+    <Compile Include="test_table.py" /> -->
+    <Compile Include="tests\emu_sublime.py" />
+    <Compile Include="tests\emu_sublime_plugin.py" />
     <Compile Include="$(APPDATA)\Sublime Text\Packages\Notr\notr.py" />
     <Compile Include="$(APPDATA)\Sublime Text\Packages\Notr\table.py" />
     <Compile Include="$(APPDATA)\Sublime Text\Packages\SbotHighlight\sbot_highlight.py" />
@@ -43,7 +43,7 @@
     <Compile Include="$(APPDATA)\Sublime Text\Packages\SbotRender\sbot_render.py" />
   </ItemGroup>
   <ItemGroup>
-<!--     <Content Include="test_files\felix.jpg" />
+    <!-- <Content Include="test_files\felix.jpg" />
     <Content Include="test_files\messy.c" />
     <Content Include="test_files\messy.cs" />
     <Content Include="test_files\messy.json" />
@@ -57,7 +57,7 @@
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="test_files\" />
+    <Folder Include="tests\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>

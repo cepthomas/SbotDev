@@ -43,7 +43,7 @@
     <Compile Include="$(APPDATA)\Sublime Text\Packages\SbotRender\sbot_render.py" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="test_files\felix.jpg" />
+<!--     <Content Include="test_files\felix.jpg" />
     <Content Include="test_files\messy.c" />
     <Content Include="test_files\messy.cs" />
     <Content Include="test_files\messy.json" />
@@ -53,7 +53,7 @@
     <Content Include="test_files\test_exec.bat" />
     <Content Include="test_files\test_settings.sublime-settings" />
     <Content Include="test_files\test_table.ntr" />
-    <Content Include="test_files\test_notr.ntr" />
+    <Content Include="test_files\test_notr.ntr" /> -->
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>

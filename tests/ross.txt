@@ -1,4 +1,4 @@
-line-1
+first-line
 From https://www.bobrosslipsum.com/
 Nice little clouds playing around in the sky. I'm sort of a softy, I couldn't shoot Bambi except with a camera. We artists are a different breed of people. We're a bunch.
 We don't make mistakes we just have happy little accidents. There it is.
@@ -21,3 +21,4 @@ Little trees and bushes grow however makes them happy. If there's two big trees 
 Let the paint work. All you have to learn here is how to have fun.
 
 I think there's an artist hidden in the bottom of every single one of us. No worries. No cares.
+last-line

@@ -6,9 +6,9 @@ import unittest
 # from unittest.mock import MagicMock
 
 # Add path to code under test.
-test_path = os.path.join(os.path.dirname(__file__), '..')
-if test_path not in sys.path:
-      sys.path.insert(0, test_path)
+cut_path = os.path.join(os.path.dirname(__file__), '..')
+if cut_path not in sys.path:
+      sys.path.insert(0, cut_path)
 
 # Now import the code under test.
 import tracer as tr
@@ -136,3 +136,10 @@ class TestTracer(unittest.TestCase):
             lines = f.readlines()
 
         self.assertEqual(len(lines), 25)
+
+
+#-----------------------------------------------------------------------------------
+if __name__ == '__main__':
+    # https://docs.python.org/3/library/unittest.html#unittest.main
+    tp = unittest.main()  # verbosity=2, exit=False)
+    print(tp.result)

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>56224532-0e9c-4b7c-9778-7a7e97187dad</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests\test_tracer.py</StartupFile>
+    <StartupFile>tests\test_common.py</StartupFile>
     <SearchPath>..\..\;tests</SearchPath>
     <!-- Execute from the parent directory. -->
     <WorkingDirectory>..</WorkingDirectory>
@@ -31,29 +31,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="sbot_common.py" />
-    <!-- <Compile Include="test_sbot.py" />
-    <Compile Include="test_tracer.py" />
-    <Compile Include="test_table.py" /> -->
+    <Compile Include="tests\test_common.py" />
+    <Compile Include="tests\test_tracer.py" />
     <Compile Include="tests\emu_sublime.py" />
     <Compile Include="tests\emu_sublime_plugin.py" />
-    <Compile Include="$(APPDATA)\Sublime Text\Packages\Notr\notr.py" />
-    <Compile Include="$(APPDATA)\Sublime Text\Packages\Notr\table.py" />
-    <Compile Include="$(APPDATA)\Sublime Text\Packages\SbotHighlight\sbot_highlight.py" />
-    <Compile Include="$(APPDATA)\Sublime Text\Packages\SbotFormat\sbot_format.py" />
-    <Compile Include="$(APPDATA)\Sublime Text\Packages\SbotRender\sbot_render.py" />
   </ItemGroup>
   <ItemGroup>
-    <!-- <Content Include="test_files\felix.jpg" />
-    <Content Include="test_files\messy.c" />
-    <Content Include="test_files\messy.cs" />
-    <Content Include="test_files\messy.json" />
-    <Content Include="test_files\messy.xml" />
-    <Content Include="test_files\nonascii.txt" />
-    <Content Include="test_files\ross.txt" />
-    <Content Include="test_files\test_exec.bat" />
-    <Content Include="test_files\test_settings.sublime-settings" />
-    <Content Include="test_files\test_table.ntr" />
-    <Content Include="test_files\test_notr.ntr" /> -->
     <Content Include="README.md" />
   </ItemGroup>
   <ItemGroup>

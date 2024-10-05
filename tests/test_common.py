@@ -1,12 +1,13 @@
 import sys
 import os
+import traceback
 import unittest
 from unittest.mock import MagicMock
 
 # Add path to code under test.
-test_path = os.path.join(os.path.dirname(__file__), '..')
-if test_path not in sys.path:
-      sys.path.insert(0, test_path)
+cut_path = os.path.join(os.path.dirname(__file__), '..')
+if cut_path not in sys.path:
+    sys.path.insert(0, cut_path)
 
 # Now import the sublime emulation.
 import emu_sublime
@@ -22,74 +23,84 @@ import sbot_common as sc
 class TestCommon(unittest.TestCase):
 
     def setUp(self):
-
-        notr_files_path = os.path.join(emu_sublime.packages_path(), 'Notr', 'files')
-
-        mock_settings = {
-            "projects": [],
-            "sort_tags_alpha": True,
-            "mru_size": 5,
-            "fixed_hl_whole_word": True,
-            "section_marker_size": 1,
-        }
-        emu_sublime.load_settings = MagicMock(return_value=mock_settings)
-
-        # Mock top level entities.
-        self.view = emu_sublime.View(10)
-        self.window = emu_sublime.Window(20)
-        self.view.window = MagicMock(return_value=self.window)
-
-        # Mock syntax interrogation.
-        self.syntax = emu_sublime.Syntax('', 'Notr', False, '')
-        self.view.syntax = MagicMock(return_value=self.syntax)
+        pass
 
     def tearDown(self):
         pass
 
-    @unittest.skip('')
-    def test_something(self):
-        sc.error("amamamamama")
-
-    def test_simple(self):
-
-        # settings = emu_sublime.load_settings("DEV_SETTINGS_FILE")
-        # print(type(settings))
-        # print(dir(settings))
-        # print(settings)
-
+    # @unittest.skip('')
+    def test_basic(self):
 
         window = emu_sublime.Window(900)
         view = emu_sublime.View(901)
 
-        view.window = MagicMock(return_value=window)
-        view.file_name = MagicMock(return_value='file123.abc')
+        test_path = os.path.join(os.path.dirname(__file__))
+        test_file_1 = f'{test_path}\\ross.txt'
+        test_file_2 = f'{test_path}\\felix.jpg'
 
-        # Do the tests. TODO fix broken ones.
+        ### Logging.
+        sc.debug('This is a debug message')
+        sc.info('This is an info message')
         
-        # sc.create_new_view(window, "text", reuse=True)
+        sc.error('This is an error message with no traceback')
+        try:
+            x = 1 / 0
+        except Exception as e:
+            sc.error('This is an error message with traceback', e.__traceback__)
+
+        ### Utilities.
+        sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
+        self.assertEqual(sout[-46:], r'\AppData\Roaming/Sublime Text/Packages/SbotDev')
+
+        sout = sc.expand_vars('C:/Sublime Text/$BAD_NAME\\wwww')
+        self.assertIsNone(sout)
+
+        sout = sc.get_store_fn('my-file.aaa')
+        self.assertTrue(sout[-36:] == r'Packages\User\.SbotStore\my-file.aaa')
+
+        parts = sc.get_path_parts(window, ['invalid-path'])
+        # Returns (dir, fn, path)
+        self.assertEqual(len(parts), 3)
+        self.assertIsNone(parts[0])
+        self.assertIsNone(parts[1])
+        self.assertIsNone(parts[2])
+
+        parts = sc.get_path_parts(window, [test_file_1, 'dont-care'])
+        self.assertIsNotNone(parts)
+        self.assertIsNotNone(parts[0])
+        self.assertIsNotNone(parts[1])
+        self.assertIsNotNone(parts[2])
+        self.assertEqual(parts[0][-22:], r'Packages\SbotDev\tests')
+        self.assertEqual(parts[1], r'ross.txt')
+        self.assertEqual(parts[2][-31:], r'Packages\SbotDev\tests\ross.txt')
+
+        # Note: these are by-inspection.
+        # sc.open_path(test_file_1)    # -> in ST
+        # sc.open_path(test_file_2)    # -> in irfanview
+        # sc.open_path(test_path)      # -> in explorer
+        # sc.open_terminal(test_path)  # -> in terminal
+
+        ### Windows and views. TODO need more detail.
+        vnew = sc.create_new_view(window, 'With practice comes confidence.', reuse=True)
+        # self.assertEqual(vnew.size(), 31)
+
+        vnew = sc.wait_load_file(window, test_file_1, 111)  # -> in window
+        self.assertEqual(vnew.size(), 1597)
+
+        hls = sc.get_highlight_info(which='all')
+        self.assertEqual(len(hls), 9)
+
+        regs = sc.get_sel_regions(vnew)
+        self.assertEqual(len(regs), 1)
+        self.assertEqual(regs[0].a, 0)
+        self.assertEqual(regs[0].b, 1597)
         
-        sc.debug("message")
-        
-        sc.error("message", tb=None)
-        
-        sc.expand_vars("s")
-        
-        sc.get_highlight_info(which='all')
-        
-        sc.get_path_parts(window, ["paths"])
-        
-        # sc.get_sel_regions(view)
-        
-        # sc.get_single_caret(view)
-        
-        sc.get_store_fn("fn")
-        
-        sc.info("message")
-        
-        # sc.open_path("path")
-        
-        # sc.open_terminal("where")
-        
-        sc.wait_load_file(window, "fpath", 111)
+        caret = sc.get_single_caret(vnew)
+        self.assertIsNone(caret)
 
 
+#-----------------------------------------------------------------------------------
+if __name__ == '__main__':
+    # https://docs.python.org/3/library/unittest.html#unittest.main
+    tp = unittest.main()  # verbosity=2, exit=False)
+    print(tp.result)

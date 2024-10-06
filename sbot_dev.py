@@ -10,7 +10,7 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
-# TODO1 build system to run a file in SbotPdb.
+# TODO1 build system (or?) to run a file in SbotPdb.
 
 
 # Benign reload in case of edited.
@@ -18,7 +18,7 @@ importlib.reload(sc)
 
 
 # TODO There's a few `# pyright: ignore` in repos that could be cleaned up.
-# TODO better home for tracer? table.py (needs sbot_common)?
+# TODO better home for tracer?
 
 
 DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
@@ -140,8 +140,8 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit (TODO with comment), push.
-        TODO show previous version of file.
+        ''' Simple git tools: diff, commit (TODOF with comment), push.
+        TODOF show previous version of file.
         https://github.com/kemayo/sublime-text-git.
         '''
         fn = self.view.file_name()

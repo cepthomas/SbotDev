@@ -134,10 +134,3 @@ class TestTracer(unittest.TestCase):
             lines = f.readlines()
 
         self.assertEqual(len(lines), 25)
-
-
-#-----------------------------------------------------------------------------------
-if __name__ == '__main__':
-    # https://docs.python.org/3/library/unittest.html#unittest.main
-    tp = unittest.main()  # verbosity=2, exit=False)
-    print(tp.result)

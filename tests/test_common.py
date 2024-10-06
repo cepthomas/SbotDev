@@ -43,6 +43,7 @@ class TestCommon(unittest.TestCase):
 
         ### Utilities.
         sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
+        self.assertIsNotNone(sout)
         self.assertEqual(sout[-46:], r'\AppData\Roaming/Sublime Text/Packages/SbotDev')
 
         sout = sc.expand_vars('C:/Sublime Text/$BAD_NAME\\wwww')
@@ -73,7 +74,7 @@ class TestCommon(unittest.TestCase):
         # sc.open_path(test_path)      # -> in explorer
         # sc.open_terminal(test_path)  # -> in terminal
 
-        ### Windows and views. TODO need more detail.
+        ### Windows and views. TODOT need more detail.
         vnew = sc.create_new_view(window, 'With practice comes confidence.', reuse=True)
         # self.assertEqual(vnew.size(), 31)
 
@@ -90,10 +91,3 @@ class TestCommon(unittest.TestCase):
         
         caret = sc.get_single_caret(vnew)
         self.assertIsNone(caret)
-
-
-#-----------------------------------------------------------------------------------
-if __name__ == '__main__':
-    # https://docs.python.org/3/library/unittest.html#unittest.main
-    tp = unittest.main()  # verbosity=2, exit=False)
-    print(tp.result)

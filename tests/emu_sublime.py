@@ -182,8 +182,7 @@ class View():
         raise NotImplementedError()
 
     def run_command(self, cmd, args=None):
-        # Run the named TextCommand TODO need to be smarter with this.
-        # raise NotImplementedError()
+        # Run the named TextCommand TODO need to do something smarter with this.
         _etrace(f'View.run_command():{cmd} {args}')
 
     def sel(self):

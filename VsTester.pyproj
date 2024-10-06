@@ -33,8 +33,7 @@
     <Compile Include="sbot_common.py" />
     <Compile Include="tests\test_common.py" />
     <Compile Include="tests\test_tracer.py" />
-    <Compile Include="tests\emu_sublime.py" />
-    <Compile Include="tests\emu_sublime_plugin.py" />
+    <Compile Include="tests\emu_sublime_api.py" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="README.md" />

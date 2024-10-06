@@ -4,18 +4,11 @@ import traceback
 import unittest
 from unittest.mock import MagicMock
 
-# Add path to code under test.
-cut_path = os.path.join(os.path.dirname(__file__), '..')
-if cut_path not in sys.path:
-    sys.path.insert(0, cut_path)
 
-# Now import the sublime emulation.
-import emu_sublime
-import emu_sublime_plugin
-sys.modules["sublime"] = emu_sublime
-sys.modules["sublime_plugin"] = emu_sublime_plugin
+# Set up the sublime emulation environment.
+import emu_sublime_api as emu
 
-# Now import the code under test.
+# Import the code under test.
 import sbot_common as sc
 
 
@@ -31,8 +24,8 @@ class TestCommon(unittest.TestCase):
     # @unittest.skip('')
     def test_basic(self):
 
-        window = emu_sublime.Window(900)
-        view = emu_sublime.View(901)
+        window = emu.Window(900)
+        view = emu.View(901)
 
         test_path = os.path.join(os.path.dirname(__file__))
         test_file_1 = f'{test_path}\\ross.txt'

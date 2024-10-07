@@ -11,17 +11,29 @@ import sublime_plugin
 from . import sbot_common as sc
 
 # TODO1 build system (or?) to run a file in SbotPdb.
-
-
-# Benign reload in case of edited.
-importlib.reload(sc)
-
+# Also this doesn't work: 
+# # Set up the sublime emulation environment.
+# import emu_sublime_api as emu
+# # print(sys.path)
+# import sbot_pdb
+# # from . import sbot_pdb
+# # Import the code under test.
+# import table
+# # import sbot_common as sc
 
 # TODO There's a few `# pyright: ignore` in repos that could be cleaned up.
 # TODO better home for tracer?
 
+# #-----------------------------------------------------------------------------------
+# if __name__ == '__main__':
+#     # https://docs.python.org/3/library/unittest.html#unittest.main
+#     tp = unittest.main()  # verbosity=2, exit=False)
+#     print(tp.result)
 
-DEV_SETTINGS_FILE = "SbotDev.sublime-settings"
+    
+# Benign reload in case of edited.
+importlib.reload(sc)
+
 
 
 #-----------------------------------------------------------------------------------
@@ -58,7 +70,8 @@ class DevEvent(sublime_plugin.EventListener):
     def on_init(self, views):
         ''' Called once with a list of views that were loaded before the EventListener was instantiated. '''
         # First thing that happens when plugin/window created. Initialize everything.
-        settings = sublime.load_settings(DEV_SETTINGS_FILE)
+        # settings = sublime.load_settings(DEV_SETTINGS_FILE)
+        pass
 
     def on_load(self, view):
         ''' Called when the file is finished loading. '''

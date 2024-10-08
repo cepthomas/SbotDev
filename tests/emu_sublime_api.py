@@ -514,7 +514,7 @@ class Window():
             view = View(_get_next_id)
             view._file_name = fname  # hack
             view._window = self
-            view._insert(None, 0, file.read())
+            view.insert(None, 0, file.read())
             self._views.append(view)
             return view
 

@@ -2,7 +2,7 @@ import sys
 import os
 import traceback
 import unittest
-from unittest.mock import MagicMock
+# from unittest.mock import MagicMock
 
 
 # Set up the sublime emulation environment.
@@ -74,7 +74,7 @@ class TestCommon(unittest.TestCase):
         # sc.open_path(test_path)      # -> in explorer
         # sc.open_terminal(test_path)  # -> in terminal
 
-        ### Windows and views. TODOT need more detail.
+        ### Windows and views. TODOT more tests
         vnew = sc.create_new_view(window, 'With practice comes confidence.', reuse=True)
         # self.assertEqual(vnew.size(), 31)
 

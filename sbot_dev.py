@@ -21,8 +21,8 @@ from . import sbot_common as sc
 # import table
 # # import sbot_common as sc
 
-# TODO There's a few `# pyright: ignore` in repos that could be cleaned up.
-# TODO better home for tracer?
+# TODO2 There's a few `# pyright: ignore` in repos that could be cleaned up.
+# TODO1 better home for tracer?
 
 # #-----------------------------------------------------------------------------------
 # if __name__ == '__main__':

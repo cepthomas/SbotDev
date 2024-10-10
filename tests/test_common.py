@@ -2,8 +2,7 @@ import sys
 import os
 import traceback
 import unittest
-# from unittest.mock import MagicMock
-
+from unittest.mock import MagicMock
 
 # Set up the sublime emulation environment.
 import emu_sublime_api as emu
@@ -21,7 +20,7 @@ class TestCommon(unittest.TestCase):
     def tearDown(self):
         pass
 
-    # @unittest.skip('')
+    #------------------------------------------------------------
     def test_basic(self):
 
         window = emu.Window(900)
@@ -68,7 +67,7 @@ class TestCommon(unittest.TestCase):
         self.assertEqual(parts[1], r'ross.txt')
         self.assertEqual(parts[2][-31:], r'Packages\SbotDev\tests\ross.txt')
 
-        # Note: these are by-inspection.
+        # Note: these are by inspection.
         # sc.open_path(test_file_1)    # -> in ST
         # sc.open_path(test_file_2)    # -> in irfanview
         # sc.open_path(test_path)      # -> in explorer

@@ -3,37 +3,86 @@ import os
 import subprocess
 import platform
 import traceback
-import datetime
+# import datetime
 import importlib
-import bdb
 import sublime
 import sublime_plugin
-from . import sbot_common as sc
 
 
-# TODO1 build system (or?) to run a file in SbotPdb.
-# Also this doesn't work: 
-# # Set up the sublime emulation environment.
-# import emu_sublime_api as emu
-# # print(sys.path)
-# import sbot_pdb
-# # from . import sbot_pdb
-# # Import the code under test.
-# import table
-# # import sbot_common as sc
+# this_dir = os.path.dirname(__file__)
+
+# This works but clutters the env:
+# Add path to this dir.
+# if os.path.dirname(__file__) not in sys.path:
+#     sys.path.insert(0, os.path.dirname(__file__))
+# import sbot_common as sc
+
+# Currently working solution:
+try:
+    from . import sbot_common as sc  # normal import
+except:
+    import sbot_common as sc  # unittest import
+
+# Explicit flavor:
+# import importlib.util
+# spec = importlib.util.spec_from_file_location("module.name", "/path/to/file.py")
+# foo = importlib.util.module_from_spec(spec)
+# sys.modules["module.name"] = foo
+# spec.loader.exec_module(foo)
+# foo.MyClass()
+
+# print(sys.path)
+
+
 
 # TODO2 There's a few `# pyright: ignore` in repos that could be cleaned up.
 # TODO1 better home for tracer?
 
-# #-----------------------------------------------------------------------------------
-# if __name__ == '__main__':
-#     # https://docs.python.org/3/library/unittest.html#unittest.main
-#     tp = unittest.main()  # verbosity=2, exit=False)
-#     print(tp.result)
-
-    
 # Benign reload in case of edited.
 importlib.reload(sc)
+
+
+##########################################################################
+# spdb = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotPdb')
+# # _cut_path = os.path.join(os.path.dirname(__file__), '..')
+# if spdb not in sys.path:
+#     sys.path.insert(0, spdb)
+# import sbot_pdb
+
+
+# https://stackoverflow.com/questions/16981921/relative-imports-in-python-3
+# https://www.reddit.com/r/learnpython/comments/pi0xkr/not_understanding_absolute_imports
+
+
+# 2024-10-10 14:33:32.856 ERR sbot_dev.py:437 Unhandled exception ImportError:
+# attempted relative import with no known parent package
+#   File "C:\Users\cepth\AppData\Roaming/Sublime Text/Packages/SbotPdb\sbot_pdb.py", line 6, in <module>
+#     from . import sbot_common as sc
+
+
+# Thunk the system modules so code under test sees this emulation rather than the real libs.
+# sys.modules["sublime"] = emu_sublime_api
+
+
+# SbotDev\Main.sublime-menu:
+# { "caption": "Run pdb example", "command": "sbot_pdb_example" },
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotPdb\example.py:
+#    class SbotPdbExampleCommand(sublime_plugin.TextCommand):
+# 
+# TODO1 build system (or?) to run a file in SbotPdb.
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotPdb\sbot_pdb_client.py:
+#    18: PKGS_PATH = os.path.join(os.environ['APPDATA'], 'Sublime Text', 'Packages')
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\go.cmd:
+#     5: :: Execute from the parent dir ST_PKGS="%APPDATA%\Sublime Text\Packages".
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\Main.sublime-menu:
+#     7:             { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
+#     8:             { "caption": "Open Trace", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\trace.log"]} },
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\README.md:
+#    14: { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\tests\test_common.py:
+#    44:         sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
+
+
 
 
 
@@ -111,6 +160,56 @@ class DevEvent(sublime_plugin.EventListener):
     def on_exit(self):
         # Called once after the API has shut down, immediately before the plugin_host process exits
         sc.info(f'on_exit {__package__}')
+
+
+#-----------------------------------------------------------------------------------
+class SbotRunPdbCommand(sublime_plugin.TextCommand):
+
+    # { "caption": "Debug", "command": "sbot_debug" },
+    # { "caption": "Run pdb example", "command": "sbot_pdb_example" }, in the pdb dir
+
+    def run(self, edit):
+        del edit
+        # Benign reload in case of being edited.
+        # importlib.reload(sbot_pdb)
+        # Run the code under debug.
+        # ret = do_a_suite(number=911, alpha='abcd')
+        # print(ret)
+
+    #----------------------------------------------------------
+    def function_1(self, a1: int, a2: float):
+        '''A simple function.'''
+        ret = f'answer is:{a1 * a2}'
+        return ret
+
+
+    #----------------------------------------------------------
+    def function_2(self, a_list, a_dict):
+        '''A simple function.'''
+        return len(a_list) + len(a_dict)
+
+
+    #----------------------------------------------------------
+    def function_boom(self):
+        '''A function that causes an unhandled exception.'''
+        return 1 / 0
+
+
+    #----------------------------------------------------------
+    def do_a_suite(self, alpha, number):
+        '''Main code.'''
+
+        # Set a breakpoint here then step through and examine the code.
+        sbot_pdb.breakpoint()
+
+        ret = self.function_1(number, len(alpha))
+
+        # Unhandled exception actually goes to sys.__excepthook__.
+        # function_boom()
+
+        ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
+
+        return ret
 
 
 #-----------------------------------------------------------------------------------

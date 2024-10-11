@@ -25,3 +25,4 @@ Built for ST4 on Windows and Linux (lightly tested).
 - There is sparse but functional unit test code. Run from the cmd like with `go.cmd` or inside a
   Visual Studio project `VsTester.sln`.
   
+- Really, python is a horrible mess. https://xkcd.com/1987.

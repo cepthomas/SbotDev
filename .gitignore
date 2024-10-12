@@ -136,3 +136,4 @@ VsTester.*
 _dump.log
 _tracer.log
 out/
+/sbot_pdb.py

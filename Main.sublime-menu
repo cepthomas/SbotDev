@@ -21,6 +21,8 @@
             { "caption": "Test Panel", "command": "sbot_test_panel" },
             { "caption": "Test Panel Input", "command": "sbot_test_panel_input" },
             { "caption": "Test Phantoms and Annotations", "command": "sbot_test_visuals" },
+            { "caption": "-" },
+            { "caption": "Notr: Dump", "command": "notr_dump" },
         ],
     },
 ]

@@ -12,6 +12,8 @@ try:
 except:
     import sbot_common as sc  # unittest import
 
+
+
 # All: TODO1 TODO2 TODOF TODOT
 
 # - Download and Install > https://marketplace.visualstudio.com/items?itemName=munyabe.ToggleComment
@@ -45,6 +47,7 @@ def _dump(txt):
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     '''Called per plugin instance.'''
+    sc.init('Dev')
     sc.debug(f'plugin_loaded {__package__} with python {platform.python_version()} on {platform.platform()}')
 
 

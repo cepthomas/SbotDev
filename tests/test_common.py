@@ -49,7 +49,7 @@ class TestCommon(unittest.TestCase):
         self.assertIsNone(sout)
 
         sout = sc.get_store_fn('my-file.aaa')
-        self.assertTrue(sout[-36:] == r'Packages\User\.SbotStore\my-file.aaa')
+        self.assertTrue(sout[-36:] == r'Packages\User\Dev\my-file.aaa')
 
         parts = sc.get_path_parts(window, ['invalid-path'])
         # Returns (dir, fn, path)

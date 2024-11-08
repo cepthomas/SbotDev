@@ -4,8 +4,8 @@
         "id": "dev",
         "children":
         [
-            { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\sbot.log"]} },
-            { "caption": "Open Trace", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\.SbotStore\\trace.log"]} },
+            { "caption": "Open Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\Dev\\Dev.log"]} },
+            { "caption": "Open Trace", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\Dev\\trace.log"]} },
             { "caption": "-" },
             { "caption": "Debug", "command": "sbot_debug" },
             { "caption": "Run pdb", "command": "sbot_run_pdb" },

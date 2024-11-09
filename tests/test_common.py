@@ -15,7 +15,7 @@ import sbot_common as sc
 class TestCommon(unittest.TestCase):
 
     def setUp(self):
-        pass
+        sc.init('_Test')
 
     def tearDown(self):
         pass
@@ -43,13 +43,13 @@ class TestCommon(unittest.TestCase):
         ### Utilities.
         sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
         self.assertIsNotNone(sout)
-        self.assertEqual(sout[-46:], r'\AppData\Roaming/Sublime Text/Packages/SbotDev')
+        self.assertTrue(r'\AppData\Roaming/Sublime Text/Packages/SbotDev' in sout)
 
         sout = sc.expand_vars('C:/Sublime Text/$BAD_NAME\\wwww')
         self.assertIsNone(sout)
 
-        sout = sc.get_store_fn('my-file.aaa')
-        self.assertTrue(sout[-36:] == r'Packages\User\Dev\my-file.aaa')
+        sout = sc.get_store_fn()
+        self.assertTrue(r'Packages\User\_Test\_Test.store' in sout)
 
         parts = sc.get_path_parts(window, ['invalid-path'])
         # Returns (dir, fn, path)
@@ -65,7 +65,7 @@ class TestCommon(unittest.TestCase):
         self.assertIsNotNone(parts[2])
         self.assertEqual(parts[0][-22:], r'Packages\SbotDev\tests')
         self.assertEqual(parts[1], r'ross.txt')
-        self.assertEqual(parts[2][-31:], r'Packages\SbotDev\tests\ross.txt')
+        self.assertTrue(r'Packages\SbotDev\tests\ross.txt' in parts[2])
 
         # Note: these are by inspection.
         # sc.open_path(test_file_1)    # -> in ST

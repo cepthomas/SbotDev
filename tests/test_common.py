@@ -15,8 +15,8 @@ import sbot_common as sc
 class TestCommon(unittest.TestCase):
 
     def setUp(self):
-        sc.init('_Test')
-
+        pass
+        
     def tearDown(self):
         pass
 
@@ -49,7 +49,7 @@ class TestCommon(unittest.TestCase):
         self.assertIsNone(sout)
 
         sout = sc.get_store_fn()
-        self.assertTrue(r'Packages\User\_Test\_Test.store' in sout)
+        self.assertTrue(r'Packages\User\Dev\Dev.store' in sout)
 
         parts = sc.get_path_parts(window, ['invalid-path'])
         # Returns (dir, fn, path)

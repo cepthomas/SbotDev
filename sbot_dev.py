@@ -16,12 +16,6 @@ except:
 
 # All: TODO1 TODO2 TODOF TODOT
 
-# - Download and Install > https://marketplace.visualstudio.com/items?itemName=munyabe.ToggleComment
-# - Restart VS
-# - Go to "Tools > Options... > Environment > Keyboard"
-# - Search for the command "ToggleComment" & Bind it to your favorite key
-# - The secret to making this work was selecting TextEditor rather than global before pressing Assign.
-
 # TODO2 There's a few `# pyright: ignore` in repos that could be cleaned up.
 # TODO2 better home for tracer?
 
@@ -47,7 +41,6 @@ def _dump(txt):
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     '''Called per plugin instance.'''
-    sc.init('Dev')
     sc.debug(f'plugin_loaded {__package__} with python {platform.python_version()} on {platform.platform()}')
 
 
@@ -64,7 +57,6 @@ class DevEvent(sublime_plugin.EventListener):
     def on_init(self, views):
         ''' Called once with a list of views that were loaded before the EventListener was instantiated. '''
         # First thing that happens when plugin/window created. Initialize everything.
-        # settings = sublime.load_settings(DEV_SETTINGS_FILE)
         pass
 
     def on_load(self, view):

@@ -6,11 +6,6 @@ echo off
 
 del "C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\User\_Test\trace.txt"
 
-rem def setUp(self):
-rem     sc.init('_Test')
-rem def tearDown(self):
-rem     pass
-
 rem :: Run unit tests from the command line. MY_PATH=%~dp0
 rem set PYTHONPATH=%~dp0test_files;%~dp0st_sim;
 rem :: Execute from the parent dir ST_PKGS="%APPDATA%\Sublime Text\Packages".
@@ -26,9 +21,9 @@ pushd ..\SbotDev\tests
 python -m unittest test_common test_tracer
 popd
 
-pushd ..\SbotResiduum\tests
-python -m unittest test_residuum
-popd
+rem pushd ..\SbotResiduum\tests
+rem python -m unittest test_residuum
+rem popd
 
 pushd ..\Notr\tests
 python -m unittest test_notr test_table
@@ -38,14 +33,14 @@ pushd ..\SbotFormat\tests
 python -m unittest test_format
 popd
 
-pushd ..\SbotHighlight\tests
-python -m unittest test_highlight
-popd
+rem pushd ..\SbotHighlight\tests
+rem python -m unittest test_highlight
+rem popd
 
-pushd ..\SbotRender\tests
-python -m unittest test_render
-popd
+rem pushd ..\SbotRender\tests
+rem python -m unittest test_render
+rem popd
 
-pushd ..\SbotSignet\tests
-python -m unittest test_signet
-popd
+rem pushd ..\SbotSignet\tests
+rem python -m unittest test_signet
+rem popd

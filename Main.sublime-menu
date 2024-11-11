@@ -6,10 +6,10 @@
         [
             { "caption": "Open Dev Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\Dev\\Dev.log"]} },
             //{ "caption": "Open Trace", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\Dev\\trace.log"]} },
-            { "caption": "-" },
             { "caption": "Debug", "command": "sbot_debug" },
-            { "caption": "Run pdb", "command": "sbot_run_pdb" },
-            // { "caption": "Run pdb example - in SbotPdb", "command": "sbot_pdb_example" },
+            { "caption": "-" },
+            { "caption": "Run pdb dev", "command": "sbot_run_pdb" },
+            { "caption": "Run pdb example", "command": "sbot_pdb_example" },
             { "caption": "-" },
             { "caption": "Sublime Commands", "command": "sbot_click", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\sublime-commands.ntr"]} },
             { "caption": "Lua Cheatsheet", "command": "sbot_click", "args": { "paths": ["$OneDrive\\OneDriveDocuments\\tech\\lua-cheat-sheet.lua"]} },

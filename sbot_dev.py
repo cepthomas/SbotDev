@@ -5,6 +5,7 @@ import platform
 import traceback
 import datetime
 import importlib
+import bdb
 import sublime
 import sublime_plugin
 try:
@@ -12,9 +13,6 @@ try:
 except:
     import sbot_common as sc  # unittest import
 
-
-
-# All: TODO1 TODO2 TODOF TODOT
 
 # TODO2 There's a few `# pyright: ignore` in repos that could be cleaned up.
 # TODO2 better home for tracer?
@@ -383,8 +381,8 @@ def excepthook(type, value, tb):
     #     return
 
     # This happens with hard shutdown of SbotPdb: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
-    # if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
-    #     return
+    if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
+        return
 
     # LSP is sometimes impolite when closing.
     # 2024-10-03 13:03:31.177 ERR sbot_dev.py:384 Unhandled exception TypeError: 'NoneType' object is not iterable
@@ -393,12 +391,12 @@ def excepthook(type, value, tb):
 
     # Crude shutdown detection.
     if len(sublime.windows()) > 0:
-        msg = f'Unhandled exception {type.__name__}: {value}'
+        msg = f'Unhandled exception {type.__name__}: {value}\nSee the log or ST console'
         sc.error(msg, tb)
 
 
-    # # Otherwise let nature take its course.
-    # sys.__excepthook__(type, value, tb)
+    # Otherwise let nature take its course.
+    sys.__excepthook__(type, value, tb)
 
 
 #-----------------------------------------------------------------------------------

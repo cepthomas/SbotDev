@@ -14,8 +14,8 @@ except:
     import sbot_common as sc  # unittest import
 
 
-# TODO2 There's a few `# pyright: ignore` in repos that could be cleaned up.
-# TODO2 better home for tracer?
+# FUTURE There's a few `# pyright: ignore` in repos that could be cleaned up.
+# TODO better home for tracer?
 
 # Benign reload in case of edited.
 importlib.reload(sc)
@@ -172,8 +172,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit (TODOF with comment), push.
-        TODOF show previous version of file.
+        ''' Simple git tools: diff, commit (no comment), push.
         https://github.com/kemayo/sublime-text-git.
         '''
         fn = self.view.file_name()

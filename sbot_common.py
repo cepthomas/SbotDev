@@ -145,7 +145,7 @@ def create_new_view(window, text, reuse=True):
     view.run_command('select_all')
     view.run_command('cut')
     view.run_command('append', {'characters': text})  # insert has some odd behavior - indentation
-    
+
     window.focus_view(view)
 
     return view
@@ -264,7 +264,7 @@ def open_path(path):
     else:  # linux variants
         subprocess.run(('xdg-open', path))
     return True
-    
+
 
 #-----------------------------------------------------------------------------------
 def open_terminal(where):

@@ -4,6 +4,9 @@
         "id": "dev",
         "children":
         [
+            { "caption": "Help Notr", "command": "sbot_click", "args": { "paths": ["https://github.com/cepthomas/Notr/blob/main/README.md"]} },
+            { "caption": "Help Dev", "command": "sbot_click", "args": { "paths": ["https://github.com/cepthomas/SbotDev/blob/main/README.md"]} },
+            { "caption": "-" },
             { "caption": "Open Dev Log", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\Dev\\Dev.log"]} },
             //{ "caption": "Open Trace", "command": "sbot_click", "args": { "paths": ["$APPDATA\\Sublime Text\\Packages\\User\\Dev\\trace.log"]} },
             { "caption": "Do Debug", "command": "sbot_debug" },

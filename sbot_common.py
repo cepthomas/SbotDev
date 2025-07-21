@@ -270,7 +270,7 @@ def open_path(path):
 def open_terminal(where):
     '''Open a terminal in where.'''
 
-    # TODOF This works for gnome. Maybe should support other desktop types?
+    # TODO This works for gnome. Maybe should support other desktop types?
     # Kde -> konsole
     # xfce4 -> xfce4-terminal
     # Cinnamon -> x-terminal-emulator

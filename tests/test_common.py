@@ -43,7 +43,7 @@ class TestCommon(unittest.TestCase):
         ### Utilities.
         sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
         self.assertIsNotNone(sout)
-        self.assertTrue(r'\AppData\Roaming/Sublime Text/Packages/SbotDev' in sout)
+        self.assertTrue('\\AppData\\Roaming/Sublime Text/Packages/SbotDev' in sout)
 
         sout = sc.expand_vars('C:/Sublime Text/$BAD_NAME\\wwww')
         self.assertIsNone(sout)

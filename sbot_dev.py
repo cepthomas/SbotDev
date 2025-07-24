@@ -13,8 +13,6 @@ try:
 except:
     import sbot_common as sc  # unittest import
 
-# FUTURE There's a few `# pyright: ignore` in repos that could be cleaned up.
-# TODO better home for tracer?
 
 # Benign reload in case of edited.
 importlib.reload(sc)

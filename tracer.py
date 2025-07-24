@@ -7,6 +7,7 @@ import platform
 import inspect
 
 
+# TODO This is not ST-specific so could have a more appropriate home elsewhere.
 
 
 #-----------------------------------------------------------------------------------

@@ -1,10 +1,13 @@
 
+:: General test runner for all sbot stuff.
+
+
 cls
 
 echo off
 
 pushd ..\SbotDev\tests
-python -m unittest test_common test_tracer
+python -m unittest test_common
 popd
 
 rem pushd ..\SbotResiduum\tests

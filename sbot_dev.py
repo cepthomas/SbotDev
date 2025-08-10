@@ -95,21 +95,50 @@ class DevEvent(sublime_plugin.EventListener):
 
 #-----------------------------------------------------------------------------------
 class SbotRunPdbCommand(sublime_plugin.TextCommand):
+    ''' How to hook pdb into ST. TODO1 '''
 
     def run(self, edit):
         del edit
 
-        # Set a breakpoint here then step through and examine the code.
-        from . import sbot_pdb; sbot_pdb.breakpoint()
 
-        ret = self.function_1(911, 'abcd')
-        print('ret:', ret)
+        # TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out')
+        # import sys, os~
+        # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common'))
+        # import Common
 
-        # Unhandled exception actually goes to sys.__excepthook__.
-        # function_boom()
 
-        ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
-        print('ret:', ret)
+        # # TODO1 general purpose path helper - something like this from emu_sublime_api.py:
+        # # # Add path to code under test - assumed it's the parent dir.
+        # # _cut_path = os.path.join(os.path.dirname(__file__), '..')
+        # # if _cut_path not in sys.path:
+        # #     sys.path.insert(0, _cut_path)
+
+        print('>>>>', sys.path)
+        # >>>> [
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
+            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
+            # 'C:\\Program Files\\Sublime Text\\Packages',
+            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
+            # ]
+
+ 
+
+
+
+        # # Set a breakpoint here then step through and examine the code.
+        # from . import sbot_pdb; sbot_pdb.breakpoint()
+
+        # ret = self.function_1(911, 'abcd')
+        # print('ret:', ret)
+
+        # # Unhandled exception actually goes to sys.__excepthook__.
+        # # function_boom()
+
+        # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
+        # print('ret:', ret)
+
 
     #----------------------------------------------------------
     def function_1(self, a1: int, a2: str):
@@ -401,3 +430,5 @@ def excepthook(type, value, tb):
 
 # Connect the last chance hook.
 sys.excepthook = excepthook
+
+

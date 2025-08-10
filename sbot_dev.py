@@ -17,6 +17,16 @@ except:
 # Benign reload in case of edited.
 importlib.reload(sc)
 
+# Syntax defs.
+SYNTAX_C = 'Packages/C++/C.sublime-syntax'
+SYNTAX_CPP = 'Packages/C++/C++.sublime-syntax'
+SYNTAX_CS = 'Packages/C#/C#.sublime-syntax'
+SYNTAX_XML = 'Packages/XML/XML.sublime-syntax'
+# Prefer LSP for Lua:
+SYNTAX_LUA = 'Packages/Lua/Lua.sublime-syntax'
+# Prefer LSP for json/jsonc:
+SYNTAX_JSON = 'Packages/JSON/JSON.sublime-syntax'
+
 
 #-----------------------------------------------------------------------------------
 # Clean dump file.
@@ -340,6 +350,117 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
     def nav(self, href):
         # href is attribute of the link clicked.
         pass
+
+
+# TODO1 these:
+
+
+#-----------------------------------------------------------------------------------
+class SbotFormatJsonCommand(sublime_plugin.TextCommand):
+    ''' sbot_format_json'''
+
+    def is_visible(self):
+        return self.view.settings().get('syntax') == SYNTAX_JSON
+        # return True
+
+    def run(self, edit):
+        del edit
+        sres = []
+        err = False
+
+        reg = sc.get_sel_regions(self.view)[0]
+        s = self.view.substr(reg)
+        s = self._do_one(s)
+        sres.append(s)
+        if s.startswith('Error'):
+            err = True
+
+        vnew = sc.create_new_view(self.view.window(), '\n'.join(sres))
+        if not err:
+            vnew.set_syntax_file(SYNTAX_JSON)
+
+
+#-----------------------------------------------------------------------------------
+class SbotFormatXmlCommand(sublime_plugin.TextCommand):
+    ''' sbot_format_xml'''
+
+    def is_visible(self):
+        return self.view.settings().get('syntax') == SYNTAX_XML
+
+    def run(self, edit):
+        del edit
+        err = False
+
+        # settings = sublime.load_settings(sc.get_settings_fn())
+        # reg = sc.get_sel_regions(self.view)[0]
+        # s = self.view.substr(reg)
+        # s = self._do_one(s, ' ' * int(str(settings.get('tab_size'))))
+        # if s.startswith('Error'):
+        #     err = True
+
+        # vnew = sc.create_new_view(self.view.window(), s)
+        # if not err:
+        #     vnew.set_syntax_file(SYNTAX_XML)
+
+
+#-----------------------------------------------------------------------------------
+class SbotFormatCxSrcCommand(sublime_plugin.TextCommand):
+    ''' sbot_format_cx_src '''
+
+    def is_visible(self):
+        syntax = self.view.settings().get('syntax')
+        return syntax in [SYNTAX_C, SYNTAX_CPP, SYNTAX_CS]
+
+    def run(self, edit):
+        del edit
+        
+        # # Current syntax.
+        # syntax = str(self.view.settings().get('syntax'))
+
+        # settings = sublime.load_settings(sc.get_settings_fn())
+        # reg = sc.get_sel_regions(self.view)[0]
+        # s = self.view.substr(reg)
+
+        # # Build the command. Uses --style=allman --indent=spaces=4 --indent-col1-comments --errors-to-stdout
+        # sindent = f"-s{settings.get('tab_size')}"
+        # p = ['astyle', '-A1', sindent, '-Y', '-X']
+        # if syntax == SYNTAX_CS: # else default of C
+        #     p.append('--mode=cs')
+
+        # try:
+        #     cp = subprocess.run(p, input=s, text=True, universal_newlines=True, capture_output=True, shell=True, check=True)
+        #     sout = cp.stdout
+        # except Exception:
+        #     sout = "Format Cx failed. Is astyle installed and in your path?"
+
+        # vnew = sc.create_new_view(self.view.window(), sout)
+        # vnew.set_syntax_file(syntax)
+
+
+#-----------------------------------------------------------------------------------
+class SbotFormatLuaCommand(sublime_plugin.TextCommand):
+    ''' sbot_format_lua '''
+
+    def is_visible(self):
+        syntax = self.view.settings().get('syntax')
+        return syntax == SYNTAX_LUA #and have_luafmt is True
+
+    def run(self, edit):
+        del edit
+        # settings = sublime.load_settings(sc.get_settings_fn())
+        # r = sc.get_sel_regions(self.view)[0]
+        # self.view.unfold(r)
+
+        # # Get lines of view.
+        # lines = []
+        # for region in self.view.lines(r):
+        #     cache = self.view.substr(region)
+        #     if len(cache) == 0: cache = ' '
+        #     lines.append(cache)
+
+        # sout = LuaFormat.lua_format(lines, settings)
+        # vnew = sc.create_new_view(self.view.window(), sout)
+        # vnew.set_syntax_file(SYNTAX_LUA)
 
 
 #-----------------------------------------------------------------------------------

@@ -9,9 +9,14 @@ import bdb
 import sublime
 import sublime_plugin
 try:
-    from . import sbot_common as sc  # normal import
+    from . import sbot_common as sc
+    print('>>> normal import') 
 except:
-    import sbot_common as sc  # unittest import
+    import sbot_common as sc
+    print('>>> unittest import')
+
+import pbot_pdb
+import code_format
 
 
 # Benign reload in case of edited.
@@ -22,9 +27,7 @@ SYNTAX_C = 'Packages/C++/C.sublime-syntax'
 SYNTAX_CPP = 'Packages/C++/C++.sublime-syntax'
 SYNTAX_CS = 'Packages/C#/C#.sublime-syntax'
 SYNTAX_XML = 'Packages/XML/XML.sublime-syntax'
-# Prefer LSP for Lua:
 SYNTAX_LUA = 'Packages/Lua/Lua.sublime-syntax'
-# Prefer LSP for json/jsonc:
 SYNTAX_JSON = 'Packages/JSON/JSON.sublime-syntax'
 
 
@@ -101,70 +104,6 @@ class DevEvent(sublime_plugin.EventListener):
     def on_exit(self):
         # Called once after the API has shut down, immediately before the plugin_host process exits
         sc.info(f'on_exit {__package__}')
-
-
-#-----------------------------------------------------------------------------------
-class SbotRunPdbCommand(sublime_plugin.TextCommand):
-    ''' How to hook pdb into ST. TODO1 '''
-
-    def run(self, edit):
-        del edit
-
-
-        # TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out')
-        # import sys, os~
-        # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common'))
-        # import Common
-
-
-        # # TODO1 general purpose path helper - something like this from emu_sublime_api.py:
-        # # # Add path to code under test - assumed it's the parent dir.
-        # # _cut_path = os.path.join(os.path.dirname(__file__), '..')
-        # # if _cut_path not in sys.path:
-        # #     sys.path.insert(0, _cut_path)
-
-        print('>>>>', sys.path)
-        # >>>> [
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
-            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
-            # 'C:\\Program Files\\Sublime Text\\Packages',
-            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
-            # ]
-
- 
-
-
-
-        # # Set a breakpoint here then step through and examine the code.
-        # from . import sbot_pdb; sbot_pdb.breakpoint()
-
-        # ret = self.function_1(911, 'abcd')
-        # print('ret:', ret)
-
-        # # Unhandled exception actually goes to sys.__excepthook__.
-        # # function_boom()
-
-        # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
-        # print('ret:', ret)
-
-
-    #----------------------------------------------------------
-    def function_1(self, a1: int, a2: str):
-        '''A simple function.'''
-        ret = f'answer is:{a1 * len(a2)}'
-        return ret
-
-    #----------------------------------------------------------
-    def function_2(self, a_list, a_dict):
-        '''A simple function.'''
-        return len(a_list) + len(a_dict)
-
-    #----------------------------------------------------------
-    def function_boom(self):
-        '''A function that causes an unhandled exception.'''
-        return 1 / 0
 
 
 #-----------------------------------------------------------------------------------
@@ -354,6 +293,73 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
 # TODO1 these:
 
+#-----------------------------------------------------------------------------------
+class RunPdbCommand(sublime_plugin.TextCommand):
+    ''' How to hook pdb into ST. TODO1 '''
+
+    def run(self, edit):
+        del edit
+
+
+        # TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out')
+        # import sys, os~
+        # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common'))
+        # import Common
+
+
+        # # TODO1 general purpose path helper - something like this from emu_sublime_api.py:
+        # # # Add path to code under test - assumed it's the parent dir.
+        # # _cut_path = os.path.join(os.path.dirname(__file__), '..')
+        # # if _cut_path not in sys.path:
+        # #     sys.path.insert(0, _cut_path)
+
+        print('>>>>', sys.path)
+        # >>>> [
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
+            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
+            # 'C:\\Program Files\\Sublime Text\\Packages',
+            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
+            # ]
+
+ 
+
+
+
+        # # Set a breakpoint here then step through and examine the code.
+        # from . import sbot_pdb; sbot_pdb.breakpoint()
+
+        # ret = self.function_1(911, 'abcd')
+        # print('ret:', ret)
+
+        # # Unhandled exception actually goes to sys.__excepthook__.
+        # # function_boom()
+
+        # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
+        # print('ret:', ret)
+
+
+    #----------------------------------------------------------
+    def function_1(self, a1: int, a2: str):
+        '''A simple function.'''
+        ret = f'answer is:{a1 * len(a2)}'
+        return ret
+
+    #----------------------------------------------------------
+    def function_2(self, a_list, a_dict):
+        '''A simple function.'''
+        return len(a_list) + len(a_dict)
+
+    #----------------------------------------------------------
+    def function_boom(self):
+        '''A function that causes an unhandled exception.'''
+        return 1 / 0
+
+# { "caption": "-" },
+# { "caption": "Run pdb dev", "command": "sbot_run_pdb" },
+# { "caption": "Run pdb example", "command": "sbot_pdb_example" },
+
 
 #-----------------------------------------------------------------------------------
 class SbotFormatJsonCommand(sublime_plugin.TextCommand):
@@ -370,7 +376,7 @@ class SbotFormatJsonCommand(sublime_plugin.TextCommand):
 
         reg = sc.get_sel_regions(self.view)[0]
         s = self.view.substr(reg)
-        s = self._do_one(s)
+        s = format_json(s)
         sres.append(s)
         if s.startswith('Error'):
             err = True
@@ -391,21 +397,21 @@ class SbotFormatXmlCommand(sublime_plugin.TextCommand):
         del edit
         err = False
 
-        # settings = sublime.load_settings(sc.get_settings_fn())
-        # reg = sc.get_sel_regions(self.view)[0]
-        # s = self.view.substr(reg)
-        # s = self._do_one(s, ' ' * int(str(settings.get('tab_size'))))
-        # if s.startswith('Error'):
-        #     err = True
+        settings = sublime.load_settings(sc.get_settings_fn())
+        reg = sc.get_sel_regions(self.view)[0]
+        s = self.view.substr(reg)
+        s = format_xml(s, settings.get('tab_size'))
+        if s.startswith('Error'):
+            err = True
 
-        # vnew = sc.create_new_view(self.view.window(), s)
-        # if not err:
-        #     vnew.set_syntax_file(SYNTAX_XML)
+        vnew = sc.create_new_view(self.view.window(), s)
+        if not err:
+            vnew.set_syntax_file(SYNTAX_XML)
 
 
 #-----------------------------------------------------------------------------------
-class SbotFormatCxSrcCommand(sublime_plugin.TextCommand):
-    ''' sbot_format_cx_src '''
+class SbotFormatCxCommand(sublime_plugin.TextCommand):
+    ''' sbot_format_cx '''
 
     def is_visible(self):
         syntax = self.view.settings().get('syntax')
@@ -414,53 +420,16 @@ class SbotFormatCxSrcCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         del edit
         
-        # # Current syntax.
-        # syntax = str(self.view.settings().get('syntax'))
+        # Current syntax.
+        syntax = str(self.view.settings().get('syntax'))
+        settings = sublime.load_settings(sc.get_settings_fn())
+        reg = sc.get_sel_regions(self.view)[0]
+        s = self.view.substr(reg)
 
-        # settings = sublime.load_settings(sc.get_settings_fn())
-        # reg = sc.get_sel_regions(self.view)[0]
-        # s = self.view.substr(reg)
+        sout = format_cx(s, syntax, settings.get('tab_size'))
 
-        # # Build the command. Uses --style=allman --indent=spaces=4 --indent-col1-comments --errors-to-stdout
-        # sindent = f"-s{settings.get('tab_size')}"
-        # p = ['astyle', '-A1', sindent, '-Y', '-X']
-        # if syntax == SYNTAX_CS: # else default of C
-        #     p.append('--mode=cs')
-
-        # try:
-        #     cp = subprocess.run(p, input=s, text=True, universal_newlines=True, capture_output=True, shell=True, check=True)
-        #     sout = cp.stdout
-        # except Exception:
-        #     sout = "Format Cx failed. Is astyle installed and in your path?"
-
-        # vnew = sc.create_new_view(self.view.window(), sout)
-        # vnew.set_syntax_file(syntax)
-
-
-#-----------------------------------------------------------------------------------
-class SbotFormatLuaCommand(sublime_plugin.TextCommand):
-    ''' sbot_format_lua '''
-
-    def is_visible(self):
-        syntax = self.view.settings().get('syntax')
-        return syntax == SYNTAX_LUA #and have_luafmt is True
-
-    def run(self, edit):
-        del edit
-        # settings = sublime.load_settings(sc.get_settings_fn())
-        # r = sc.get_sel_regions(self.view)[0]
-        # self.view.unfold(r)
-
-        # # Get lines of view.
-        # lines = []
-        # for region in self.view.lines(r):
-        #     cache = self.view.substr(region)
-        #     if len(cache) == 0: cache = ' '
-        #     lines.append(cache)
-
-        # sout = LuaFormat.lua_format(lines, settings)
-        # vnew = sc.create_new_view(self.view.window(), sout)
-        # vnew.set_syntax_file(SYNTAX_LUA)
+        vnew = sc.create_new_view(self.view.window(), sout)
+        vnew.set_syntax_file(syntax)
 
 
 #-----------------------------------------------------------------------------------
@@ -496,16 +465,6 @@ def _dump_stack(stkpos=1):
 
     # Get most recent frame => traceback.extract_tb(tb)[:-1], traceback.extract_stack()[:-1]
 
-    # try:
-    #     while True:
-    #         frame = sys._getframe(stkpos)  ??? this doesn't work any more
-    #         buff.append(f'{_frame_formatter(frame, stkpos)}')
-    #         stkpos += 1
-    # except:
-    #     # End of stack.
-    #     pass
-
-
     for frame in traceback.extract_stack():
         buff.append(f'{_frame_formatter(frame)}')
 
@@ -520,15 +479,14 @@ def excepthook(type, value, tb):
     with summary.
     '''
 
-    # Sometimes gets these on shutdown:
-
-    # FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
-    # if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
-    #     return
-
     # This happens with hard shutdown of SbotPdb: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
     if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
         return
+
+    # Sometimes gets these on shutdown:
+    # FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
+    # if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
+    #     return
 
     # LSP is sometimes impolite when closing.
     # 2024-10-03 13:03:31.177 ERR sbot_dev.py:384 Unhandled exception TypeError: 'NoneType' object is not iterable
@@ -540,8 +498,7 @@ def excepthook(type, value, tb):
         msg = f'Unhandled exception {type.__name__}: {value}\nSee the log or ST console'
         sc.error(msg, tb)
 
-
-    # Otherwise let nature take its course.
+    # Otherwise revert to original hook.
     sys.__excepthook__(type, value, tb)
 
 

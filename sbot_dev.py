@@ -6,17 +6,52 @@ import traceback
 import datetime
 import importlib
 import bdb
+import string
+import re
+import enum
+import json
+import xml
+import xml.dom.minidom
 import sublime
 import sublime_plugin
-try:
-    from . import sbot_common as sc
-    print('>>> normal import') 
-except:
-    import sbot_common as sc
-    print('>>> unittest import')
 
-import pbot_pdb
-import code_format
+
+
+
+from . import sbot_common as sc
+# try:
+#     from . import sbot_common as sc
+#     print('>>> normal import') 
+# except:
+#     import sbot_common as sc
+#     print('>>> unittest import')
+
+
+# my_dir = os.path.dirname(__file__)
+# # Add source path to sys.
+# utils.ensure_import(my_dir, '..')
+# # OK to import now.
+# import code_format
+# # # Benign reload in case of edited.
+# # importlib.reload(tr)
+
+
+# # Add path to sys.
+# def ensure_import(*paths):
+#     npath = os.path.abspath(os.path.join(*paths))
+#     if npath not in sys.path:
+#         # append rather than insert so can override builtin.
+#         sys.path.append(npath)
+
+
+
+# pbot_path = os.path.abspath(os.path.join('\\', 'Dev', 'Libs', 'PyBagOfTricks'))
+pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
+if pbot_path not in sys.path:
+    sys.path.append(pbot_path)
+
+# import pbot_pdb
+# import code_format
 
 
 # Benign reload in case of edited.
@@ -32,19 +67,12 @@ SYNTAX_JSON = 'Packages/JSON/JSON.sublime-syntax'
 
 
 #-----------------------------------------------------------------------------------
-# Clean dump file.
-_dump_fn = os.path.join(os.path.dirname(__file__), 'out', '_dump.log') TODOX
-try:
-    os.remove(_dump_fn)
-except:
-    pass    
-
 # Write to dump file.
 def _dump(txt):
-    with open(_dump_fn, 'a') as f:
+    fn = os.path.join(os.path.dirname(__file__), 'out', 'dump.log')
+    with open(fn, 'a') as f:
         f.write(txt + '\n')
         f.flush()
- TODOX
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
@@ -291,74 +319,66 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
         pass
 
 
-# TODO1 these:
-
 #-----------------------------------------------------------------------------------
-class RunPdbCommand(sublime_plugin.TextCommand):
-    ''' How to hook pdb into ST. TODO1 '''
+# class RunPdbCommand(sublime_plugin.TextCommand):
+#     ''' How to hook pdb into ST. TODO1 '''
 
-    def run(self, edit):
-        del edit
+#     def run(self, edit):
+#         del edit
+#         TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out') TODOX
+#         # import sys, os~
+#         sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common')) TODOX
+#         # import Common
 
+#         print('>>>>', sys.path)
+#         # >>>> [
+#             # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
+#             # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
+#             # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
+#             # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
+#             # 'C:\\Program Files\\Sublime Text\\Packages',
+#             # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
+#             # ]
 
-        TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out') TODOX
-        # import sys, os~
-        sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common')) TODOX
-        # import Common
+#         # # Set a breakpoint here then step through and examine the code.
+#         # from . import sbot_pdb; sbot_pdb.breakpoint()
 
+#         # ret = self.function_1(911, 'abcd')
+#         # print('ret:', ret)
 
-        # # TODO1 general purpose path helper - something like this from emu_sublime_api.py:
-        # # # Add path to code under test - assumed it's the parent dir.
-        # # _cut_path = os.path.join(os.path.dirname(__file__), '..')
-        # # if _cut_path not in sys.path:
-        # #     sys.path.insert(0, _cut_path)
+#         # # Unhandled exception actually goes to sys.__excepthook__.
+#         # # function_boom()
 
-        print('>>>>', sys.path)
-        # >>>> [
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
-            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
-            # 'C:\\Program Files\\Sublime Text\\Packages',
-            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
-            # ]
-
- 
-
-
-
-        # # Set a breakpoint here then step through and examine the code.
-        # from . import sbot_pdb; sbot_pdb.breakpoint()
-
-        # ret = self.function_1(911, 'abcd')
-        # print('ret:', ret)
-
-        # # Unhandled exception actually goes to sys.__excepthook__.
-        # # function_boom()
-
-        # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
-        # print('ret:', ret)
+#         # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
+#         # print('ret:', ret)
 
 
-    #----------------------------------------------------------
-    def function_1(self, a1: int, a2: str):
-        '''A simple function.'''
-        ret = f'answer is:{a1 * len(a2)}'
-        return ret
+#     #----------------------------------------------------------
+#     def function_1(self, a1: int, a2: str):
+#         '''A simple function.'''
+#         ret = f'answer is:{a1 * len(a2)}'
+#         return ret
 
-    #----------------------------------------------------------
-    def function_2(self, a_list, a_dict):
-        '''A simple function.'''
-        return len(a_list) + len(a_dict)
+#     #----------------------------------------------------------
+#     def function_2(self, a_list, a_dict):
+#         '''A simple function.'''
+#         return len(a_list) + len(a_dict)
 
-    #----------------------------------------------------------
-    def function_boom(self):
-        '''A function that causes an unhandled exception.'''
-        return 1 / 0
+#     #----------------------------------------------------------
+#     def function_boom(self):
+#         '''A function that causes an unhandled exception.'''
+#         return 1 / 0
 
 # { "caption": "-" },
 # { "caption": "Run pdb dev", "command": "sbot_run_pdb" },
 # { "caption": "Run pdb example", "command": "sbot_pdb_example" },
+
+
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+#--------------------TODO1 all this format stuff------------------------------------
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------------------
@@ -430,6 +450,313 @@ class SbotFormatCxCommand(sublime_plugin.TextCommand):
 
         vnew = sc.create_new_view(self.view.window(), sout)
         vnew.set_syntax_file(syntax)
+
+
+
+
+#-----------------------------------------------------------------------------------
+def format_json(s):
+    ''' Clean and format the string. Returns the new string. '''
+
+    class ScanState(enum.IntFlag):
+        DEFAULT = enum.auto()   # Idle
+        STRING = enum.auto()    # Process a quoted string
+        LCOMMENT = enum.auto()  # Processing a single line comment
+        BCOMMENT = enum.auto()  # Processing a block/multiline comment
+        DONE = enum.auto()      # Finito
+
+    # tabWidth = 4
+    comment_count = 0
+    sreg = []
+    state = ScanState.DEFAULT
+    current_comment = []
+    current_char = -1
+    next_char = -1
+    escaped = False
+
+    # Index is in cleaned version, value is in original.
+    pos_map = []
+
+    # Iterate the string.
+    try:
+        slen = len(s)
+        i = 0
+        while i < slen:
+            current_char = s[i]
+            next_char = s[i + 1] if i < slen - 1 else -1
+
+            # Remove whitespace and transform comments into legal json.
+            if state == ScanState.STRING:
+                sreg.append(current_char)
+                pos_map.append(i)
+                # Handle escaped chars.
+                if current_char == '\\':
+                    escaped = True
+                elif current_char == '\"':
+                    if not escaped:
+                        state = ScanState.DEFAULT
+                    escaped = False
+                else:
+                    escaped = False
+
+            elif state == ScanState.LCOMMENT:
+                # Handle line comments.
+                if current_char == '\n':
+                    # End of comment.
+                    scom = ''.join(current_comment)
+                    stag = f'\"//{comment_count}\":\"{scom}\",'
+                    comment_count += 1
+                    sreg.append(stag)
+                    pos_map.append(i)
+                    state = ScanState.DEFAULT
+                    current_comment.clear()
+                elif current_char == '\r':
+                    # ignore
+                    pass
+                else:
+                    # Maybe escape.
+                    if current_char == '\"' or current_char == '\\':
+                        current_comment.append('\\')
+                    current_comment.append(current_char)
+
+            elif state == ScanState.BCOMMENT:
+                # Handle block comments.
+                if current_char == '*' and next_char == '/':
+                    # End of comment.
+                    scom = ''.join(current_comment)
+                    stag = f'\"//{comment_count}\":\"{scom}\",'
+                    comment_count += 1
+                    sreg.append(stag)
+                    pos_map.append(i)
+                    state = ScanState.DEFAULT
+                    current_comment.clear()
+                    i += 1  # Skip next char.
+                elif current_char == '\n' or current_char == '\r':
+                    # ignore
+                    pass
+                else:
+                    # Maybe escape.
+                    if current_char == '\"' or current_char == '\\':
+                        current_comment.append('\\')
+                    current_comment.append(current_char)
+
+            elif state == ScanState.DEFAULT:
+                # Check for start of a line comment.
+                if current_char == '/' and next_char == '/':
+                    state = ScanState.LCOMMENT
+                    current_comment.clear()
+                    i += 1  # Skip next char.
+                # Check for start of a block comment.
+                elif current_char == '/' and next_char == '*':
+                    state = ScanState.BCOMMENT
+                    current_comment.clear()
+                    i += 1  # Skip next char.
+                elif current_char == '\"':
+                    sreg.append(current_char)
+                    pos_map.append(i)
+                    state = ScanState.STRING
+                # Skip ws.
+                elif current_char not in string.whitespace:
+                    sreg.append(current_char)
+                    pos_map.append(i)
+
+            else:  # state == ScanState.DONE:
+                pass
+            i += 1  # next
+
+        # Prep for formatting.
+        ret = ''.join(sreg)
+
+        # Remove any trailing commas.
+        ret = re.sub(',}', '}', ret)
+        ret = re.sub(',]', ']', ret)
+
+        # Run it through the formatter.
+        ret = json.loads(ret)
+        ret = json.dumps(ret, indent=4)
+
+    except json.JSONDecodeError as je:
+        # Get some context from the original string.
+        context = []
+        original_pos = pos_map[je.pos]
+        start_pos = max(0, original_pos - 40)
+        end_pos = min(len(s) - 1, original_pos + 40)
+        context.append(f'Json Error: {je.msg} pos: {original_pos}')
+        context.append(s[start_pos:original_pos])
+        context.append('---------here----------')
+        context.append(s[original_pos:end_pos])
+        ret = '\n'.join(context)
+
+    return ret
+
+
+#-----------------------------------------------------------------------------------
+def format_xml(s, indent):
+    ''' Clean and format the string. Returns the new string. '''
+
+    def clean(node):
+        for n in node.childNodes:
+            if n.nodeType == xml.dom.minidom.Node.TEXT_NODE:
+                if n.nodeValue:
+                    n.nodeValue = n.nodeValue.strip()
+            elif n.nodeType == xml.dom.minidom.Node.ELEMENT_NODE:
+                clean(n)
+    
+    try:
+        top = xml.dom.minidom.parseString(s)
+        clean(top)  
+        top.normalize()
+        sindent = ' ' * int(indent)
+        ret = top.toprettyxml(indent=sindent)
+    except Exception as e:
+        ret = f"Error: {e}"
+
+    return ret
+
+
+#-----------------------------------------------------------------------------------
+def format_cx(s, syntax, indent):
+    ''' Clean and format C/C++/C# string. Returns the new string. '''
+
+    # Build the command. Uses --style=allman --indent=spaces=4 --indent-col1-comments --errors-to-stdout
+    sindent = f"-s{indent}"
+    p = ['astyle', '-A1', sindent, '-Y', '-X']
+    if syntax == 'C#': # else default of C
+        p.append('--mode=cs')
+
+    try:
+        cp = subprocess.run(p, input=s, text=True, universal_newlines=True, capture_output=True, shell=True, check=True)
+        sout = cp.stdout
+    except Exception:
+        sout = "Format Cx failed. Is astyle installed and in your path?"
+
+    return sout
+
+
+#-----------------------------------------------------------------------------------
+def test_format(): 
+
+    my_dir = os.path.dirname(__file__)
+
+    def assertEqual(s1, s2):
+        pass
+
+    def fail(s1):
+        pass
+
+    #------------------------------------------------------------
+    # def test_format_json(self):
+
+    fn = os.path.join(my_dir, 'messy.json')
+    with open(f'{fn}', 'r') as fp:
+        # The happy path.
+        s = fp.read()
+        res = format_json(s)
+        assertEqual(res[:50], '{\n    "MarkPitch": {\n        "Original": 0,\n      ')
+
+        # Make it a bad file.
+        s = s.replace('\"Original\"', '')
+        res = format_json(s)
+        assertEqual(res[:50], "Json Error: Expecting property name enclosed in do")
+
+
+    #------------------------------------------------------------
+    # def test_format_xml(self):
+
+    fn = os.path.join(my_dir, 'messy.xml')
+    with open(f'{fn}', 'r') as fp:
+        # The happy path.
+        s = fp.read()
+        res = format_xml(s, 4)
+        if 'Error:' in res:
+            fail(res)
+        else:
+            assertEqual(res[100:150], 'nType="Anti-IgG (PEG)" TestSpec="08 ABSCR4 IgG" Du')
+
+        # Make it a bad file.
+        s = s.replace('ColumnType=', '')
+        res = format_xml(s, 4)
+        assertEqual(res, "Error: not well-formed (invalid token): line 6, column 4")
+
+
+    #------------------------------------------------------------
+    # def test_format_c(self):
+
+    fn = os.path.join(my_dir, 'messy.c')
+    with open(f'{fn}', 'r') as fp:
+        # The happy path.
+        s = fp.read()
+        res = format_cx(s, 'C', 4)
+        assertEqual(res[450:475], '[1] = (val >> 8) & 0xFF;\n')
+
+
+    #------------------------------------------------------------
+    # def test_format_cs(self):
+
+    fn = os.path.join(my_dir, 'messy.cs')
+    with open(f'{fn}', 'r') as fp:
+        # The happy path.
+        s = fp.read()
+
+        res = format_cx(s, 'C#', 4)
+        assertEqual(res[700:738], '\n    public Dumper(TextWriter writer)\n')
+
+
+'''
+# SbotFormat doc
+
+
+Sublime Text plugin to do simple formatting of common source code files. Doesn't replace the existing file,
+shows the content in a new view.
+
+- Prettify json, turns C/C++ style comments into valid json elements, and removes trailing commas.
+- Prettify xml.
+- Prettify C family (C/C++/C#) files using [AStyle](https://astyle.sourceforge.net/) (which must be installed and in your path). Note: I started with the python astyle module but didn't care for it.
+- Prettify lua - uses main code from [LuaFormat](https://github.com/floydawong/LuaFormat) (MIT license). Gets a bit confused sometimes.
+
+**NOTE:** LSP works much better for json and lua and should be preferred. Keeping this code here for now.
+
+Built for ST4 on Windows. Linux and OSX should be ok but are minimally tested - PRs welcome.
+
+
+## Commands and Menus
+
+| Command                  | Description                   | Args             |
+| :--------                | :-------                      | :--------        |
+| sbot_format_json         | Format json content           |                  |
+| sbot_format_xml          | Format xml content            |                  |
+| sbot_format_cx_src       | Format C/C++/C# content       |                  |
+| sbot_format_lua          | Format lua content            |                  |
+
+
+There is no default `Context.sublime-menu` file in this plugin.
+Add the commands you like to your own `User\Context.sublime-menu` file. Typical entries are:
+``` json
+{ "caption": "Format",
+    "children":
+    [
+        { "caption": "Format C/C++/C#", "command": "sbot_format_cx_src" },
+        { "caption": "Format json", "command": "sbot_format_json" },
+        { "caption": "Format xml", "command": "sbot_format_xml" },
+        { "caption": "Format lua", "command": "sbot_format_lua" },
+    ]
+}
+```
+
+## Settings
+
+| Setting            | Description         | Options                                     |
+| :--------          | :-------            | :------                                     |
+| tab_size           | Spaces per tab      | Currently applies to all file types         |
+'''
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+#-----------------------------------------------------------------------------------
+
+
+
 
 
 #-----------------------------------------------------------------------------------

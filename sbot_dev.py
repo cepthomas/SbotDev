@@ -33,7 +33,7 @@ SYNTAX_JSON = 'Packages/JSON/JSON.sublime-syntax'
 
 #-----------------------------------------------------------------------------------
 # Clean dump file.
-_dump_fn = os.path.join(os.path.dirname(__file__), 'out', '_dump.log')
+_dump_fn = os.path.join(os.path.dirname(__file__), 'out', '_dump.log') TODOX
 try:
     os.remove(_dump_fn)
 except:
@@ -44,7 +44,7 @@ def _dump(txt):
     with open(_dump_fn, 'a') as f:
         f.write(txt + '\n')
         f.flush()
-
+ TODOX
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
@@ -301,9 +301,9 @@ class RunPdbCommand(sublime_plugin.TextCommand):
         del edit
 
 
-        # TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out')
+        TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out') TODOX
         # import sys, os~
-        # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common'))
+        sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common')) TODOX
         # import Common
 
 

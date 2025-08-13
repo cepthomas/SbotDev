@@ -20,6 +20,20 @@ from . import sbot_common as sc
 importlib.reload(sc)
 
 
+# TODO1 clean up all emu_sublime_api.py
+# Searching 159 files for "unittest.TestCase" (case sensitive)
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_notr.py:
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_table.py:
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\tests\test_common.py:
+# Searching 159 files for "emu_sublime_api" (case sensitive)
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\emu_sublime_api.py:
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_notr.py:
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_table.py:
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\tests\emu_sublime_api.py:
+# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\tests\test_common.py:
+
+
+
 #-----------------------------------------------------------------------------------
 # Write to dump file.
 def _dump(txt):
@@ -274,54 +288,39 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
-# class RunPdbCommand(sublime_plugin.TextCommand):
-#     ''' How to hook pbot_pdb into ST. TODO1 '''
+class RunPdbCommand(sublime_plugin.TextCommand):
+    ''' How to hook pbot_pdb into ST. TODO1 '''
 
-#     def run(self, edit):
-#         del edit
-#         TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out') TODOX
-#         # import sys, os~
-#         sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common')) TODOX
-#         # import Common
+    def run(self, edit):
+        del edit
 
-#         print('>>>>', sys.path)
-#         # >>>> [
-#             # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
-#             # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
-#             # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
-#             # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
-#             # 'C:\\Program Files\\Sublime Text\\Packages',
-#             # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
-#             # ]
+        # TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out')
+        # # import sys, os~
+        # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common'))
+        # # import Common
 
-#         # # Set a breakpoint here then step through and examine the code.
-#         # from . import sbot_pdb; sbot_pdb.breakpoint()
+        # print('>>>>', sys.path)
+        # >>>> [
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
+            # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
+            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
+            # 'C:\\Program Files\\Sublime Text\\Packages',
+            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
+            # ]
 
-#         # ret = self.function_1(911, 'abcd')
-#         # print('ret:', ret)
+        # # Set a breakpoint here then step through and examine the code.
+        # from . import sbot_pdb; sbot_pdb.breakpoint()
 
-#         # # Unhandled exception actually goes to sys.__excepthook__.
-#         # # function_boom()
+        # ret = self.function_1(911, 'abcd')
+        # print('ret:', ret)
 
-#         # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
-#         # print('ret:', ret)
+        # # Unhandled exception actually goes to sys.__excepthook__.
+        # # function_boom()
 
+        # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
+        # print('ret:', ret)
 
-#     #----------------------------------------------------------
-#     def function_1(self, a1: int, a2: str):
-#         '''A simple function.'''
-#         ret = f'answer is:{a1 * len(a2)}'
-#         return ret
-
-#     #----------------------------------------------------------
-#     def function_2(self, a_list, a_dict):
-#         '''A simple function.'''
-#         return len(a_list) + len(a_dict)
-
-#     #----------------------------------------------------------
-#     def function_boom(self):
-#         '''A function that causes an unhandled exception.'''
-#         return 1 / 0
 
 # { "caption": "-" },
 # { "caption": "Run pdb dev", "command": "sbot_run_pdb" },
@@ -391,7 +390,7 @@ def excepthook(type, value, tb):
     # if type is TypeError and 'object is not iterable' in str(value):
     #     return
 
-    # Crude shutdown detection.
+    # Crude shutdown detection to avoid false positives.
     if len(sublime.windows()) > 0:
         msg = f'Unhandled exception {type.__name__}: {value}\nSee the log or ST console'
         sc.error(msg, tb)
@@ -400,11 +399,7 @@ def excepthook(type, value, tb):
     sys.__excepthook__(type, value, tb)
 
 
-#-----------------------------------------------------------------------------------
 #----------------------- Finish initialization -------------------------------------
-#-----------------------------------------------------------------------------------
 
 # Connect the last chance hook.
 sys.excepthook = excepthook
-
-

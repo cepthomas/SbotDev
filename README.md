@@ -6,8 +6,7 @@ Just a big messy area. These are not the codes you are looking for. ST4 on Windo
 
 
 - `sbot_common.py` contain miscellaneous common components primarily for internal use by the sbot family.
-  This includes a very simple logger primarily for user-facing information, syntax errors and the
-  like. For debugging, `tracer.py` is more useful.
+  This includes a very simple logger primarily for user-facing information, syntax errors and the like.
   The `sbot_common.py` in this repo is the master and is copied to other repos that use it upon update.
   Submodules were considered but seemed more complex than a simple copy-op. Fight me.
 
@@ -16,15 +15,26 @@ Just a big messy area. These are not the codes you are looking for. ST4 on Windo
 "preview_on_click": "only_left",
 ```
 
-- There is sparse but functional unit test code. Run from the cmd like with `go.cmd` or inside a
-  Visual Studio project `VsTester.sln`.
-  
-- Really, python is a horrible mess. https://xkcd.com/1987.
+[Really, python is a mess.](https://xkcd.com/1987)
 
 
+# Using pbot_pdb.py to debug ST plugins TODO1
 
-## Notes
+Most instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md).
+apply here. The code under test is of course the plugin.
 
-- `sbot_common.py` contains miscellaneous common components primarily for internal use by the sbot family.
-  This includes a very simple logger primarily for user-facing information, syntax errors and the like.
-  Log file is in `<ST_PACKAGES_DIR>\User\SbotFormat\SbotFormat.log`.
+
+It's usually handy to add a command like this in one of the menus:
+```json
+{ "caption": "Run pdb example", "command": "pbot_pdb_example" },
+```
+and a corresponding handler:
+```python
+class SbotPdbExampleCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        from . import pbot_pdb; pbot_pdb.breakpoint()
+        my_plugin_code()
+```
+
+Note that sublime is blocked while running the debugger so you can't edit files using ST.
+  You may have to resort to *another editor!*.

@@ -18,23 +18,22 @@ Just a big messy area. These are not the codes you are looking for. ST4 on Windo
 [Really, python is a mess.](https://xkcd.com/1987)
 
 
-# Using pbot_pdb.py to debug ST plugins TODO1
+# Using pbot_pdb.py to debug ST plugins
 
 Most instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md).
 apply here. The code under test is of course the plugin.
 
-
 It's usually handy to add a command like this in one of the menus:
 ```json
-{ "caption": "Run pdb example", "command": "pbot_pdb_example" },
+{ "caption": "Run pdb example", "command": "run_pdb" },
 ```
 and a corresponding handler:
 ```python
-class SbotPdbExampleCommand(sublime_plugin.TextCommand):
+class RunPdbCommand(sublime_plugin.TextCommand):
     def run(self, edit):
         from . import pbot_pdb; pbot_pdb.breakpoint()
         my_plugin_code()
 ```
 
-Note that sublime is blocked while running the debugger so you can't edit files using ST.
+Note that ST is blocked while running the debugger so you can't edit files using it.
   You may have to resort to *another editor!*.

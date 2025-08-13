@@ -287,46 +287,39 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
         pass
 
 
+
+#----------------- How to use pbot_pdb to debug this ST plugin ---------------------
+# Setup for running pbot_pdb.
+# Either:
+#  - Copy pbot_pdb.py to this dir.
+#  - Add source path to sys something like this:
+pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
+if pbot_path not in sys.path:
+    sys.path.append(pbot_path)
+
+# OK to import now.
+import pbot_pdb
+
 #-----------------------------------------------------------------------------------
 class RunPdbCommand(sublime_plugin.TextCommand):
-    ''' How to hook pbot_pdb into ST. TODO1 '''
+    ''' '''
+
+    def function2(self, arg):
+        return arg + 1
+
+    def function1(self, arg):
+        # Set a breakpoint here then step through and examine the code.
+        pbot_pdb.breakpoint()
+        return self.function2(len(arg))
 
     def run(self, edit):
         del edit
 
-        # TEST_OUT_PATH = os.path.join(os.path.dirname(__file__), 'out')
-        # # import sys, os~
-        # sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'Common'))
-        # # import Common
+        # Benign reload in case of edited.
+        importlib.reload(pbot_pdb)
 
-        # print('>>>>', sys.path)
-        # >>>> [
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python3.8.zip',
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python38',
-            # 'C:\\Program Files\\Sublime Text\\Lib\\python3',
-            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Lib\\python38',
-            # 'C:\\Program Files\\Sublime Text\\Packages',
-            # 'C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages'
-            # ]
-
-        # # Set a breakpoint here then step through and examine the code.
-        # from . import sbot_pdb; sbot_pdb.breakpoint()
-
-        # ret = self.function_1(911, 'abcd')
-        # print('ret:', ret)
-
-        # # Unhandled exception actually goes to sys.__excepthook__.
-        # # function_boom()
-
-        # ret = self.function_2([33, 'thanks', 3.56], {'aaa': 111, 'bbb': 222, 'ccc': 333})
-        # print('ret:', ret)
-
-
-# { "caption": "-" },
-# { "caption": "Run pdb dev", "command": "sbot_run_pdb" },
-# { "caption": "Run pdb example", "command": "sbot_pdb_example" },
-
-
+        # Run some fake code.
+        self.function1('ABCD')
 
 
 #-----------------------------------------------------------------------------------

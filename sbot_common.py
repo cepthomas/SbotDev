@@ -8,7 +8,7 @@ import shutil
 import subprocess
 import sublime
 import sublime_plugin
-from . import config
+import config
 
 
 # Data type for shared scopes.

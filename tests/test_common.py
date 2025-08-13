@@ -7,11 +7,15 @@ from unittest.mock import MagicMock
 # Set up the sublime emulation environment.
 import emu_sublime_api as emu
 
+
 # Import the code under test.
+cut_path = os.path.abspath(os.path.join(__file__, '..'))
+print(cut_path)
+if cut_path not in sys.path:
+    sys.path.append(cut_path)
+# OK to import now.
+print(sys.path)
 import sbot_common as sc
-
-
-# TODO1 used??? felix.jpg  nonascii.txt  ross.txt
 
 
 #-----------------------------------------------------------------------------------

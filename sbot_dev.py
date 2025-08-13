@@ -14,49 +14,10 @@ import bdb
 # import xml.dom.minidom
 import sublime
 import sublime_plugin
-
-
-
-
-from . import sbot_common as sc  # TODO1
-# try:
-#     from . import sbot_common as sc
-#     print('>>> normal import') 
-# except:
-#     import sbot_common as sc
-#     print('>>> unittest import')
-
-
-# my_dir = os.path.dirname(__file__)
-# # Add source path to sys.
-# utils.ensure_import(my_dir, '..')
-# # OK to import now.
-# import code_format
-# # # Benign reload in case of edited.
-# # importlib.reload(tr)
-
-
-# # Add path to sys.
-# def ensure_import(*paths):
-#     npath = os.path.abspath(os.path.join(*paths))
-#     if npath not in sys.path:
-#         # append rather than insert so can override builtin.
-#         sys.path.append(npath)
-
-
-
-# pbot_path = os.path.abspath(os.path.join('\\', 'Dev', 'Libs', 'PyBagOfTricks'))
-pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-if pbot_path not in sys.path:
-    sys.path.append(pbot_path)
-
-# import pbot_pdb
-# import code_format
-
+from . import sbot_common as sc
 
 # Benign reload in case of edited.
 importlib.reload(sc)
-
 
 
 #-----------------------------------------------------------------------------------
@@ -314,7 +275,7 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
 #-----------------------------------------------------------------------------------
 # class RunPdbCommand(sublime_plugin.TextCommand):
-#     ''' How to hook pdb into ST. TODO1 '''
+#     ''' How to hook pbot_pdb into ST. TODO1 '''
 
 #     def run(self, edit):
 #         del edit

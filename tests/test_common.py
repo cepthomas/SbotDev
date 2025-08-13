@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 # Set up the sublime emulation environment.
 import emu_sublime_api as emu
 
+# TODO1 Simplify testing. Python paths!!!!
 
 # Import the code under test.
 cut_path = os.path.abspath(os.path.join(__file__, '..'))
@@ -70,9 +71,9 @@ class TestCommon(unittest.TestCase):
         self.assertIsNotNone(parts[0])
         self.assertIsNotNone(parts[1])
         self.assertIsNotNone(parts[2])
-        self.assertEqual(parts[0][-22:], r'Packages\SbotDev\tests')
-        self.assertEqual(parts[1], r'ross.txt')
-        self.assertTrue(r'Packages\SbotDev\tests\ross.txt' in parts[2])
+        self.assertEqual(parts[0][-22:], R'Packages\SbotDev\tests')
+        self.assertEqual(parts[1], R'ross.txt')
+        self.assertTrue(R'Packages\SbotDev\tests\ross.txt' in parts[2])
 
         # Note: these are by inspection.
         # sc.open_path(test_file_1)    # -> in ST

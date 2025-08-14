@@ -2,21 +2,20 @@ import sys
 import os
 import traceback
 import unittest
-from unittest.mock import MagicMock
+import importlib
+# from unittest.mock import MagicMock
 
 # Set up the sublime emulation environment.
 import emu_sublime_api as emu
 
-# TODO1 Simplify testing. Python paths are confusing!!!!
-
 # Import the code under test.
 cut_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-print(cut_path)
 if cut_path not in sys.path:
     sys.path.append(cut_path)
 # OK to import now.
-print(sys.path)
 import sbot_common as sc
+# Benign reload in case it is  edited.
+importlib.reload(sc)
 
 
 #-----------------------------------------------------------------------------------
@@ -30,7 +29,6 @@ class TestCommon(unittest.TestCase):
 
     #------------------------------------------------------------
     def test_basic(self):
-
         window = emu.Window(900)
         view = emu.View(901)
 

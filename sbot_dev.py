@@ -16,22 +16,16 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
-# Benign reload in case of edited.
-importlib.reload(sc)
 
-
-# TODO1 clean up all emu_sublime_api.py
-# Searching 159 files for "unittest.TestCase" (case sensitive)
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_notr.py:
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_table.py:
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\tests\test_common.py:
-# Searching 159 files for "emu_sublime_api" (case sensitive)
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\emu_sublime_api.py:
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_notr.py:
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\Notr\tests\test_table.py:
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\tests\emu_sublime_api.py:
-# C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev\tests\test_common.py:
-
+#----------------- Setup for running pbot_pdb in this file ---------------------
+# Pick one:
+#  - Copy pbot_pdb.py to this dir.
+#  - Add source path to sys.path, something like this:
+pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
+if pbot_path not in sys.path:
+    sys.path.append(pbot_path)
+# OK to import now.
+import pbot_pdb
 
 
 #-----------------------------------------------------------------------------------
@@ -41,6 +35,7 @@ def _dump(txt):
     with open(fn, 'a') as f:
         f.write(txt + '\n')
         f.flush()
+
 
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
@@ -286,19 +281,6 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
         # href is attribute of the link clicked.
         pass
 
-
-
-#----------------- How to use pbot_pdb to debug this ST plugin ---------------------
-# Setup for running pbot_pdb.
-# Either:
-#  - Copy pbot_pdb.py to this dir.
-#  - Add source path to sys something like this:
-pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-if pbot_path not in sys.path:
-    sys.path.append(pbot_path)
-
-# OK to import now.
-import pbot_pdb
 
 #-----------------------------------------------------------------------------------
 class RunPdbCommand(sublime_plugin.TextCommand):

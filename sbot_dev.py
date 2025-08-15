@@ -14,7 +14,20 @@ import bdb
 # import xml.dom.minidom
 import sublime
 import sublime_plugin
-from . import sbot_common as sc
+
+
+# print('>>>', 'sbot_dev.py:sys.path:', sys.path)
+
+# ST doesn't add this file path to sys???
+cut_path = os.path.dirname(__file__)
+if cut_path not in sys.path:
+    sys.path.insert(0, cut_path)
+
+
+
+
+# from . import sbot_common as sc
+import sbot_common as sc
 
 
 #----------------- Setup for running pbot_pdb in this file ---------------------
@@ -23,8 +36,7 @@ from . import sbot_common as sc
 #  - Add source path to sys.path, something like this:
 pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
 if pbot_path not in sys.path:
-    sys.path.append(pbot_path)
-# OK to import now.
+    sys.path.insert(0, pbot_path)
 import pbot_pdb
 
 

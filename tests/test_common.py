@@ -5,17 +5,29 @@ import unittest
 import importlib
 # from unittest.mock import MagicMock
 
+
+# print('>>>', 'test_common.py:sys.path:', sys.path)
+
+
 # Set up the sublime emulation environment.
 import emu_sublime_api as emu
 
-# Import the code under test.
+
+# Import the code under test. Add the path so importer can find it.
 cut_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 if cut_path not in sys.path:
-    sys.path.append(cut_path)
-# OK to import now.
+    sys.path.insert(0, cut_path)
 import sbot_common as sc
-# Benign reload in case it is  edited.
-importlib.reload(sc)
+
+
+# importlib.import_module(name, package=None)  e.g. import_module('..mod', 'pkg.subpkg') will import pkg.mod
+# returns the specified package or module (e.g. pkg.mod)
+# If you are dynamically importing a module that was created since the interpreter began execution 
+#   (e.g., created a Python source file), you may need to call invalidate_caches() in order for the new module 
+#   to be noticed by the import system.
+
+# cut_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+# importlib.import_module(R'C:\Users\cepth\AppData\Roaming\Sublime Text\Packages\SbotDev', 'sbot_common')
 
 
 #-----------------------------------------------------------------------------------

@@ -10,22 +10,6 @@ import sublime
 import sublime_plugin
 
 
-# print('>>>', 'sbot_common.py:sys.path:', sys.path)
-
-# my_path = os.path.dirname(__file__)
-# if my_path not in sys.path: sys.path.insert(0, my_path)
-
-# # ST doesn't add this file path to sys???
-# cut_path = os.path.dirname(__file__)
-# if cut_path not in sys.path:
-#     sys.path.insert(0, cut_path)
-# import config
-
-# try: # normal import?
-#     from . import config
-# except: # unittest import!
-#     import config
-
 # Data type for shared scopes.
 HighlightInfo = collections.namedtuple('HighlightInfo', 'scope_name, region_name, type')
 

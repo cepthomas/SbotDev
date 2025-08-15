@@ -8,35 +8,21 @@ import bdb
 # import datetime
 # import string
 # import re
-# import enum
-# import json
-# import xml
-# import xml.dom.minidom
 import sublime
 import sublime_plugin
 
+# my_path = os.path.dirname(__file__)
+# if my_path not in sys.path: sys.path.insert(0, my_path)
 
-# print('>>>', 'sbot_dev.py:sys.path:', sys.path)
-
-# ST doesn't add this file path to sys???
-cut_path = os.path.dirname(__file__)
-if cut_path not in sys.path:
-    sys.path.insert(0, cut_path)
-
-
-
-
-# from . import sbot_common as sc
-import sbot_common as sc
+from . import sbot_common as sc
 
 
 #----------------- Setup for running pbot_pdb in this file ---------------------
 # Pick one:
-#  - Copy pbot_pdb.py to this dir.
-#  - Add source path to sys.path, something like this:
+#  - Copy pbot_pdb.py to this dir and edit to taste.
+#  - Clone PyBagOfTricks and add source path to sys.path, something like this:
 pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-if pbot_path not in sys.path:
-    sys.path.insert(0, pbot_path)
+if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
 import pbot_pdb
 
 

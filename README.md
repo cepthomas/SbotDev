@@ -18,7 +18,7 @@ Just a big messy area. These are not the codes you are looking for. ST4 on Windo
 [Really, python is a mess.](https://xkcd.com/1987)
 
 
-# Using pbot_pdb.py to debug ST plugins
+# Using pbot_pdb to debug ST plugins
 
 Most instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md).
 apply here. The code under test is of course the plugin.
@@ -31,4 +31,4 @@ It's usually handy to add a command like this in one of the menus:
 ```
 
 Note that ST is blocked while running the debugger so you can't edit files using it.
-  You may have to resort to *another editor!*.
+You may have to resort to *another editor!*.

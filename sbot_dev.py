@@ -5,22 +5,29 @@ import platform
 import traceback
 import importlib
 import bdb
-# import datetime
-# import string
-# import re
+import datetime
+import string
+import re
 import sublime
 import sublime_plugin
-
-# my_path = os.path.dirname(__file__)
-# if my_path not in sys.path: sys.path.insert(0, my_path)
-
 from . import sbot_common as sc
+
+# print(f'>>> sbot_dev  friendly_name:[{sc._friendly_name}]  settings_fn:[{sc.get_settings_fn()}]')
+
+# <*sublime-notes#unit testing and import>
+
+# Phasing out Python 3.3 - Python 3.3 will be phased out over the course of a year, being removed entirely
+# some time after Q1 2026. This will be done in stages, starting with this update adding the
+# "disable_plugin_host_3.3" setting. With the setting enabled all plugins will run under python 3.8.
+# Upgrading Python 3.8 to 3.13 - We will be replacing Python 3.8 with 3.13 in the next development cycle.
+# Plugins targeting 3.8 will instead run on 3.13. This will roll out slowly, initially through a beta program,
+# to ensure a smooth transition.
 
 
 #----------------- Setup for running pbot_pdb in this file ---------------------
 # Pick one:
 #  - Copy pbot_pdb.py to this dir and edit to taste.
-#  - Clone PyBagOfTricks and add source path to sys.path, something like this:
+#  - Clone PyBagOfTricks and add its path to sys.path, something like this:
 pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
 if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
 import pbot_pdb

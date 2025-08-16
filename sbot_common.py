@@ -20,7 +20,9 @@ LL_DEBUG = 2
 
 _temp_view_id = None
 
+# This will get replaced during the copy process.
 _friendly_name = 'SBOT_DEV'
+
 
 #-----------------------------------------------------------------------------------
 #----------------------- Initialization --------------------------------------------

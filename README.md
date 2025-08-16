@@ -7,15 +7,14 @@ Just a big messy area. These are not the codes you are looking for. ST4 on Windo
 
 - `sbot_common.py` contain miscellaneous common components primarily for internal use by the sbot family.
   This includes a very simple logger primarily for user-facing information, syntax errors and the like.
-  The `sbot_common.py` in this repo is the master and is copied to other repos that use it upon update.
+  The `sbot_common.py` and `emu_sublime_api.py` files in this repo are the masters which are copied to other repos as pertinent.
   Submodules were considered but seemed more complex than a simple copy-op. Fight me.
 
 - Right click stuff works best with this global setting:
 ```
 "preview_on_click": "only_left",
 ```
-
-[Really, python is a mess.](https://xkcd.com/1987)
+- [Really, python is a mess.](https://xkcd.com/1987)
 
 
 # Using pbot_pdb to debug ST plugins

@@ -12,7 +12,7 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
-# print(f'>>> sbot_dev  friendly_name:[{sc._friendly_name}]  settings_fn:[{sc.get_settings_fn()}]')
+# print(f'>>> sbot_dev  plugin_name:[{sc._plugin_name}]  settings_fn:[{sc.get_settings_fn()}]')
 
 # <*sublime-notes#unit testing and import>
 

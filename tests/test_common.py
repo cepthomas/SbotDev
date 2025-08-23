@@ -76,7 +76,7 @@ class TestCommon(unittest.TestCase):
         # sc.open_path(test_path)      # -> in explorer
         # sc.open_terminal(test_path)  # -> in terminal
 
-        ### Windows and views. TODO more tests
+        ### Windows and views.
         vnew = sc.create_new_view(window, 'With practice comes confidence.', reuse=True)
         # self.assertEqual(vnew.size(), 31)
 

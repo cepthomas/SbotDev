@@ -1,8 +1,10 @@
 # Sublime Text Plugin Incubator and Playground
 
-Just a big messy area. These are not the codes you are looking for. ST4 on Windows.
+Just a big messy area. These are not the codes you are looking for.
 
 ![owk](owk.jpg)
+
+ST4 on Windows.
 
 
 - `sbot_common.py` contain miscellaneous common components primarily for internal use by the sbot family.

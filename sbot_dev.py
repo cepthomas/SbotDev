@@ -14,6 +14,7 @@ from . import sbot_common as sc
 
 # print(f'>>> sbot_dev  plugin_name:[{sc._plugin_name}]  settings_fn:[{sc.get_settings_fn()}]')
 
+
 # <*sublime-notes#unit testing and import>
 
 # Phasing out Python 3.3 - Python 3.3 will be phased out over the course of a year, being removed entirely
@@ -22,6 +23,11 @@ from . import sbot_common as sc
 # Upgrading Python 3.8 to 3.13 - We will be replacing Python 3.8 with 3.13 in the next development cycle.
 # Plugins targeting 3.8 will instead run on 3.13. This will roll out slowly, initially through a beta program,
 # to ensure a smooth transition.
+
+# The other way to share state between different commands would be settings (for example view settings or
+# window settings), which have the benefit of being persisted in the session file so that their values will
+# remain in place even if you quit and restart Sublime (assuming you’re using hot_exit). The caveat there is
+# that you can only store basic types as settings (anything that can be converted to json, essentially).
 
 
 #----------------- Setup for running pbot_pdb in this file ---------------------
@@ -191,8 +197,11 @@ class SbotGitCommand(sublime_plugin.TextCommand):
 class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
     def run(self):
-        directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
+        # self.one_way()
+        self.another_way()
 
+    def one_way(self):
+        directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
         items = []
         for dir in directions:
             items.append(sublime.QuickPanelItem(
@@ -203,6 +212,32 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
 
         self.window.show_quick_panel(items, self.on_done, on_highlight=self.on_highlight, placeholder="type here")
         # self.window.show_quick_panel(items, self.on_done, flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT, selected_index=2, on_highlight=self.on_highlight, placeholder="place-xxx")
+
+    def another_way(self):
+        items = []
+
+        items.append(sublime.QuickPanelItem(trigger='COLOR_REDISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_REDISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_ORANGISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_ORANGISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_YELLOWISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_YELLOWISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_GREENISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_GREENISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_CYANISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_CYANISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_BLUISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_BLUISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_PURPLISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_PURPLISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_PINKISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_PINKISH, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_DARK', annotation='==> annotation', kind=(sublime.KindId.COLOR_DARK, 'X', '???')))
+        items.append(sublime.QuickPanelItem(trigger='COLOR_LIGHT', annotation='==> annotation', kind=(sublime.KindId.COLOR_LIGHT, 'X', '???')))
+
+        # items.append(sublime.QuickPanelItem(trigger='AMBIGUOUS', annotation='==> annotation', kind=(sublime.KindId.AMBIGUOUS, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='KEYWORD', annotation='==> annotation', kind=(sublime.KindId.KEYWORD, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='TYPE', annotation='==> annotation', kind=(sublime.KindId.TYPE, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='FUNCTION', annotation='==> annotation', kind=(sublime.KindId.FUNCTION, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='NAMESPACE', annotation='==> annotation', kind=(sublime.KindId.NAMESPACE, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='NAVIGATION', annotation='==> annotation', kind=(sublime.KindId.NAVIGATION, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='MARKUP', annotation='==> annotation', kind=(sublime.KindId.MARKUP, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='VARIABLE', annotation='==> annotation', kind=(sublime.KindId.VARIABLE, 'X', '???')))
+        # items.append(sublime.QuickPanelItem(trigger='SNIPPET', annotation='==> annotation', kind=(sublime.KindId.SNIPPET, 'X', '???')))
+        
+        self.window.show_quick_panel(items, self.on_done, on_highlight=self.on_highlight, placeholder="type here")
 
     def on_done(self, *args, **kwargs):
         sel = args[0]

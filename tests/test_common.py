@@ -33,16 +33,6 @@ class TestCommon(unittest.TestCase):
         test_file_1 = f'{test_path}\\ross.txt'
         test_file_2 = f'{test_path}\\felix.jpg'
 
-        ### Logging.
-        sc.debug('This is a debug message')
-        sc.info('This is an info message')
-        
-        sc.error('This is an error message with no traceback')
-        try:
-            x = 1 / 0
-        except Exception as e:
-            sc.error('This is an error message with traceback', e.__traceback__)
-
         ### Utilities.
         sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
         self.assertIsNotNone(sout)
@@ -93,3 +83,23 @@ class TestCommon(unittest.TestCase):
         
         caret = sc.get_single_caret(vnew)
         self.assertIsNone(caret)
+
+
+    #------------------------------------------------------------
+    def test_log(self):
+
+        # test_path = os.path.join(os.path.dirname(__file__))
+        # test_file_1 = f'{test_path}\\ross.txt'
+        # test_file_2 = f'{test_path}\\felix.jpg'
+
+        ### Logging.
+        sc.debug('This is a debug message')
+        sc.info('This is an info message')
+        
+        sc.error('This is an error message with no traceback')
+
+        try:
+            x = 1 / 0
+        except Exception as e:
+            sc.error('This is an error message with traceback', e.__traceback__)
+

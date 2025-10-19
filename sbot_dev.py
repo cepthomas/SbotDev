@@ -12,22 +12,6 @@ import sublime
 import sublime_plugin
 from . import sbot_common as sc
 
-# print(f'>>> sbot_dev  plugin_name:[{sc._plugin_name}]  settings_fn:[{sc.get_settings_fn()}]')
-
-
-# <*sublime-notes#unit testing and import>
-
-# Phasing out Python 3.3 - Python 3.3 will be phased out over the course of a year, being removed entirely
-# some time after Q1 2026. This will be done in stages, starting with this update adding the
-# "disable_plugin_host_3.3" setting. With the setting enabled all plugins will run under python 3.8.
-# Upgrading Python 3.8 to 3.13 - We will be replacing Python 3.8 with 3.13 in the next development cycle.
-# Plugins targeting 3.8 will instead run on 3.13. This will roll out slowly, initially through a beta program,
-# to ensure a smooth transition.
-
-# The other way to share state between different commands would be settings (for example view settings or
-# window settings), which have the benefit of being persisted in the session file so that their values will
-# remain in place even if you quit and restart Sublime (assuming you’re using hot_exit). The caveat there is
-# that you can only store basic types as settings (anything that can be converted to json, essentially).
 
 
 #----------------- Setup for running pbot_pdb in this file ---------------------

@@ -31,7 +31,7 @@ class TestCommon(unittest.TestCase):
 
         test_path = os.path.join(os.path.dirname(__file__))
         test_file_1 = f'{test_path}\\ross.txt'
-        test_file_2 = f'{test_path}\\felix.jpg'
+        test_file_2 = f'{test_path}\\felix200.jpg'
 
         ### Utilities.
         sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
@@ -90,7 +90,7 @@ class TestCommon(unittest.TestCase):
 
         # test_path = os.path.join(os.path.dirname(__file__))
         # test_file_1 = f'{test_path}\\ross.txt'
-        # test_file_2 = f'{test_path}\\felix.jpg'
+        # test_file_2 = f'{test_path}\\felix200.jpg'
 
         ### Logging.
         sc.debug('This is a debug message')

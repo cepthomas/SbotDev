@@ -253,8 +253,8 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         ### Phantoms.
-        image = os.path.join(sublime.packages_path(), "SbotDev", "felix.jpg")
-        img_html = '<img src="file://' + image + '" width="16" height="16">'
+        image = os.path.join(sublime.packages_path(), "SbotDev", "felix200.jpg")
+        img_html = '<img src="file://' + image + '" width="32" height="32">'
         # Old way works too:
         # self.view.erase_phantoms("test")
         # for sel in self.view.sel():
@@ -289,15 +289,15 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
         self.phantom_set.update(phantoms)
 
-        ### Annotations.
+        ### Coloring, annotations, icons.
         regions = []
         anns = []
         for i in range(3):
             p = 1000 + i * 200
-            regions.append(sublime.Region(p, p + 20))
+            regions.append(sublime.Region(p, p + 5)) # color range
             anns.append(f'Annotation=<b>{i}</b>')
 
-        self.view.add_regions(key='dev_region_name', regions=regions, scope='markup.user_hl6',
+        self.view.add_regions(key='dev_region_name', regions=regions, scope='markup.user_hl6', # color = cyan
                               annotations=anns, annotation_color='red',
                               icon='circle', flags=sublime.RegionFlags.DRAW_STIPPLED_UNDERLINE)
 
@@ -391,7 +391,7 @@ def excepthook(type, value, tb):
 
     # Crude shutdown detection to avoid false positives.
     if len(sublime.windows()) > 0:
-        msg = f'Unhandled exception {type.__name__}: {value}\nSee the log or ST console'
+        msg = f'Unhandled exception {type.__name__}: {value}'
         sc.error(msg, tb)
 
     # Otherwise revert to original hook.

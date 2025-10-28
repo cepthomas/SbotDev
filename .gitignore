@@ -133,3 +133,5 @@ dmypy.json
 VsTester.*
 
 # Project files
+/tests/mebibyte.bin
+/tests/mebibyte.bin

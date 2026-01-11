@@ -133,14 +133,19 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
 class SbotGitCommand(sublime_plugin.TextCommand):
 
     def run(self, edit, git_cmd):
-        ''' Simple git tools: diff, commit (no comment), push.
+        ''' Simple git tools: status, diff, commit (no comment), push.
         https://github.com/kemayo/sublime-text-git.
         '''
         fn = self.view.file_name()
 
         if fn is not None:
             dir, fn = os.path.split(fn)
-            if git_cmd == 'diff':
+            if git_cmd == 'status':
+                cmd = f'git status "{dir}"'
+                cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+                self.proc_ret(cp, is_diff=True)
+
+            elif git_cmd == 'diff':
                 cmd = f'git diff "{fn}"'
                 cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
                 self.proc_ret(cp, is_diff=True)
@@ -160,6 +165,9 @@ class SbotGitCommand(sublime_plugin.TextCommand):
     def proc_ret(self, cp, is_diff=False):
         ''' Common process output handling  cp: the CompletedProcess, Note git writes some non-error stuff to stderr. '''
         text = []
+        text.append(f'args:{cp.args}')
+        text.append('')
+
         if cp.returncode != 0:
             text.append(f'GIT returncode:{cp.returncode}')
         if len(cp.stdout) > 0:

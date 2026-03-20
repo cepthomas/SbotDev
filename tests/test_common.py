@@ -30,15 +30,15 @@ class TestCommon(unittest.TestCase):
         view = emu.View(901)
 
         test_path = os.path.join(os.path.dirname(__file__))
-        test_file_1 = f'{test_path}\\ross.txt'
-        test_file_2 = f'{test_path}\\felix200.jpg'
+        test_file_1 = f'{test_path}/ross.txt'
+        test_file_2 = f'{test_path}/felix200.jpg'
 
         ### Utilities.
-        sout = sc.expand_vars('$APPDATA/Sublime Text/Packages/SbotDev')
+        sout = sc.expand_vars('$OneDrive/Sublime Text/Packages/SbotDev')
         self.assertIsNotNone(sout)
-        self.assertTrue('\\AppData\\Roaming/Sublime Text/Packages/SbotDev' in sout)
+        self.assertTrue('AppData/Roaming/Sublime Text/Packages/SbotDev' in sout)
 
-        sout = sc.expand_vars('C:/Sublime Text/$BAD_NAME\\wwww')
+        sout = sc.expand_vars('Sublime Text/$BAD_NAME/wwww')
         self.assertIsNone(sout)
 
         sout = sc.get_store_fn()
@@ -56,9 +56,9 @@ class TestCommon(unittest.TestCase):
         self.assertIsNotNone(parts[0])
         self.assertIsNotNone(parts[1])
         self.assertIsNotNone(parts[2])
-        self.assertEqual(parts[0][-22:], R'Packages\SbotDev\tests')
+        self.assertEqual(parts[0][-22:], R'Packages/SbotDev/tests')
         self.assertEqual(parts[1], R'ross.txt')
-        self.assertTrue(R'Packages\SbotDev\tests\ross.txt' in parts[2])
+        self.assertTrue(R'Packages/SbotDev/tests/ross.txt' in parts[2])
 
         # Note: these are by inspection.
         # sc.open_path(test_file_1)    # -> in ST

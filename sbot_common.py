@@ -224,10 +224,10 @@ def open_terminal(where):
     elif sublime.platform() == 'windows':
         subprocess.run(f'wt -d "{where}"', shell=False, check=False)  # W10+
     else:  # linux -- this works for gnome, other desktop types need a config item.
-        subprocess.run(f'gnome-terminal --working-directory="{where}"', shell=False, check=False)
+        subprocess.run(f'gnome-terminal --working-directory="{where}"', shell=True, check=False)
     # Kde -> konsole
     # xfce4 -> xfce4-terminal
-    # Cinnamon -> x-terminal-emulator
+    # Cinnamon -> gnome-terminal
     # MATE -> mate-terminal --window
     # Unity -> gnome-terminal --profile=Default
 

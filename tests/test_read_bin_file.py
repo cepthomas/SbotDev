@@ -8,6 +8,7 @@ from functools import partial
 
 BUFF_SIZE = 4096
 LINE_SIZE = 16
+# A mebibyte (MiB) is equal to 1,048,576 bytes (1,024 × 1,024), or 1,024 kibibytes.
 BIN_FILE_NAME = 'mebibyte.bin'
 BIN_FILE_SIZE = 2**20
 

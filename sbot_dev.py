@@ -8,10 +8,10 @@ import bdb
 import datetime
 import string
 import re
+import socket
 import sublime
 import sublime_plugin
 from . import sbot_common as sc
-
 
 
 #----------------- Setup for running pbot_pdb in this file ---------------------
@@ -48,6 +48,8 @@ def plugin_unloaded():
 class DevEvent(sublime_plugin.EventListener):
     ''' General listener. https://www.sublimetext.com/docs/api_reference.html#sublime_plugin.EventListener '''
 
+    hostname = socket.gethostname()
+
     def on_init(self, views):
         ''' Called once with a list of views that were loaded before the EventListener was instantiated. '''
         # First thing that happens when plugin/window created. Initialize everything.
@@ -59,6 +61,10 @@ class DevEvent(sublime_plugin.EventListener):
         if view.file_name() is not None and 'sbot.log' in view.file_name():
             # view.run_command("move_to", {"to": "eof"})
             view.show_at_center(view.size())
+
+        # Adjust font size based on host.
+        if self.hostname in ("host1", "host1.example.com", "host2"):
+            view.settings().set("font_size", 20)
 
     def on_query_completions(self, view, prefix, locations):
         '''

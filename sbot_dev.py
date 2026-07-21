@@ -21,13 +21,6 @@ from . import sbot_common as sc
 pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
 if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
 import pbot_pdb
-# #----------------- Setup for running pbot_pdb in this file ---------------------
-# # Pick one:
-# #  - Copy pbot_pdb.py to this dir and edit to taste.
-# #  - Clone PyBagOfTricks and add its path to sys.path, something like this:
-# pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-# if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
-# import pbot_pdb
 
 
 #-----------------------------------------------------------------------------------

@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <sys/time.h>
 
-#include "build_test.h"
+#include "bldex.h"
 
 
 //---------------- Private --------------------------//

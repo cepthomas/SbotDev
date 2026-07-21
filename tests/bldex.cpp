@@ -1,6 +1,7 @@
 #include <stdarg>
 #include <string>
-#include "build_test2.h"
+
+#include "bldex.h"
 
 using namespace std;
 

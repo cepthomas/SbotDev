@@ -1,0 +1,94 @@
+{
+    // All ST builtin builders.
+
+/*
+    "build_systems":
+    [
+        {
+            "cmd": ["python3", "-u", "$file"],
+            "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
+            "selector": "source.python",
+            "interactive": true,
+            "env": {"PYTHONIOENCODING": "utf-8"},
+            "windows": { "cmd": ["py", "-u", "$file"], },
+
+            "variants":
+            [
+                {
+                    "name": "Syntax Check",
+                    "cmd": ["python3", "-m", "py_compile", "$file"],
+                    "interactive": false,
+                    "windows": { "cmd": ["py", "-m", "py_compile", "$file"], }
+                }
+            ]
+        },
+
+        {
+            "cmd": ["lua", "$file"],
+            "file_regex": "^(?:lua:)?[\t ](...*?):([0-9]*):?([0-9]*)",
+            "selector": "source.lua",
+            "interactive": true,
+
+            "variants":
+            [
+                {
+                    "name": "Syntax Check",
+                    "cmd": ["luac", "-p", "$file"],
+                    "interactive": false,
+                }
+            ]
+        },
+
+        // C++ Single File.sublime-build
+        {
+            "shell_cmd": "g++ \"${file}\" -o \"${file_path}/${file_base_name}\"",
+            "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+            "working_dir": "${file_path}",
+            "selector": "source.c++",
+
+            "variants":
+            [
+                {
+                    "name": "Run",
+                    "shell_cmd": "g++ \"${file}\" -o \"${file_path}/${file_base_name}\" && \"${file_path}/${file_base_name}\"",
+                    "interactive": true,
+                }
+            ]
+        },
+
+        // C Single File.sublime-build
+        {
+            "shell_cmd": "gcc \"${file}\" -o \"${file_path}/${file_base_name}\"",
+            "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+            "working_dir": "${file_path}",
+            "selector": "source.c",
+
+            "variants":
+            [
+                {
+                    "name": "Run",
+                    "shell_cmd": "gcc \"${file}\" -o \"${file_path}/${file_base_name}\" && \"${file_path}/${file_base_name}\"",
+                    "interactive": true,
+                }
+            ]
+        },
+
+        {
+            "shell_cmd": "make",
+            "file_regex": "^(..[^:\n]*):([0-9]+):?([0-9]+)?:? (.*)$",
+            "working_dir": "${folder:${project_path:${file_path}}}",
+            "selector": "source.makefile",
+            "syntax": "Packages/Makefile/Make Output.sublime-syntax",
+            "keyfiles": ["Makefile", "makefile"],
+
+            "variants":
+            [
+                {
+                    "name": "Clean",
+                    "shell_cmd": "make clean"
+                }
+            ]
+        }
+    ]
+*/
+}

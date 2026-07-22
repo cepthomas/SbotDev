@@ -3,28 +3,56 @@
 	[
 		{ "path": ".", },
 
-		{ "path": "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\User", "name": "Packages/User", },
+		{
+			"path": "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\User",
+			"name": "Packages/User",
+		},
 
 		// { "path": "C:\\Program Files\\Sublime Text\\Lib\\python38", },
 
-		{ "path": "C:\\Users\\cepth\\OneDrive\\OneDriveDocuments\\tech\\sublime\\config", },
+		{
+			"path": "C:\\Users\\cepth\\OneDrive\\OneDriveDocuments\\tech\\sublime\\config"
+		},
 
 		// { "path": "C:/Dev/_temp", },
 
 		{
-			"path": "C:\\Dev\\Misc\\ZigLab"
+			"path": "C:\\Dev\\Misc\\ZigLab",
 		},
+
+		// {
+		// 	"path": "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Zig Language",
+		// 	"name": "Zig Language - ST ZLS",
+		// },
 	],
 
 
-	///// Experiments with ST config files TODO-CFIG /////
-	// TODO-CFIG Looks like project build_systems add to any from sublime-build files.
+	///// Experiments with ST config files /////
     "build_systems":
     [
+        {
+		    "name": "SD Example Build",
+            "target": "my_example_build",
+            //"selector": "source.mylang",  // always appears if commented out
+            "cancel": {"kill": true},
+
+            "variants":
+            [
+                {
+                    "name": "Lint",
+                    "lint": true
+                },
+                {
+                    "name": "Integration Tests",
+                    "integration": true
+                }
+            ]
+        },
+
 		{
 		    "name": "SD Run python script",
 		    "selector": "source.python",
-		    "file_patterns": [ "*.py"], 
+		    "file_patterns": [ "*.py"],
 		    "env": { "PYTHONPATH": "C:\\Dev\\my_py_libs", },
 		    "shell_cmd": "python \"$file\"",
 		    "file_regex": "^\\s*File \"(...*?)\", line ([0-9]*)",
@@ -41,6 +69,7 @@
 
 		{
 		    "name": "SD Run python Test All",
+            // "selector": "source.python", // always appears if commented out
 		    "working_dir": "$project_path",
 		    "shell_cmd": "python -m unittest",
 		    "file_regex": "^\\s*File \"(...*?)\", line ([0-9]*)",
@@ -48,26 +77,14 @@
 		},
 
         {
-            "name": "SD source.python Run Test All",
-            "selector": "source.python",
-            "working_dir": "$project_path",
-            "shell_cmd": "python -m unittest",
-            "file_regex": "^\\s*File \"(...*?)\", line ([0-9]*)",
-            "cancel": { "kill": true, },
-        },
-
-        {
+            // always appears - no selector or file_patterns
             "name": "SD Default no selector",
-            // always appears TODO-CFIG
 		    "shell_cmd": "echo SD Default no selector | clip",
-		    // "windows": { "shell_cmd": "dir | clip", },
-		    // "linux": { "shell_cmd": "ls -l", },
-		    //"env": { "SOMEPATH": "/some/where" },  // see above
         },
 
         {
             "name": "SD Default json",
-		    "selector": "source.json", // this gates variants TODO-CFIG
+		    "selector": "source.json", // this gates variants
 		    "shell_cmd": "echo SD Default json | clip",
 		    // "windows": { "shell_cmd": "dir | clip", },
 		    // "linux": { "shell_cmd": "ls -l", },
@@ -77,8 +94,6 @@
 		    [
 		        {
 		            "name": "SD json var1", // variants need a name
-		            // "lint": true
-		            // "cmd": ["my_command", "-D", "$file"]
 		            "shell_cmd": "echo SD json var1 | clip",
 		        },
 		        {
@@ -89,6 +104,7 @@
         },
 	],
 
+    // LSP settings.
 	"settings":
 	{
 		"LSP":
@@ -97,8 +113,7 @@
 			{
 				"settings":
 				{
-			        // LSP settings/overrides. See above. TODO-CFIG understand override better.
-                    // anything from LSP-<syntax>.sublime-settings "settings" section
+			        // LSP settings/overrides LSP-<syntax>.sublime-settings "settings" section
                     "mysyntax.validate.enable": true,
                     // etc...
 				},

@@ -3,14 +3,17 @@
 	[
 		{ "path": ".", },
 
-		{ "path": "../User", "name": "Packages/User", },
+		{ "path": "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\User", "name": "Packages/User", },
 
 		// { "path": "C:\\Program Files\\Sublime Text\\Lib\\python38", },
 
-		{ "path": "C:/Users/cepth/OneDrive/OneDriveDocuments/tech/sublime/config" },
+		{ "path": "C:\\Users\\cepth\\OneDrive\\OneDriveDocuments\\tech\\sublime\\config", },
 
 		// { "path": "C:/Dev/_temp", },
 
+		{
+			"path": "C:\\Dev\\Misc\\ZigLab"
+		},
 	],
 
 
@@ -22,7 +25,7 @@
 		    "name": "SD Run python script",
 		    "selector": "source.python",
 		    "file_patterns": [ "*.py"], 
-		    "env": { "PYTHONPATH": "C:\\Dev\\my_py_libs" },
+		    "env": { "PYTHONPATH": "C:\\Dev\\my_py_libs", },
 		    "shell_cmd": "python \"$file\"",
 		    "file_regex": "^\\s*File \"(...*?)\", line ([0-9]*)",
 		},

@@ -7,6 +7,10 @@ import sublime_plugin
 
 # https://www.sublimetext.com/docs/build_systems.html#advanced-example
 
+# Someone said:
+# I almost exclusively use custom Build System with custom exec command tailored for my use,
+# and I set it in the project file to be sure it is the one that is used for the matching selector.
+
 class MyExampleBuildCommand(sublime_plugin.WindowCommand): # TODO1  called from sbot_dev.sublime-project - fix/debug
 
     encoding = 'utf-8'

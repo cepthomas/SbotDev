@@ -1,42 +1,33 @@
 {
     // Bits and pieces of build files - maybe for later.
 
-/*
     "build_systems":
     [
         {
-            "name": "Run Lua Script Lua",
+            "name": "Run Script - Lua",
             "selector": "source.lua",
             "file_patterns": ["*.lua"],
             // "working_dir": "$project_path\\??",
-            "env":
-            {
-                "LUA_PATH": "?;?.lua;C:\\Dev\\Libs\\LuaBagOfTricks\\?.lua;;",
-                // "LUA_PATH": "C:\\Dev\\Apps\\Nebulua\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\LBOT\\?.lua",
-            },
+            "env": { "LUA_PATH": "?;?.lua;C:\\Dev\\Libs\\LuaBagOfTricks\\?.lua;;", },
+            // "LUA_PATH": "C:\\Dev\\Apps\\Nebulua\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\LBOT\\?.lua",
             "shell_cmd": "lua \"$file\"",
             "file_regex": "^lua: (...*?):([0-9]*)():?(.*)$",
         },
 
         {
-            "name": "Run Lua Test Lua",
+            "name": "Run Test - Lua",
             "selector": "source.lua",
             "file_patterns": ["test_*.lua"],
-            // "working_dir": "$project_path\\test",
             // "working_dir": "$project_path\\Test",
-            "env":
-            {
-                // "LUA_PATH": "?;?.lua;test\\?.lua;;", // ??
-                "LUA_PATH": "?;?.lua;C:\\Dev\\Libs\\LuaBagOfTricks\\?.lua;;",
-                "LUA_PATH": "?;?.lua;C:\\Dev\\Apps\\Nebulua\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\Test\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\LBOT\\?.lua", // nebulua
-            },
+            "env": { "LUA_PATH": "?;?.lua;C:\\Dev\\Apps\\Nebulua\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\Test\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\LBOT\\?.lua", },
+            // "LUA_PATH": "?;?.lua;test\\?.lua;;", // ??
             "shell_cmd": "lua $project_path\\pnut_runner.lua \"$file\"",
             // "shell_cmd": "lua $project_path\\LBOT\\pnut_runner.lua \"$file\"",
             "file_regex": "^!? *(..[^:]*):([0-9]+)",
         },
 
         {
-            "name": "Run Test Py",
+            "name": "Run Test - Py",
             "selector": "source.python",
             "file_patterns": ["test_*.py"],
             "working_dir": "$project_path\\tests",
@@ -46,7 +37,7 @@
         },
 
         {
-            "name": "Run Test All Py",
+            "name": "Run Test All - Py",
             "working_dir": "$project_path", 
             "shell_cmd": "python -m unittest",
             "file_regex": "^\\s*File \"(...*?)\", line ([0-9]*)",
@@ -54,7 +45,7 @@
         },
 
         {
-            "name": "g++ C++",
+            "name": "g++ - C++",
             "cmd": ["g++.exe","-std=c++14", "${file}", "-o", "${file_base_name}.exe", "&&" , "${file_base_name}.exe<input.in>output.in"],
             "selector":"source.cpp",
             "file_regex": "^(…[^:]):([0-9]+):?([0-9]+)?:? (.)$",
@@ -63,7 +54,7 @@
         },
 
         {
-            "name": "mingw C",
+            "name": "mingw - C",
             "shell_cmd": "pushd build_mingw & build.cmd & popd",
             // or "shell_cmd": "build.cmd",
             "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
@@ -72,7 +63,7 @@
         },
 
         {
-            "name": "mingw C build test",
+            "name": "mingw test - C",
             "shell_cmd": "pushd build_mingw & build_test.cmd & popd",
             "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
             "working_dir": "$project_path",
@@ -80,7 +71,7 @@
         },
 
         {
-            "name": "mingw C run test",
+            "name": "mingw run test - C",
             "shell_cmd": "pushd build_mingw\\build_test & nebulua.exe & popd",
             "file_regex": "^! (..[^:]*):([0-9]+)",
             "working_dir": "$project_path",
@@ -88,7 +79,7 @@
         },
 
         {
-            "name": "cmake",
+            "name": "Make - cmake",
             "keyfiles": [ "CMakeLists.txt"],
             "shell_cmd": "cmake $file", // or python build-cmake.py or python format_cmake_cmd(...) or...
             "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
@@ -96,7 +87,7 @@
         },
 
         {
-            "name": "make",
+            "name": "Make - makefile",
             "keyfiles": [ "Makefile"],
             "shell_cmd": "make $file", // or python build-make.py or python format_make_cmd(...) or...
             "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
@@ -104,12 +95,11 @@
         },
 
         {
-            "name": "msbuild",
+            "name": "Make - msbuild",
             "shell_cmd": "pushd test_ch & \"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\Msbuild\\Current\\Bin\\MSBuild.exe\" -v:m Lbot.sln & popd",
             "file_regex": "^([^\\(]+)\\(([0-9]+),([0-9]+)\\): ([^\\[]+)\\[",
             "working_dir": "$project_path",
             "cancel": {"kill": true,},
         },
     ],
-*/
 }

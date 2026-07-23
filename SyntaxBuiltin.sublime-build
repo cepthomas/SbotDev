@@ -1,9 +1,9 @@
 {
     // All ST builtin builders.
 
-/*
-    "build_systems":
+    "build_systems_builtin":
     [
+        ///// C:\Program Files\Sublime Text\Packages\Python.sublime-package /////
         {
             "cmd": ["python3", "-u", "$file"],
             "file_regex": "^[ ]*File \"(...*?)\", line ([0-9]*)",
@@ -23,6 +23,7 @@
             ]
         },
 
+        ///// C:\Program Files\Sublime Text\Packages\Lua.sublime-package /////
         {
             "cmd": ["lua", "$file"],
             "file_regex": "^(?:lua:)?[\t ](...*?):([0-9]*):?([0-9]*)",
@@ -39,8 +40,9 @@
             ]
         },
 
-        // C++ Single File.sublime-build
+        ///// C:\Program Files\Sublime Text\Packages\C++.sublime-package /////
         {
+            // C++ Single File.sublime-build
             "shell_cmd": "g++ \"${file}\" -o \"${file_path}/${file_base_name}\"",
             "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
             "working_dir": "${file_path}",
@@ -56,8 +58,8 @@
             ]
         },
 
-        // C Single File.sublime-build
         {
+            // C Single File.sublime-build
             "shell_cmd": "gcc \"${file}\" -o \"${file_path}/${file_base_name}\"",
             "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
             "working_dir": "${file_path}",
@@ -73,6 +75,7 @@
             ]
         },
 
+        ///// C:\Program Files\Sublime Text\Packages\Makefile.sublime-package /////
         {
             "shell_cmd": "make",
             "file_regex": "^(..[^:\n]*):([0-9]+):?([0-9]+)?:? (.*)$",
@@ -90,5 +93,4 @@
             ]
         }
     ]
-*/
 }

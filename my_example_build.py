@@ -5,14 +5,41 @@ import sublime
 import sublime_plugin
 
 
-# https://www.sublimetext.com/docs/build_systems.html#advanced-example
+# From https://www.sublimetext.com/docs/build_systems.html#advanced-example
 
-# Someone said:
-# I almost exclusively use custom Build System with custom exec command tailored for my use,
+# Someone said: I almost exclusively use custom Build System with custom exec command tailored for my use,
 # and I set it in the project file to be sure it is the one that is used for the matching selector.
 
-class MyExampleBuildCommand(sublime_plugin.WindowCommand): # TODO1  called from sbot_dev.sublime-project - fix/debug
+class MyExampleBuildCommand(sublime_plugin.WindowCommand):
+    encoding = 'utf-8'
+    panel = None
 
+    def is_enabled(self, lint=False, integration=False, kill=False):
+        return True
+
+    def run(self, lint=False, integration=False, kill=False):
+        if kill:
+            return
+
+        vars = self.window.extract_variables()
+        working_dir = vars['file_path']
+
+        # Creating the panel implicitly clears any previous contents
+        self.panel = self.window.create_output_panel('exec')
+
+        settings = self.panel.settings()
+
+        # Write stuff.
+        self.panel.run_command('append', {'characters': f'working_dir: {working_dir}\n'})        
+        self.panel.run_command('append', {'characters': f'lint: {lint}\n'})        
+        self.panel.run_command('append', {'characters': f'integration: {integration}\n'})        
+        self.panel.run_command('append', {'characters': f'kill: {kill}\n'})        
+
+        self.window.run_command('show_panel', {'panel': 'output.exec'} )
+
+
+
+class MyExampleBuildCommand_original(sublime_plugin.WindowCommand):
     encoding = 'utf-8'
     killed = False
     proc = None

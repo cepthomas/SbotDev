@@ -17,9 +17,9 @@
 
         // { "path": "C:/Dev/_temp", },
 
-        {
-            "path": "C:\\Dev\\Misc\\ZigLab",
-        },
+        // {
+        //     "path": "C:\\Dev\\Misc\\ZigLab",
+        // },
 
         // {
         //  "path": "C:\\Users\\cepth\\AppData\\Roaming\\Sublime Text\\Packages\\Zig Language",
@@ -33,20 +33,17 @@
     [
         {
             // Calls MyExampleBuildCommand() in my_example_build.py
-            "name": "Fancy Build",
+            "name": "Example Build",
             "target": "my_example_build",
-            //"selector": "source.mylang",  // always appears if commented out
+            //"selector": "source.mylang", // always appears if not specified
             "cancel": {"kill": true},
-            // "windows": { "shell_cmd": "dir | clip", },
-            // "linux": { "shell_cmd": "ls -l", },
-            //"env": { "SOMEPATH": "/some/where" },  // see above
+            "env": { "HOOHA": "Nice little clouds playing around in the sky" },
 
-            // WindowCommand func args.
             "variants":
             [
                 {
                     "name": "Lint", // variants need a name
-                    "lint": true
+                    "lint": true    // WindowCommand func arg
                 },
                 {
                     "name": "Integration Tests",
@@ -54,30 +51,6 @@
                 }
             ]
         },
-
-        // {
-        //     // always appears - no selector or file_patterns
-        //     "name": "SD Default no selector",
-        //     "shell_cmd": "echo SD Default no selector | clip",
-        // },
-
-        // {
-        //     "name": "SD Default json",
-        //     "selector": "source.json", // this gates variants
-        //     "shell_cmd": "echo SD Default json | clip",
-
-        //     "variants":
-        //     [
-        //         {
-        //             "name": "SD json var1", // variants need a name
-        //             "shell_cmd": "echo SD json var1 | clip",
-        //         },
-        //         {
-        //             "name": "SD json var2",
-        //             "shell_cmd": "echo SD json var2 | clip",
-        //         }
-        //  ],
-        // },
     ],
 
     // LSP settings.

@@ -1,5 +1,5 @@
 {
-    // Bits and pieces of build files - maybe for later.
+    // Bits and pieces of build files - hold for later.
 
     "build_systems":
     [
@@ -9,7 +9,7 @@
             "file_patterns": ["*.lua"],
             // "working_dir": "$project_path\\??",
             "env": { "LUA_PATH": "?;?.lua;C:\\Dev\\Libs\\LuaBagOfTricks\\?.lua;;", },
-            // "LUA_PATH": "C:\\Dev\\Apps\\Nebulua\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\LBOT\\?.lua",
+            // or "LUA_PATH": "C:\\Dev\\Apps\\Nebulua\\lua\\?.lua;C:\\Dev\\Apps\\Nebulua\\LBOT\\?.lua",
             "shell_cmd": "lua \"$file\"",
             "file_regex": "^lua: (...*?):([0-9]*)():?(.*)$",
         },

@@ -3,7 +3,7 @@ import os
 import subprocess
 import platform
 import traceback
-import importlib
+# import importlib
 import bdb
 import datetime
 import string
@@ -11,7 +11,12 @@ import re
 import socket
 import sublime
 import sublime_plugin
-from . import sbot_common as sc
+
+# TODO1 clean up this import mechanism for unit tests? see notr.
+try:
+    from . import sbot_common as sc  # normal import
+except:
+    import sbot_common as sc  # unittest import
 
 
 #----------------- Setup for running pbot_pdb in this file ---------------------

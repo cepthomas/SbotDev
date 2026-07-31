@@ -12,14 +12,21 @@ import socket
 import sublime
 import sublime_plugin
 
-# TODO1 clean up this import mechanism for unit tests? see notr.
+
+# TODO1 clean up this import mechanism for unit tests? like notr.
 try:
-    from . import sbot_common as sc  # normal import
+    from . import sbot_common as sc  # normal import - like ST loads
+    print('---', 'using from . import sbot_common')
 except:
-    import sbot_common as sc  # unittest import
+    import sbot_common as sc  # unittest import - or running from cmd line
+    print('---', 'using import sbot_common')
 
 
-#----------------- Setup for running pbot_pdb in this file ---------------------
+# import sbot_common as sc  # unittest import
+# print('---', 'using import sbot_common no try/except')
+
+
+#----------------- TODO1 Setup for running pbot_pdb in this file ---------------------
 # Pick one:
 #  - Copy pbot_pdb.py to this dir and edit to taste.
 #  - Clone PyBagOfTricks and add its path to sys.path, something like this:

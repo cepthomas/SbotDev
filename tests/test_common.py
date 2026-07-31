@@ -52,7 +52,7 @@ class TestCommon(unittest.TestCase):
         self.assertEqual(len(parts), 3)
         self.assertIsNone(parts[0])
         self.assertIsNone(parts[1])
-        # TODO in test actually returns parts[0]  self.assertIsNone(parts[2])
+        # TODO1 in test actually returns parts[0]  self.assertIsNone(parts[2])
 
         # print('>>>', window)
         parts = sc.get_path_parts(window, [test_file_1, 'dont-care'])

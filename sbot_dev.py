@@ -3,7 +3,6 @@ import os
 import subprocess
 import platform
 import traceback
-# import importlib
 import bdb
 import datetime
 import string
@@ -14,16 +13,15 @@ import sublime_plugin
 
 
 # TODO1 clean up this import mechanism for unit tests? like notr.
-try:
-    from . import sbot_common as sc  # normal import - like ST loads
-    print('---', 'using from . import sbot_common')
-except:
-    import sbot_common as sc  # unittest import - or running from cmd line
-    print('---', 'using import sbot_common')
+# try:
+#     from . import sbot_common as sc  # normal import - like ST loads
+#     print('---', 'using from . import sbot_common')
+# except:
+#     import sbot_common as sc  # unittest import - or running from cmd line
+#     print('---', 'using import sbot_common')
 
-
-# import sbot_common as sc  # unittest import
-# print('---', 'using import sbot_common no try/except')
+from . import sbot_common as sc  # normal import - like ST loads
+print('---', 'using import sbot_common no try/except')
 
 
 #----------------- TODO1 Setup for running pbot_pdb in this file ---------------------
@@ -34,6 +32,16 @@ pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
 if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
 import pbot_pdb
 
+
+#----------------- New unit testing ------------------------------------------------
+class HelloWorldCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        view = self.view
+        view.insert(edit, view.sel()[0].begin(), "hello world")
+
+def foo(x):
+    return x + 1
+    
 
 #-----------------------------------------------------------------------------------
 # Write to dump file.

@@ -4,9 +4,12 @@ import sublime
 from unittesting import TestCase
 
 
-# from https://github.com/SublimeText/UnitTesting
-#      https://github.com/randy3k/UnitTesting-example/blob/master/tests/test_hw.py
+#-----------------------------------------------------------------------------------
+#---------------------- Play with ST unittesting -----------------------------------
+#-----------------------------------------------------------------------------------
 
+# from https://github.com/SublimeText/UnitTesting
+# & https://github.com/randy3k/UnitTesting-example/blob/master/tests/test_hw.py
 
 #-----------------------------------------------------------------------------------
 class TestHelloWorldCommand(TestCase):
@@ -19,10 +22,10 @@ class TestHelloWorldCommand(TestCase):
         s.set("close_windows_when_empty", False)
 
     def tearDown(self):
-        if self.view:
-            self.view.set_scratch(True)
-            self.view.window().focus_view(self.view)
-            self.view.window().run_command("close_file")
+        # if self.view:
+        self.view.set_scratch(True)
+        self.view.window().focus_view(self.view)
+        self.view.window().run_command("close_file")
 
     def setText(self, string):
         self.view.run_command("insert", {"characters": string})
@@ -31,6 +34,7 @@ class TestHelloWorldCommand(TestCase):
         return self.view.substr(self.view.line(self.view.text_point(row, 0)))
 
     def test_hello_world(self):
+        # print('==============================')
         self.setText("new ")
         self.view.run_command("hello_world")
         first_row = self.getRow(0)
@@ -41,23 +45,23 @@ class TestHelloWorldCommand(TestCase):
 class TestFunctions(TestCase):
     # unit test non-ST code
 
-    sdev = sys.modules["SbotDev.sbot_dev"] # was ["UnitTesting-example.helloworld"]
+    mdev = sys.modules["SbotDev.sbot_dev"] # was ["UnitTesting-example.helloworld"]
 
     def test_foo(self):
-        x = self.sdev.foo(1)
+        x = self.mdev.foo(1)
         print('+++ foo=', x)
         self.assertEqual(x, 2)
 
     def test_new(self):
-        self.sdev._dump('googoogogogogogogo')
+        self.mdev._dump('googoogogogogogogo')
 
         # can access common from here too!
-        sout = self.sdev.sc.expand_vars(R'$APPDATA\Sublime Text\Packages\SbotDev')
-        self.sdev._dump(f'>>> [{sout}]')
+        sout = self.mdev.sc.expand_vars(R'$APPDATA\Sublime Text\Packages\SbotDev')
+        self.mdev._dump(f'>>> [{sout}]')
         self.assertIsNotNone(sout)
         self.assertTrue(R'AppData\Roaming\Sublime Text\Packages\SbotDev' in sout)
 
-        # print('+++', dir(sdev))
+        # print('+++', dir(mdev))
         # 'DevEvent'
         # 'HelloWorldCommand'
         # 'SbotDebugCommand'

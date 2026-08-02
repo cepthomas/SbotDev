@@ -6,6 +6,7 @@ import datetime
 import pathlib
 import shutil
 import subprocess
+import json
 import sublime
 import sublime_plugin
 
@@ -25,21 +26,30 @@ pathlib.Path(_store_path).mkdir(parents=True, exist_ok=True)
 
 
 #-----------------------------------------------------------------------------------
-#---------------------------- Public uttility functions ----------------------------
+#---------------------------- Public utility functions ----------------------------
 #-----------------------------------------------------------------------------------
 
 
 #-----------------------------------------------------------------------------------
-def get_plugin_name():
-    ''' How this is known internally.'''
-    return _plugin_name
+def read_store():
+    ''' Where to keep the module's stuff.'''
+    fn = os.path.join(_store_path, f'{_plugin_name}.store')
+    try:
+        with open(fn, 'r') as fp:
+            return json.load(fp)
+    except Exception as e:
+        error(f'Error reading {fn}: {e}', e.__traceback__)
 
 
 #-----------------------------------------------------------------------------------
-def get_store_fn():
+def write_store(store):
     ''' Where to keep this module's stuff.'''
-    return os.path.join(_store_path, f'{_plugin_name}.store')
-
+    fn = os.path.join(_store_path, f'{_plugin_name}.store')
+    try:
+        with open(fn, 'w') as fp:
+            json.dump(store, fp, indent=4)
+    except Exception as e:
+        error(f'Error writing {fn}: {e}', e.__traceback__)
 
 #-----------------------------------------------------------------------------------
 def get_settings_fn():

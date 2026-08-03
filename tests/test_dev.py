@@ -2,6 +2,7 @@ import sys
 import os
 import sublime
 from unittesting import TestCase
+from unittest.mock import MagicMock
 
 
 #-----------------------------------------------------------------------------------
@@ -45,6 +46,7 @@ class TestHelloWorldCommand(TestCase):
 class TestFunctions(TestCase):
     # unit test non-ST code
 
+    # Code under test.
     mdev = sys.modules["SbotDev.sbot_dev"] # was ["UnitTesting-example.helloworld"]
 
     def test_foo(self):

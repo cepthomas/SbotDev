@@ -6,6 +6,8 @@ import datetime
 import string
 
 '''
+>>> This model has been replaced by the ST unittesting package. Retained for historical record.
+
 A simple emulation of the ST api solely for the purpose of debugging plugins.
 This enables the use of standard components like unittest without using
 the ST embedded python. Any local flavor of python >= 3.8 should work fine.

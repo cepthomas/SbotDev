@@ -1,3 +1,4 @@
+from ntpath import exists
 import sys
 import os
 import traceback
@@ -11,7 +12,7 @@ import sublime
 import sublime_plugin
 
 
-# This will get replaced with a plugin specific name during the copy process.
+# Plugin specific name.
 _plugin_name = 'SBOT_DEV'
 
 # Data type for shared scopes.
@@ -34,6 +35,10 @@ pathlib.Path(_store_path).mkdir(parents=True, exist_ok=True)
 def read_store():
     ''' Where to keep the module's stuff.'''
     fn = os.path.join(_store_path, f'{_plugin_name}.store')
+    if not exists(fn): # assume new, create empty default
+        with open(fn, 'w') as fp:
+            json.dump('{}', fp, indent=4)
+
     try:
         with open(fn, 'r') as fp:
             return json.load(fp)

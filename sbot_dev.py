@@ -10,19 +10,7 @@ import re
 import socket
 import sublime
 import sublime_plugin
-
-# _plugin_name = 'SBOT_DEV'
-
-# TODO1 clean up this import mechanism for unit tests? like notr.
-# try:
-#     from . import sbot_common as sc  # normal import - like ST loads
-#     print('---', 'using from . import sbot_common')
-# except:
-#     import sbot_common as sc  # unittest import - or running from cmd line
-#     print('---', 'using import sbot_common')
-
 from . import sbot_common as sc  # normal import - like ST loads
-# print('---', 'using import sbot_common no try/except')
 
 
 #----------------- TODO1 Setup for running pbot_pdb in this file ---------------------

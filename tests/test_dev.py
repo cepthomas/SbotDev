@@ -14,13 +14,12 @@ from unittest.mock import MagicMock
 
 #-----------------------------------------------------------------------------------
 class TestHelloWorldCommand(TestCase):
-    # using sublime view/window TODO1 fully replace my emu (Notr, SbotDev)?
 
     def setUp(self):
         self.view = sublime.active_window().new_file()
-        # make sure we have a window to work with
-        s = sublime.load_settings("Preferences.sublime-settings")
-        s.set("close_windows_when_empty", False)
+        # # make sure we have a window to work with ... not really needed?
+        # s = sublime.load_settings("Preferences.sublime-settings")
+        # s.set("close_windows_when_empty", False)
 
     def tearDown(self):
         # if self.view:

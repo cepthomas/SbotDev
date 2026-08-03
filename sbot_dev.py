@@ -7,6 +7,7 @@ import bdb
 import datetime
 import string
 import re
+import importlib
 import socket
 import sublime
 import sublime_plugin
@@ -16,29 +17,14 @@ from . import sbot_common as sc  # normal import - like ST loads
 #----------------- TODO1 Setup for running pbot_pdb in this file ---------------------
 # Pick one:
 #  - Copy pbot_pdb.py to this dir and edit to taste.
+
 #  - Clone PyBagOfTricks and add its path to sys.path, something like this:
-pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
-import pbot_pdb
+# pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
+# if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
 
-
-#----------------- New unit testing ------------------------------------------------
-class HelloWorldCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        view = self.view
-        view.insert(edit, view.sel()[0].begin(), "hello world")
-
-def foo(x):
-    return x + 1
-    
-
-#-----------------------------------------------------------------------------------
-# Write to dump file.
-def _dump(txt):
-    fn = os.path.join(os.path.dirname(__file__), 'out', 'dump.log')
-    with open(fn, 'a') as f:
-        f.write(txt + '\n')
-        f.flush()
+# import pbot_pdb
+# Benign reload in case it's edited.
+# importlib.reload(pbot_pdb)
 
 
 #-----------------------------------------------------------------------------------
@@ -108,8 +94,25 @@ class DevEvent(sublime_plugin.EventListener):
 
 
 #-----------------------------------------------------------------------------------
+# New unit testing target.
+class HelloWorldCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        view = self.view
+        view.insert(edit, view.sel()[0].begin(), "hello world")
+
+def foo(x):
+    return x + 1
+
+
+#-----------------------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit):
+
+        # https://docs.python.org/3/library/pdb.html
+
+
+        breakpoint()
+
 
         # Blow stuff up. Force unhandled exception.
         sc.debug('Forcing unhandled exception!')
@@ -243,7 +246,7 @@ class SbotTestPanelCommand(sublime_plugin.WindowCommand):
         # items.append(sublime.QuickPanelItem(trigger='MARKUP', annotation='==> annotation', kind=(sublime.KindId.MARKUP, 'X', '???')))
         # items.append(sublime.QuickPanelItem(trigger='VARIABLE', annotation='==> annotation', kind=(sublime.KindId.VARIABLE, 'X', '???')))
         # items.append(sublime.QuickPanelItem(trigger='SNIPPET', annotation='==> annotation', kind=(sublime.KindId.SNIPPET, 'X', '???')))
-        
+
         self.window.show_quick_panel(items, self.on_done, on_highlight=self.on_highlight, placeholder="type here")
 
     def on_done(self, *args, **kwargs):
@@ -419,6 +422,15 @@ def excepthook(type, value, tb):
 
     # Otherwise revert to original hook.
     sys.__excepthook__(type, value, tb)
+
+
+#-----------------------------------------------------------------------------------
+# Write to dump file.
+def _dump(txt):
+    fn = os.path.join(os.path.dirname(__file__), 'out', 'dump.log')
+    with open(fn, 'a') as f:
+        f.write(txt + '\n')
+        f.flush()
 
 
 #----------------------- Finish initialization -------------------------------------

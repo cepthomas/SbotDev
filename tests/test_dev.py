@@ -5,14 +5,12 @@ from unittesting import TestCase
 from unittest.mock import MagicMock
 
 
-#-----------------------------------------------------------------------------------
-#---------------------- Play with ST unittesting -----------------------------------
-#-----------------------------------------------------------------------------------
-
+# Play with ST unittesting
 # from https://github.com/SublimeText/UnitTesting
-# & https://github.com/randy3k/UnitTesting-example/blob/master/tests/test_hw.py
+#      https://github.com/randy3k/UnitTesting-example/blob/master/tests/test_hw.py
 
 #-----------------------------------------------------------------------------------
+# Interact with the target window.
 class TestHelloWorldCommand(TestCase):
 
     def setUp(self):
@@ -46,23 +44,23 @@ class TestFunctions(TestCase):
     # unit test non-ST code
 
     # Code under test.
-    mdev = sys.modules["SbotDev.sbot_dev"] # was ["UnitTesting-example.helloworld"]
+    mod_dev = sys.modules["SbotDev.sbot_dev"]
 
     def test_foo(self):
-        x = self.mdev.foo(1)
-        print('+++ foo=', x)
+        x = self.mod_dev.foo(1)
+        # print('+++ foo=', x)
         self.assertEqual(x, 2)
 
     def test_new(self):
-        self.mdev._dump('googoogogogogogogo')
+        self.mod_dev._dump('googoogogogogogogo')
 
         # can access common from here too!
-        sout = self.mdev.sc.expand_vars(R'$APPDATA\Sublime Text\Packages\SbotDev')
-        self.mdev._dump(f'>>> [{sout}]')
+        sout = self.mod_dev.sc.expand_vars(R'$APPDATA\Sublime Text\Packages\SbotDev')
+        self.mod_dev._dump(f'>>> [{sout}]')
         self.assertIsNotNone(sout)
         self.assertTrue(R'AppData\Roaming\Sublime Text\Packages\SbotDev' in sout)
 
-        # print('+++', dir(mdev))
+        # print('+++', dir(mod_dev))
         # 'DevEvent'
         # 'HelloWorldCommand'
         # 'SbotDebugCommand'

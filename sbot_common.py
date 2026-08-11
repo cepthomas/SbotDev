@@ -251,9 +251,8 @@ def open_terminal(where):
 #---------------------------- Logging functions ------------------------------------
 #-----------------------------------------------------------------------------------
 
-# Local log file.
 _log_fn = os.path.join(_store_path, f'{_plugin_name}.log')
-
+_log_name = _plugin_name
 
 #-----------------------------------------------------------------------------------
 # Initialize logging. Maybe roll over log now.
@@ -275,7 +274,6 @@ def error(message, tb=None):
     for s in traceback.format_tb(tb):
         if len(s) > 0:
             info.append(s[:-1])
-    # info.append('See the log for details')
     sublime.error_message('\n'.join(info))  # This goes to console too.
 
 
@@ -303,9 +301,6 @@ def debug(message):
 def _write_log(level, message, tb=None):
     '''Format a standard message with caller info and log it.'''
 
-    # if _log_fn == INVALID_FN:
-    #     raise RuntimeError('Logger has not been initialized.')
-
     # Sometimes get stray empty lines.
     if len(message) == 0:
         return
@@ -316,23 +311,15 @@ def _write_log(level, message, tb=None):
     frame = sys._getframe(2)
     fn = os.path.basename(frame.f_code.co_filename)
     line = frame.f_lineno
-    # f'func = {frame.f_code.co_name}'
-    # f'mod_name = {frame.f_globals["__name__"]}'
-    # f'class_name = {frame.f_locals["self"].__class__.__name__}'
 
     time_str = f'{str(datetime.datetime.now())}'[0:-3]
 
-    # Write the record. No need to be synchronized across multiple sbot plugins
-    # as ST docs say that API runs on a single thread.
+    # Write the record. No need for sync as ST docs say that API runs on a single thread.
     with open(_log_fn, 'a') as log:
-        out_line = f'{time_str} {level} {fn}:{line} {message}'
+        out_line = f'{time_str} {level} {_log_name} {fn}({line}) {message}'
         log.write(out_line + '\n')
         if tb is not None:
-            # The traceback formatter is a bit ugly - clean it up.
-            tblines = []
-            for s in traceback.format_tb(tb):
-                if len(s) > 0:
-                    tblines.append(s[:-1])
-            stb = '\n'.join(tblines)
-            log.write(stb + '\n')
+            for tbline in traceback.format_tb(tb):
+                for s in tbline.splitlines():
+                    log.write(s + '\n')
         log.flush()

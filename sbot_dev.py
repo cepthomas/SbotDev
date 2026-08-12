@@ -20,7 +20,7 @@ from . import sbot_common as sc  # normal import - like ST loads
 #  - Copy pbot_pdb.py to this dir and edit to taste.
 #  - Clone PyBagOfTricks and add its path to sys.path, something like this:
 # pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-# if pbot_path not in sys.path: sys.path.insert(0, pbot_path)
+# if pbot_path not in sys.path: sys.path.append(pbot_path)
 # import pbot_pdb
 
 

@@ -14,16 +14,6 @@ import sublime_plugin
 from . import sbot_common as sc  # normal import - like ST loads
 
 
-
-#----------------- TODO1 Setup for running pbot_pdb in this file ---------------------
-# Pick one:
-#  - Copy pbot_pdb.py to this dir and edit to taste.
-#  - Clone PyBagOfTricks and add its path to sys.path, something like this:
-# pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-# if pbot_path not in sys.path: sys.path.append(pbot_path)
-# import pbot_pdb
-
-
 #-----------------------------------------------------------------------------------
 def plugin_loaded():
     '''Called per plugin instance.'''
@@ -105,22 +95,14 @@ def foo(x):
 class SbotDebugCommand(sublime_plugin.TextCommand):
     def run(self, edit):
 
-        # https://docs.python.org/3/library/pdb.html
-
-
-#>>>        breakpoint()
-
-
         # Blow stuff up. Force unhandled exception.
         sc.debug('Forcing unhandled exception!')
         sc.open_path('not-a-real-file')
         # i = 222 / 0
 
-
         # _dump('====== Dump a stack - most recent last')
         # for f in traceback.extract_stack():
         #     _dump(_frame_formatter(f))
-
 
         # _dump('====== Dump a traceback - most recent last')
         # try:
@@ -128,7 +110,6 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         # except Exception as e:
         #     for f in traceback.extract_tb(e.__traceback__):
         #         _dump(_frame_formatter(f))
-
 
         # '''
         # is_folded(region: Region) → bool
@@ -330,15 +311,28 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
 
 
 #-----------------------------------------------------------------------------------
+# Setup for running pbot_pdb in this file
+# This way:
+#  - Copy pbot_pdb.py to this dir and edit to taste.
+#    from . import pbot_pdb
+# That way:
+#  - Clone PyBagOfTricks and add its path to sys.path.
+pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
+if pbot_path not in sys.path: sys.path.append(pbot_path)
+import pbot_pdb
+
+#-----------------------------------------------------------------------------------
 class RunPdbCommand(sublime_plugin.TextCommand):
     ''' '''
 
     def function2(self, arg):
-        return arg + 1
+        x = 111
+        y = 22
+        return arg + x + y
 
     def function1(self, arg):
         # Set a breakpoint here then step through and examine the code.
-#>>>        pbot_pdb.breakpoint()
+        pbot_pdb.breakpoint()
         return self.function2(len(arg))
 
     def run(self, edit):
@@ -346,6 +340,14 @@ class RunPdbCommand(sublime_plugin.TextCommand):
 
         # Benign reload in case of edited.
         # importlib.reload(pbot_pdb)
+
+        # Configure ppdb.
+        pbot_pdb.PORT = 59120
+        pbot_pdb.USE_COLOR = True
+        pbot_pdb.XLAT = {'\n': '<NL>', '\r': '<CR>', '\u001b': '<ESC>'}
+        pbot_pdb.LOG_FN = os.path.join(os.path.join(os.path.dirname(__file__), 'out', 'pbot_ppdb.log'))
+        try: os.remove(pbot_pdb.LOG_FN)
+        except: pass
 
         # Run some fake code.
         self.function1('ABCD')

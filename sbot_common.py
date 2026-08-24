@@ -1,4 +1,3 @@
-from ntpath import exists
 import sys
 import os
 import traceback
@@ -8,6 +7,7 @@ import pathlib
 import shutil
 import subprocess
 import json
+from ntpath import exists
 import sublime
 import sublime_plugin
 
@@ -252,7 +252,7 @@ def open_terminal(where):
 #-----------------------------------------------------------------------------------
 
 _log_fn = os.path.join(_store_path, f'{_plugin_name}.log')
-_log_name = _plugin_name
+_log_name = _plugin_name[0:4].upper()
 
 #-----------------------------------------------------------------------------------
 # Initialize logging. Maybe roll over log now.
@@ -312,11 +312,14 @@ def _write_log(level, message, tb=None):
     fn = os.path.basename(frame.f_code.co_filename)
     line = frame.f_lineno
 
-    time_str = f'{str(datetime.datetime.now())}'[0:-3]
+    # time_str = f'{str(datetime.datetime.now())}'[0:-3]
+    dt = datetime.datetime.now()
+    sdate = f'{dt.year:04d}-{dt.month:02d}-{dt.day:02d}'
+    stime = f'{dt.hour:02d}:{dt.minute:02d}:{dt.second:02d}.{dt.microsecond//1000:03d}.{dt.microsecond%1000:03d}'
 
     # Write the record. No need for sync as ST docs say that API runs on a single thread.
     with open(_log_fn, 'a') as log:
-        out_line = f'{time_str} {level} {_log_name} {fn}({line}) {message}'
+        out_line = f'{sdate} {stime} {level} {_log_name} {fn}({line}) {message}'
         log.write(out_line + '\n')
         if tb is not None:
             for tbline in traceback.format_tb(tb):

@@ -345,7 +345,7 @@ class RunPdbCommand(sublime_plugin.TextCommand):
         pbot_pdb.PORT = 59120
         pbot_pdb.USE_COLOR = True
         pbot_pdb.XLAT = {'\n': '<NL>', '\r': '<CR>', '\u001b': '<ESC>'}
-        pbot_pdb.LOG_FN = os.path.join(os.path.join(os.path.dirname(__file__), 'out', 'pbot_ppdb.log'))
+        pbot_pdb.LOG_FN = os.path.abspath(os.path.join(os.path.dirname(__file__), 'out', 'pbot_pdb.log'))
         try: os.remove(pbot_pdb.LOG_FN)
         except: pass
 

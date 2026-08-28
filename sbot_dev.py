@@ -321,36 +321,39 @@ pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
 if pbot_path not in sys.path: sys.path.append(pbot_path)
 import pbot_pdb
 
+
 #-----------------------------------------------------------------------------------
 class RunPdbCommand(sublime_plugin.TextCommand):
     ''' '''
-
     def function2(self, arg):
         x = 111
         y = 22
         return arg + x + y
 
     def function1(self, arg):
-        # Set a breakpoint here then step through and examine the code.
-        pbot_pdb.breakpoint()
-        return self.function2(len(arg))
+        # Set a breakpoint in here then step through and examine the code.
+        sc.info('function1 set breakpoint')
+
+        log_fn = os.path.abspath(os.path.join(os.path.dirname(__file__), 'out', 'spbot.log'))
+        try: os.remove(log_fn)
+        except: pass
+
+        pbot_pdb.breakpoint(59120, log_fn=log_fn, use_color=True) # turn off color for unit test
+
+        sc.info('function1 done breakpoint')
+
+        res = self.function2(len(arg))
+        return res
 
     def run(self, edit):
-        del edit
+        sc.info('go() enter')
 
         # Benign reload in case of edited.
         # importlib.reload(pbot_pdb)
 
-        # Configure ppdb.
-        pbot_pdb.PORT = 59120
-        pbot_pdb.USE_COLOR = True
-        pbot_pdb.XLAT = {'\n': '<NL>', '\r': '<CR>', '\u001b': '<ESC>'}
-        pbot_pdb.LOG_FN = os.path.abspath(os.path.join(os.path.dirname(__file__), 'out', 'pbot_pdb.log'))
-        try: os.remove(pbot_pdb.LOG_FN)
-        except: pass
-
-        # Run some fake code.
+        # Run some test code.
         self.function1('ABCD')
+        sc.info('go() exit')
 
 
 #-----------------------------------------------------------------------------------

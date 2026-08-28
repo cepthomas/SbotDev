@@ -4,7 +4,7 @@ import time
 # from pathlib import Path
 from functools import partial
 
-# Todo1 make this a real unittesting
+# TODO make this a real unittesting
 
 # https://stackoverflow.com/questions/1035340/reading-binary-file-and-looping-over-each-byte
 

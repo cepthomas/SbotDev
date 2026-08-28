@@ -20,8 +20,6 @@ Project collections, variables, functions, etc use:
     - `visual` is the way ST API handles elements.
     - `internal` is the plugin format.
 
-Using pbot_pdb to debug ST plugins: TODO1 debug/update.
-
 TODO1 - pbot_pdb.py - Optional timeout can be set to force socket closure which unfreezes the ST application
 rather than having to forcibly shut it down.
 

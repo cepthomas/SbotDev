@@ -88,8 +88,6 @@ class TestFunctions(TestCase):
         # 'sc'
 
 
-
-
 #-----------------------------------------------------------------------------------
 class TestCommon(TestCase):
 

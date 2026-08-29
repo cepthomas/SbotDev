@@ -25,6 +25,15 @@
         // },
     ],
 
+        // // from https://github.com/SublimeText/UnitTesting
+        // {
+        //     "name": "Test - ST",
+        //     "target": "unit_testing",
+        //     "package": "$package_name",
+        //     "pattern": "$file_name",
+        //     "failfast": true,
+        // },
+
 
     ///// Experiments with config files /////
     "build_systems":

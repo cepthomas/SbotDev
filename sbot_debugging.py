@@ -14,19 +14,36 @@ import sublime_plugin
 from . import sbot_common as sc
 
 
-#-----------------------------------------------------------------------------------
-# Setup for running pbot_pdb in this file
-# This way:
-#  - Copy pbot_pdb.py to this dir and edit to taste.
-#    from . import pbot_pdb
-# That way:
-#  - Clone PyBagOfTricks and add its path to sys.path.
+'''
+TODO some doc on using pbot_pdb in debugging ST plugins.
+
+- The instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md)
+  generally apply here. The code under test is of course the plugin.
+
+- See `SbotDebugCommand()` for an example. It's usually handy to add a command like this in
+  one of your menus (e.g. `Main.sublime-menu`): `{ "caption": "Do Debug", "command": "sbot_debug" }`
+
+- Note that ST is blocked while running the debugger so you can't edit files using it. You may have to
+  resort to _another editor!_
+
+- Note: 'c' or 'n' (1 or more) after break keeps running and locks up ST. 'q' exits cleanly.
+
+- Setup for running pbot_pdb in this file
+    This way:
+     - Copy pbot_pdb.py to this dir and edit to taste.
+       from . import pbot_pdb
+    That way:
+     - Clone PyBagOfTricks and add its path to sys.path.
+
+'''
+
 pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
 if pbot_path not in sys.path: sys.path.append(pbot_path)
 import pbot_pdb
 
+sc.info('---------- module loaded -------------')
 
-#-----------------------------------------------------------------------------------
+#--------------------------------------------------------------------
 class SbotDebugCommand(sublime_plugin.TextCommand):
     ''' '''
     def function2(self, arg):
@@ -47,6 +64,9 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         sc.info('function1 done breakpoint')
 
         res = self.function2(len(arg))
+
+        sc.info(f'function1 exit [{res}]')
+
         return res
 
     def boom(self):
@@ -66,31 +86,18 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         #     for f in traceback.extract_tb(e.__traceback__):
         #         _dump(_frame_formatter(f))
 
-        # '''
-        # is_folded(region: Region) → bool
-        # folded_regions() → list[sublime.Region]
-        # fold(x: Region | list[sublime.Region]) → bool
-        # unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
-        # '''
-        # regions = self.view.folded_regions()
-        # text = ["folded_regions"]
-        # for r in regions:
-        #     s = f'region:{r}'
-        #     text.append(s)
-        # new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
-
     def run(self, edit):
         sc.info('go() enter')
 
-        # Benign reload in case of edited.
-        # importlib.reload(pbot_pdb)
+        # Benign reload in case of edited. Can be removed later when settled down.
+        importlib.reload(pbot_pdb)
 
         # Run some test code.
         self.function1('ABCD')
         sc.info('go() exit')
 
 
-#-----------------------------------------------------------------------------------
+#--------------------------------------------------------------------
 def _frame_formatter(frame, stkpos=-1):
     if stkpos >= 0:
         # extra info please
@@ -103,7 +110,7 @@ def _frame_formatter(frame, stkpos=-1):
     return s
 
 
-#-----------------------------------------------------------------------------------
+#--------------------------------------------------------------------
 def _dump_stack(stkpos=1):
     # Default is caller frame -> 1.
 
@@ -129,7 +136,7 @@ def _dump_stack(stkpos=1):
     return buff
 
 
-#-----------------------------------------------------------------------------------
+#--------------------------------------------------------------------
 def excepthook(type, value, tb):
     '''
     Process unhandled exceptions. This catches for all current plugins and is mainly
@@ -160,7 +167,7 @@ def excepthook(type, value, tb):
     sys.__excepthook__(type, value, tb)
 
 
-#-----------------------------------------------------------------------------------
+#--------------------------------------------------------------------
 # Write to dump file.
 def _dump(txt):
     fn = os.path.join(os.path.dirname(__file__), 'out', 'dump.log')
@@ -169,7 +176,7 @@ def _dump(txt):
         f.flush()
 
 
-#----------------------- Finish initialization -------------------------------------
+#----------------------- Finish initialization ----------------------
 
 # Connect the last chance hook.
 sys.excepthook = excepthook

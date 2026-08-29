@@ -1,4 +1,4 @@
-# Sublime Text Plugin Incubator and Playground TODO1 clean up all + plugin_dev_notes.md
+# Sublime Text Plugin Incubator and Playground
 
 `Just a big messy area. These are not the codes you are looking for.`
 
@@ -20,15 +20,7 @@ Project collections, variables, functions, etc use:
     - `visual` is the way ST API handles elements.
     - `internal` is the plugin format.
 
-TODO1 - pbot_pdb.py - Optional timeout can be set to force socket closure which unfreezes the ST application
-rather than having to forcibly shut it down.
-
-  - The instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md) generally apply here. The code under test is of course the plugin.
-  - See `sbot_dev.py` `RunPdbCommand()` for an example. It's usually handy to add a command like this in one of your menus (e.g. `Main.sublime-menu`): `{ "caption": "Run pbot_pdb", "command": "run_pdb" }`
-  - Note that ST is blocked while running the debugger so you can't edit files using it. You may have to resort to _another editor!_
-
 [Really, python is a hot mess.](https://xkcd.com/1987)
-
 
 # Tech Notes
 
@@ -38,29 +30,39 @@ https://github.com/cepthomas/example_plugin.git contains a lot of structural inf
 
 ## Error Handling
 
-Because ST takes ownership of the python module loading and execution, it just dumps any load/parse and runtime
-exceptions to the console. This can be annoying because it means you have to have the console open pretty much all the time.
-First attempt was to hook the console stdout but it was not very cooperative. So now there are try/except around all the
-ST callback functions and this works to catch runtime errors and pop up a message box. Import/parse errors still go to the
-console so you have to keep an eye open there while developing but they should resolve quickly.
+Because ST takes ownership of the python module loading and execution, it just dumps any load/parse
+and runtime exceptions to the console. This can be annoying because it means you have to have the
+console open pretty much all the time.
+
+First attempt was to hook the console stdout but it was not very cooperative. So now there are
+try/except around all the ST callback functions and this works to catch runtime errors and pop up
+a message box. Import/parse errors still go to the console so you have to keep an eye open there
+while developing but they should resolve quickly.
 
 ## Exceptions
 
 These are the categories of exceptions in the Sublime python implementation:
 - User-handled with the standard `try/except` mechanism.
-- Plugin command syntax and functional errors are intercepted and logged by a custom `sys.excepthook` in `sbot_logger.py`.
-- Errors in scripts that are executed by sublime internals e.g. `load_module()` are not caught by the above hook but go straight
-  to stdout. It *works* but is not as tightly integrated as preferred.
+- Plugin command syntax and functional errors are intercepted and logged by a custom `sys.excepthook`
+  in `sbot_logger.py`.
+- Errors in scripts that are executed by sublime internals e.g. `load_module()` are not caught by the
+  above hook but go straight to stdout. It *works* but is not as tightly integrated as preferred.
 
 ## General Notes
 
-If you pass a dict as value in View.settings().set(name, value), it seems that the dict key must be a string.
-
-In views, find results fail until the focus is lost and regained. This is a bug in Sublime, so work around it by changing the focus:
-```
-  window.focus_view(prev_view)
-  window.focus_view(view)
-```
+- In the code, `line` refers to editor lines and is 1-based. `row` refers to buffer contents as
+  an array and is 0-based.
+- Project collections, variables, functions, etc use:
+    - `persisted` is the json compatible file format.
+    - `visual` is the way ST API handles elements.
+    - `internal` is the plugin format.
+- If you pass a dict as value in View.settings().set(name, value), it seems that the dict key must be a string.
+- In views, find results fail until the focus is lost and regained. This is a bug in Sublime,
+  so work around it by changing the focus.
+'''
+window.focus_view(prev_view)
+window.focus_view(view)
+'''
 
 ## Commands
 If you are going to interact with the current view, use TextCommand, otherwise use WindowCommand.
@@ -68,7 +70,6 @@ Unknown usage for ApplicationCommand.
 WindowCommand is instantiated once per window (all views). Use for commands sited in main and sidebar menus.
 TextCommand is instantiated once per view. Use for commands sited in context (view) menus.
 - Commands can't end with `<underscore numeral>` e.g. `my_cmd_1` should be `stpt_cmd1`.
-
 
 ## Events
 There are some idiosyncrasies with ST event generation.

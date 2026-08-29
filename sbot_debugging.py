@@ -1,0 +1,441 @@
+import sys
+import os
+import subprocess
+import platform
+import traceback
+import bdb
+import datetime
+import string
+import re
+import importlib
+import socket
+import sublime
+import sublime_plugin
+from . import sbot_common as sc
+
+
+# #-----------------------------------------------------------------------------------
+# def plugin_loaded():
+#     '''Called per plugin instance.'''
+#     sc.debug(f'plugin_loaded {__package__} with python {platform.python_version()} on {platform.platform()}')
+
+
+# #-----------------------------------------------------------------------------------
+# def plugin_unloaded():
+#     '''Called per plugin instance.'''
+#     sc.info(f'plugin_unloaded {__package__}')
+
+
+# #-----------------------------------------------------------------------------------
+# class DevEvent(sublime_plugin.EventListener):
+#     ''' General listener. https://www.sublimetext.com/docs/api_reference.html#sublime_plugin.EventListener '''
+
+#     hostname = socket.gethostname()
+
+#     def on_init(self, views):
+#         ''' Called once with a list of views that were loaded before the EventListener was instantiated. '''
+#         # First thing that happens when plugin/window created. Initialize everything.
+#         pass
+
+#     def on_load(self, view):
+#         ''' Called when the file is finished loading. '''
+#         # Open logfile at end of file - option. https://forum.sublimetext.com/t/move-up-or-down-by-n-lines/42193/3
+#         if view.file_name() is not None and 'sbot.log' in view.file_name():
+#             # view.run_command("move_to", {"to": "eof"})
+#             view.show_at_center(view.size())
+
+#         # Adjust font size based on host.
+#         if self.hostname in ("host1", "host1.example.com", "host2"):
+#             view.settings().set("font_size", 20)
+
+#     def on_query_completions(self, view, prefix, locations):
+#         '''
+#         These are cryptic, hard to configure correctly. See also associated settings.
+#         on_query_completions(view: View, prefix: str, locations: List[Point])
+#                    -> Union[None, List[CompletionValue], Tuple[List[CompletionValue], AutoCompleteFlags], CompletionList]
+#         https://forum.sublimetext.com/t/annoying-autocomplete-c/59082
+#         https://forum.sublimetext.com/t/how-to-stop-tab-auto-complete-on-4126/63222/2
+#         '''
+#         # suppress too many offerings?
+#         # return ([], sublime.INHIBIT_WORD_COMPLETIONS)
+#         return ([], 0)
+
+#     def on_hover(self, view, point, hover_zone):
+#         # point - The closest point in the view to the mouse location. The mouse may not actually be located adjacent based on the value of hover_zone:
+#         #    TEXT = 1 The mouse is hovered over the text.
+#         #    GUTTER = 2 The mouse is hovered over the gutter.
+#         #    MARGIN = 3 The mouse is hovered in the white space to the right of a line.
+#         items = ['ietm1', 'item2', 'item3', 'item4']
+#         # view.show_popup_menu(items, self.on_hover_done)
+#         #   Show a popup menu at the caret, for selecting an item in a list.
+#         # show_popup(content: str, flags=PopupFlags.NONE, location: Point=-1, max_width: DIP=320,
+#         #   max_height: DIP=240, on_navigate:=None, on_hide:=None)
+#         #   Show a popup displaying HTML content.
+
+#     def on_hover_done(self, sel):
+#         pass
+
+#     def on_exit(self):
+#         # Called once after the API has shut down, immediately before the plugin_host process exits
+#         sc.info(f'on_exit {__package__}')
+
+
+#-----------------------------------------------------------------------------------
+# New unit testing target.
+class HelloWorldCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+        view = self.view
+        view.insert(edit, view.sel()[0].begin(), "hello world")
+
+def foo(x):
+    return x + 1
+
+
+#-----------------------------------------------------------------------------------
+class SbotDebugCommand(sublime_plugin.TextCommand):
+    def run(self, edit):
+
+        # Blow stuff up. Force unhandled exception.
+        sc.debug('Forcing unhandled exception!')
+        sc.open_path('not-a-real-file')
+        # i = 222 / 0
+
+        # _dump('====== Dump a stack - most recent last')
+        # for f in traceback.extract_stack():
+        #     _dump(_frame_formatter(f))
+
+        # _dump('====== Dump a traceback - most recent last')
+        # try:
+        #     x = 1 / 0
+        # except Exception as e:
+        #     for f in traceback.extract_tb(e.__traceback__):
+        #         _dump(_frame_formatter(f))
+
+        # '''
+        # is_folded(region: Region) → bool
+        # folded_regions() → list[sublime.Region]
+        # fold(x: Region | list[sublime.Region]) → bool
+        # unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
+        # '''
+        # regions = self.view.folded_regions()
+        # text = ["folded_regions"]
+        # for r in regions:
+        #     s = f'region:{r}'
+        #     text.append(s)
+        # new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
+
+
+# #-----------------------------------------------------------------------------------
+# class SbotGitCommand(sublime_plugin.TextCommand):
+
+#     def run(self, edit, git_cmd):
+#         ''' Simple git tools: status, diff, commit (no comment), push.
+#         https://github.com/kemayo/sublime-text-git.
+#         '''
+#         fn = self.view.file_name()
+
+#         if fn is not None:
+#             dir, fn = os.path.split(fn)
+#             if git_cmd == 'status':
+#                 cmd = f'git status "{dir}"'
+#                 cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+#                 self.proc_ret(cp, is_diff=True)
+
+#             elif git_cmd == 'diff':
+#                 cmd = f'git diff "{fn}"'
+#                 cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+#                 self.proc_ret(cp, is_diff=True)
+
+#             elif git_cmd == 'commit':
+#                 msg = 'WIP.'
+#                 # git commit --dry-run -a -m <msg> [<pathspec>]
+#                 cmd = f'git commit -m "{msg}" {fn}'
+#                 cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+#                 self.proc_ret(cp)
+
+#             elif git_cmd == 'push':
+#                 cmd = 'git push'
+#                 cp = subprocess.run(cmd, cwd=dir, universal_newlines=True, capture_output=True, text=True, shell=True)
+#                 self.proc_ret(cp)
+
+#     def proc_ret(self, cp, is_diff=False):
+#         ''' Common process output handling  cp: the CompletedProcess, Note git writes some non-error stuff to stderr. '''
+#         text = []
+#         text.append(f'args:{cp.args}')
+#         text.append('')
+
+#         if cp.returncode != 0:
+#             text.append(f'GIT returncode:{cp.returncode}')
+#         if len(cp.stdout) > 0:
+#             text.append('GIT stdout')
+#             text.append(f'{cp.stdout}')
+#         if len(cp.stderr) > 0:
+#             text.append('GIT stderr')
+#             text.append(f'{cp.stderr}')
+#         new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
+#         if is_diff:
+#             new_view.assign_syntax('Packages/Diff/Diff.sublime-syntax')
+
+#     def is_visible(self):
+#         # Could test for .git folder.
+#         return True
+
+
+# #-----------------------------------------------------------------------------------
+# class SbotTestPanelCommand(sublime_plugin.WindowCommand):
+
+#     def run(self):
+#         # self.one_way()
+#         self.another_way()
+
+#     def one_way(self):
+#         directions = ["north", "south", "east", "west", "up", "down", "left", "right"]
+#         items = []
+#         for dir in directions:
+#             items.append(sublime.QuickPanelItem(
+#                 trigger=dir,
+#                 details="<i>details</i><b>more</b>",
+#                 annotation=f"look_{dir}",
+#                 kind=(sublime.KIND_ID_COLOR_REDISH + directions.index(dir), dir[:1], '????') ))
+
+#         self.window.show_quick_panel(items, self.on_done, on_highlight=self.on_highlight, placeholder="type here")
+#         # self.window.show_quick_panel(items, self.on_done, flags=sublime.KEEP_OPEN_ON_FOCUS_LOST | sublime.MONOSPACE_FONT, selected_index=2, on_highlight=self.on_highlight, placeholder="place-xxx")
+
+#     def another_way(self):
+#         items = []
+
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_REDISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_REDISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_ORANGISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_ORANGISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_YELLOWISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_YELLOWISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_GREENISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_GREENISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_CYANISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_CYANISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_BLUISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_BLUISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_PURPLISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_PURPLISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_PINKISH', annotation='==> annotation', kind=(sublime.KindId.COLOR_PINKISH, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_DARK', annotation='==> annotation', kind=(sublime.KindId.COLOR_DARK, 'X', '???')))
+#         items.append(sublime.QuickPanelItem(trigger='COLOR_LIGHT', annotation='==> annotation', kind=(sublime.KindId.COLOR_LIGHT, 'X', '???')))
+
+#         # items.append(sublime.QuickPanelItem(trigger='AMBIGUOUS', annotation='==> annotation', kind=(sublime.KindId.AMBIGUOUS, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='KEYWORD', annotation='==> annotation', kind=(sublime.KindId.KEYWORD, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='TYPE', annotation='==> annotation', kind=(sublime.KindId.TYPE, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='FUNCTION', annotation='==> annotation', kind=(sublime.KindId.FUNCTION, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='NAMESPACE', annotation='==> annotation', kind=(sublime.KindId.NAMESPACE, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='NAVIGATION', annotation='==> annotation', kind=(sublime.KindId.NAVIGATION, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='MARKUP', annotation='==> annotation', kind=(sublime.KindId.MARKUP, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='VARIABLE', annotation='==> annotation', kind=(sublime.KindId.VARIABLE, 'X', '???')))
+#         # items.append(sublime.QuickPanelItem(trigger='SNIPPET', annotation='==> annotation', kind=(sublime.KindId.SNIPPET, 'X', '???')))
+
+#         self.window.show_quick_panel(items, self.on_done, on_highlight=self.on_highlight, placeholder="type here")
+
+#     def on_done(self, *args, **kwargs):
+#         sel = args[0]
+
+#     def on_highlight(self, *args, **kwargs):
+#         hlt = args[0]
+
+
+# #-----------------------------------------------------------------------------------
+# class SbotTestPanelInputCommand(sublime_plugin.WindowCommand):
+
+#     def run(self):
+#         # Bottom input area.
+#         self.window.show_input_panel(self.window.extract_variables()['folder'] + '>', "", self.on_done, None, None)
+
+#     def on_done(self, text):
+#         sc.create_new_view(self.window, text)
+#         sc.debug(f'Got:{text}')
+
+
+# #-----------------------------------------------------------------------------------
+# class SbotTestVisualsCommand(sublime_plugin.TextCommand):
+
+#     def __init__(self, view):
+#         super(SbotTestVisualsCommand, self).__init__(view)
+#         self.view = view
+#         self.phantom_set = sublime.PhantomSet(self.view, "my_key")
+#         self.count = 0
+
+#     def run(self, edit):
+#         ### Phantoms.
+#         image = os.path.join(sublime.packages_path(), "SbotDev", "felix200.jpg")
+#         img_html = '<img src="file://' + image + '" width="32" height="32">'
+#         # Old way works too:
+#         # self.view.erase_phantoms("test")
+#         # for sel in self.view.sel():
+#         #     self.view.add_phantom ("test", sel, img_html, sublime.LAYOUT_BLOCK)
+
+#         # Clean first. Note - phantoms need to be managed externally rather than instantiate each time cmd is loaded.
+#         phantoms = []
+#         self.phantom_set.update(phantoms)
+
+#         html = f'<div>|image LAYOUT_INLINE at 200:210|{img_html}|</div>'
+#         region = sublime.Region(200, 210)
+#         phantom = sublime.Phantom(region, html, sublime.LAYOUT_INLINE)
+#         phantoms.append(phantom)
+
+#         html = f'<div>|image LAYOUT_BELOW at 400:410|{img_html}|</div>'
+#         region = sublime.Region(400, 410)
+#         phantom = sublime.Phantom(region, html, sublime.LAYOUT_BELOW)
+#         phantoms.append(phantom)
+
+#         html = f'<div>|image LAYOUT_BLOCK at 600:610|{img_html}|</div>'
+#         region = sublime.Region(600, 610)
+#         phantom = sublime.Phantom(region, html, sublime.LAYOUT_BLOCK)
+#         phantoms.append(phantom)
+
+#         href = "https://www.sublimetext.com/docs/api_reference.html"
+#         href = "abcdef12345"
+
+#         html = f'<div><a href="{href}">|href LAYOUT_BLOCK at 800:810|</a></div>'
+#         region = sublime.Region(800, 810)
+#         phantom = sublime.Phantom(region, html, sublime.LAYOUT_BLOCK, self.nav)
+#         phantoms.append(phantom)
+
+#         self.phantom_set.update(phantoms)
+
+#         ### Coloring, annotations, icons.
+#         regions = []
+#         anns = []
+#         for i in range(3):
+#             p = 1000 + i * 200
+#             regions.append(sublime.Region(p, p + 5)) # color range
+#             anns.append(f'Annotation=<b>{i}</b>')
+
+#         self.view.add_regions(key='dev_region_name', regions=regions, scope='markup.user_hl6', # color = cyan
+#                               annotations=anns, annotation_color='red',
+#                               icon='circle', flags=sublime.RegionFlags.DRAW_STIPPLED_UNDERLINE)
+
+#     def nav(self, href):
+#         # href is attribute of the link clicked.
+#         pass
+
+
+#-----------------------------------------------------------------------------------
+# Setup for running pbot_pdb in this file
+# This way:
+#  - Copy pbot_pdb.py to this dir and edit to taste.
+#    from . import pbot_pdb
+# That way:
+#  - Clone PyBagOfTricks and add its path to sys.path.
+pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
+if pbot_path not in sys.path: sys.path.append(pbot_path)
+import pbot_pdb
+
+
+#-----------------------------------------------------------------------------------
+class RunPdbCommand(sublime_plugin.TextCommand):
+    ''' '''
+    def function2(self, arg):
+        x = 111
+        y = 22
+        return arg + x + y
+
+    def function1(self, arg):
+        # Set a breakpoint in here then step through and examine the code.
+        sc.info('function1 set breakpoint')
+
+        log_fn = os.path.abspath(os.path.join(os.path.dirname(__file__), 'out', 'spbot.log'))
+        try: os.remove(log_fn)
+        except: pass
+
+        pbot_pdb.breakpoint(59120, log_fn=log_fn, use_color=True) # turn off color for unit test
+
+        sc.info('function1 done breakpoint')
+
+        res = self.function2(len(arg))
+        return res
+
+    def run(self, edit):
+        sc.info('go() enter')
+
+        # Benign reload in case of edited.
+        # importlib.reload(pbot_pdb)
+
+        # Run some test code.
+        self.function1('ABCD')
+        sc.info('go() exit')
+
+
+#-----------------------------------------------------------------------------------
+def _frame_formatter(frame, stkpos=-1):
+    if stkpos >= 0:
+        # extra info please
+        s = f'stkpos:{stkpos} file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
+    else:
+        s = f'file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
+    # Other frame.f_code attributes:
+    # co_filename, co_firstlineno, co_argcount, co_name, co_varnames, co_consts, co_names
+    # co_cellvars, co_freevars, co_kwonlyargcount, co_posonlyargcount, co_nlocals, co_stacksize
+    return s
+
+
+#-----------------------------------------------------------------------------------
+def _dump_stack(stkpos=1):
+    # Default is caller frame -> 1.
+
+    buff = []
+
+    # tb => traceback object.
+    # limit => Print up to limit stack trace entries (starting from the invocation point) if limit is positive.
+    #   Otherwise, print the last abs(limit) entries. If limit is omitted or None, all entries are printed.
+    # f => optional argument can be used to specify an alternate stack frame to start. Otherwise uses current.
+    # FrameSummary attributes of interest: 'filename', 'line', 'lineno', 'locals', 'name'.
+
+    # [FrameSummary] traceback.extract_tb(tb, limit=None)  Useful for alternate formatting of stack traces.
+    # [FrameSummary] traceback.extract_stack(f=None, limit=None)  Extract the raw traceback from the current stack frame.
+    # [string] traceback.format_list([FrameSummary])  Kind of ugly printable format with dangling newlines.
+    # [string] traceback.format_tb(tb, limit=None)  A shorthand for format_list(extract_tb(tb, limit)).
+    # [string] traceback.format_stack(f=None, limit=None)  A shorthand for format_list(extract_stack(f, limit)).
+
+    # Get most recent frame => traceback.extract_tb(tb)[:-1], traceback.extract_stack()[:-1]
+
+    for frame in traceback.extract_stack():
+        buff.append(f'{_frame_formatter(frame)}')
+
+    return buff
+
+
+#-----------------------------------------------------------------------------------
+def excepthook(type, value, tb):
+    '''
+    Process unhandled exceptions. This catches for all current plugins and is mainly
+    used for debugging the sbot pantheon. Logs the full stack and pops up a message box
+    with summary.
+    '''
+
+    # This happens with hard shutdown of SbotPdb: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
+    if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
+        return
+
+    # Sometimes gets these on shutdown:
+    # FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
+    # if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
+    #     return
+
+    # LSP is sometimes impolite when closing.
+    # 2024-10-03 13:03:31.177 ERR sbot_dev.py:384 Unhandled exception TypeError: 'NoneType' object is not iterable
+    # if type is TypeError and 'object is not iterable' in str(value):
+    #     return
+
+    # Crude shutdown detection to avoid false positives.
+    if len(sublime.windows()) > 0:
+        msg = f'Unhandled exception {type.__name__}: {value}'
+        sc.error(msg, tb)
+
+    # Otherwise revert to original hook.
+    sys.__excepthook__(type, value, tb)
+
+
+#-----------------------------------------------------------------------------------
+# Write to dump file.
+def _dump(txt):
+    fn = os.path.join(os.path.dirname(__file__), 'out', 'dump.log')
+    with open(fn, 'a') as f:
+        f.write(txt + '\n')
+        f.flush()
+
+
+#----------------------- Finish initialization -------------------------------------
+
+# Connect the last chance hook.
+sys.excepthook = excepthook

@@ -11,7 +11,7 @@ import importlib
 import socket
 import sublime
 import sublime_plugin
-from . import sbot_common as sc  # normal import - like ST loads
+from . import sbot_common as sc
 
 
 #-----------------------------------------------------------------------------------
@@ -80,49 +80,49 @@ class DevEvent(sublime_plugin.EventListener):
         sc.info(f'on_exit {__package__}')
 
 
-#-----------------------------------------------------------------------------------
-# New unit testing target.
-class HelloWorldCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
-        view = self.view
-        view.insert(edit, view.sel()[0].begin(), "hello world")
+# #-----------------------------------------------------------------------------------
+# # New unit testing target.
+# class HelloWorldCommand(sublime_plugin.TextCommand):
+#     def run(self, edit):
+#         view = self.view
+#         view.insert(edit, view.sel()[0].begin(), "hello world")
 
-def foo(x):
-    return x + 1
+# def foo(x):
+#     return x + 1
 
 
-#-----------------------------------------------------------------------------------
-class SbotDebugCommand(sublime_plugin.TextCommand):
-    def run(self, edit):
+# #-----------------------------------------------------------------------------------
+# class SbotDebugCommand(sublime_plugin.TextCommand):
+#     def run(self, edit):
 
-        # Blow stuff up. Force unhandled exception.
-        sc.debug('Forcing unhandled exception!')
-        sc.open_path('not-a-real-file')
-        # i = 222 / 0
+#         # Blow stuff up. Force unhandled exception.
+#         sc.debug('Forcing unhandled exception!')
+#         sc.open_path('not-a-real-file')
+#         # i = 222 / 0
 
-        # _dump('====== Dump a stack - most recent last')
-        # for f in traceback.extract_stack():
-        #     _dump(_frame_formatter(f))
+#         # _dump('====== Dump a stack - most recent last')
+#         # for f in traceback.extract_stack():
+#         #     _dump(_frame_formatter(f))
 
-        # _dump('====== Dump a traceback - most recent last')
-        # try:
-        #     x = 1 / 0
-        # except Exception as e:
-        #     for f in traceback.extract_tb(e.__traceback__):
-        #         _dump(_frame_formatter(f))
+#         # _dump('====== Dump a traceback - most recent last')
+#         # try:
+#         #     x = 1 / 0
+#         # except Exception as e:
+#         #     for f in traceback.extract_tb(e.__traceback__):
+#         #         _dump(_frame_formatter(f))
 
-        # '''
-        # is_folded(region: Region) → bool
-        # folded_regions() → list[sublime.Region]
-        # fold(x: Region | list[sublime.Region]) → bool
-        # unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
-        # '''
-        # regions = self.view.folded_regions()
-        # text = ["folded_regions"]
-        # for r in regions:
-        #     s = f'region:{r}'
-        #     text.append(s)
-        # new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
+#         # '''
+#         # is_folded(region: Region) → bool
+#         # folded_regions() → list[sublime.Region]
+#         # fold(x: Region | list[sublime.Region]) → bool
+#         # unfold(x: Region | list[sublime.Region]) → list[sublime.Region]
+#         # '''
+#         # regions = self.view.folded_regions()
+#         # text = ["folded_regions"]
+#         # for r in regions:
+#         #     s = f'region:{r}'
+#         #     text.append(s)
+#         # new_view = sc.create_new_view(self.view.window(), '\n'.join(text))
 
 
 #-----------------------------------------------------------------------------------
@@ -310,132 +310,237 @@ class SbotTestVisualsCommand(sublime_plugin.TextCommand):
         pass
 
 
+# #-----------------------------------------------------------------------------------
+# # Setup for running pbot_pdb in this file
+# # This way:
+# #  - Copy pbot_pdb.py to this dir and edit to taste.
+# #    from . import pbot_pdb
+# # That way:
+# #  - Clone PyBagOfTricks and add its path to sys.path.
+# pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
+# if pbot_path not in sys.path: sys.path.append(pbot_path)
+# import pbot_pdb
+
+
+# #-----------------------------------------------------------------------------------
+# class RunPdbCommand(sublime_plugin.TextCommand):
+#     ''' '''
+#     def function2(self, arg):
+#         x = 111
+#         y = 22
+#         return arg + x + y
+
+#     def function1(self, arg):
+#         # Set a breakpoint in here then step through and examine the code.
+#         sc.info('function1 set breakpoint')
+
+#         log_fn = os.path.abspath(os.path.join(os.path.dirname(__file__), 'out', 'spbot.log'))
+#         try: os.remove(log_fn)
+#         except: pass
+
+#         pbot_pdb.breakpoint(59120, log_fn=log_fn, use_color=True) # turn off color for unit test
+
+#         sc.info('function1 done breakpoint')
+
+#         res = self.function2(len(arg))
+#         return res
+
+#     def run(self, edit):
+#         sc.info('go() enter')
+
+#         # Benign reload in case of edited.
+#         # importlib.reload(pbot_pdb)
+
+#         # Run some test code.
+#         self.function1('ABCD')
+#         sc.info('go() exit')
+
+
+# #-----------------------------------------------------------------------------------
+# def _frame_formatter(frame, stkpos=-1):
+#     if stkpos >= 0:
+#         # extra info please
+#         s = f'stkpos:{stkpos} file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
+#     else:
+#         s = f'file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
+#     # Other frame.f_code attributes:
+#     # co_filename, co_firstlineno, co_argcount, co_name, co_varnames, co_consts, co_names
+#     # co_cellvars, co_freevars, co_kwonlyargcount, co_posonlyargcount, co_nlocals, co_stacksize
+#     return s
+
+
+# #-----------------------------------------------------------------------------------
+# def _dump_stack(stkpos=1):
+#     # Default is caller frame -> 1.
+
+#     buff = []
+
+#     # tb => traceback object.
+#     # limit => Print up to limit stack trace entries (starting from the invocation point) if limit is positive.
+#     #   Otherwise, print the last abs(limit) entries. If limit is omitted or None, all entries are printed.
+#     # f => optional argument can be used to specify an alternate stack frame to start. Otherwise uses current.
+#     # FrameSummary attributes of interest: 'filename', 'line', 'lineno', 'locals', 'name'.
+
+#     # [FrameSummary] traceback.extract_tb(tb, limit=None)  Useful for alternate formatting of stack traces.
+#     # [FrameSummary] traceback.extract_stack(f=None, limit=None)  Extract the raw traceback from the current stack frame.
+#     # [string] traceback.format_list([FrameSummary])  Kind of ugly printable format with dangling newlines.
+#     # [string] traceback.format_tb(tb, limit=None)  A shorthand for format_list(extract_tb(tb, limit)).
+#     # [string] traceback.format_stack(f=None, limit=None)  A shorthand for format_list(extract_stack(f, limit)).
+
+#     # Get most recent frame => traceback.extract_tb(tb)[:-1], traceback.extract_stack()[:-1]
+
+#     for frame in traceback.extract_stack():
+#         buff.append(f'{_frame_formatter(frame)}')
+
+#     return buff
+
+
+# #-----------------------------------------------------------------------------------
+# def excepthook(type, value, tb):
+#     '''
+#     Process unhandled exceptions. This catches for all current plugins and is mainly
+#     used for debugging the sbot pantheon. Logs the full stack and pops up a message box
+#     with summary.
+#     '''
+
+#     # This happens with hard shutdown of SbotPdb: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
+#     if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
+#         return
+
+#     # Sometimes gets these on shutdown:
+#     # FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
+#     # if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
+#     #     return
+
+#     # LSP is sometimes impolite when closing.
+#     # 2024-10-03 13:03:31.177 ERR sbot_dev.py:384 Unhandled exception TypeError: 'NoneType' object is not iterable
+#     # if type is TypeError and 'object is not iterable' in str(value):
+#     #     return
+
+#     # Crude shutdown detection to avoid false positives.
+#     if len(sublime.windows()) > 0:
+#         msg = f'Unhandled exception {type.__name__}: {value}'
+#         sc.error(msg, tb)
+
+#     # Otherwise revert to original hook.
+#     sys.__excepthook__(type, value, tb)
+
+
+# #-----------------------------------------------------------------------------------
+# # Write to dump file.
+# def _dump(txt):
+#     fn = os.path.join(os.path.dirname(__file__), 'out', 'dump.log')
+#     with open(fn, 'a') as f:
+#         f.write(txt + '\n')
+#         f.flush()
+
+
+# #----------------------- Finish initialization -------------------------------------
+
+# # Connect the last chance hook.
+# sys.excepthook = excepthook
+
+
+
 #-----------------------------------------------------------------------------------
-# Setup for running pbot_pdb in this file
-# This way:
-#  - Copy pbot_pdb.py to this dir and edit to taste.
-#    from . import pbot_pdb
-# That way:
-#  - Clone PyBagOfTricks and add its path to sys.path.
-pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
-if pbot_path not in sys.path: sys.path.append(pbot_path)
-import pbot_pdb
-
-
 #-----------------------------------------------------------------------------------
-class RunPdbCommand(sublime_plugin.TextCommand):
-    ''' '''
-    def function2(self, arg):
-        x = 111
-        y = 22
-        return arg + x + y
-
-    def function1(self, arg):
-        # Set a breakpoint in here then step through and examine the code.
-        sc.info('function1 set breakpoint')
-
-        log_fn = os.path.abspath(os.path.join(os.path.dirname(__file__), 'out', 'spbot.log'))
-        try: os.remove(log_fn)
-        except: pass
-
-        pbot_pdb.breakpoint(59120, log_fn=log_fn, use_color=True) # turn off color for unit test
-
-        sc.info('function1 done breakpoint')
-
-        res = self.function2(len(arg))
-        return res
-
-    def run(self, edit):
-        sc.info('go() enter')
-
-        # Benign reload in case of edited.
-        # importlib.reload(pbot_pdb)
-
-        # Run some test code.
-        self.function1('ABCD')
-        sc.info('go() exit')
-
-
+#-------------------------- Needs home TODO1 ---------------------------------------
 #-----------------------------------------------------------------------------------
-def _frame_formatter(frame, stkpos=-1):
-    if stkpos >= 0:
-        # extra info please
-        s = f'stkpos:{stkpos} file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
-    else:
-        s = f'file:{frame.filename} func:{frame.name} lineno:{frame.lineno} line:{frame.line}'
-    # Other frame.f_code attributes:
-    # co_filename, co_firstlineno, co_argcount, co_name, co_varnames, co_consts, co_names
-    # co_cellvars, co_freevars, co_kwonlyargcount, co_posonlyargcount, co_nlocals, co_stacksize
-    return s
-
-
 #-----------------------------------------------------------------------------------
-def _dump_stack(stkpos=1):
-    # Default is caller frame -> 1.
-
-    buff = []
-
-    # tb => traceback object.
-    # limit => Print up to limit stack trace entries (starting from the invocation point) if limit is positive.
-    #   Otherwise, print the last abs(limit) entries. If limit is omitted or None, all entries are printed.
-    # f => optional argument can be used to specify an alternate stack frame to start. Otherwise uses current.
-    # FrameSummary attributes of interest: 'filename', 'line', 'lineno', 'locals', 'name'.
-
-    # [FrameSummary] traceback.extract_tb(tb, limit=None)  Useful for alternate formatting of stack traces.
-    # [FrameSummary] traceback.extract_stack(f=None, limit=None)  Extract the raw traceback from the current stack frame.
-    # [string] traceback.format_list([FrameSummary])  Kind of ugly printable format with dangling newlines.
-    # [string] traceback.format_tb(tb, limit=None)  A shorthand for format_list(extract_tb(tb, limit)).
-    # [string] traceback.format_stack(f=None, limit=None)  A shorthand for format_list(extract_stack(f, limit)).
-
-    # Get most recent frame => traceback.extract_tb(tb)[:-1], traceback.extract_stack()[:-1]
-
-    for frame in traceback.extract_stack():
-        buff.append(f'{_frame_formatter(frame)}')
-
-    return buff
-
-
 #-----------------------------------------------------------------------------------
-def excepthook(type, value, tb):
-    '''
-    Process unhandled exceptions. This catches for all current plugins and is mainly
-    used for debugging the sbot pantheon. Logs the full stack and pops up a message box
-    with summary.
-    '''
 
-    # This happens with hard shutdown of SbotPdb: BrokenPipeError, ConnectionAbortedError, ConnectionRefusedError, ConnectionResetError.
-    if issubclass(type, bdb.BdbQuit) or issubclass(type, ConnectionError):
-        return
+import random
+import pathlib
+import time
+# from pathlib import Path
+from functools import partial
+from mmap import ACCESS_READ, mmap
 
-    # Sometimes gets these on shutdown:
-    # FileNotFoundError '...Log\plugin_host-3.8-on_exit.log'
-    # if issubclass(type, FileNotFoundError) and 'plugin_host-3.8-on_exit.log' in str(value):
-    #     return
+# TODO1 make this a real unittesting - or put in main code - or???
 
-    # LSP is sometimes impolite when closing.
-    # 2024-10-03 13:03:31.177 ERR sbot_dev.py:384 Unhandled exception TypeError: 'NoneType' object is not iterable
-    # if type is TypeError and 'object is not iterable' in str(value):
-    #     return
+# https://stackoverflow.com/questions/1035340/reading-binary-file-and-looping-over-each-byte
 
-    # Crude shutdown detection to avoid false positives.
-    if len(sublime.windows()) > 0:
-        msg = f'Unhandled exception {type.__name__}: {value}'
-        sc.error(msg, tb)
+BUFF_SIZE = 4096
+LINE_SIZE = 16
+# A mebibyte (MiB) is equal to 1,048,576 bytes (1,024 × 1,024), or 1,024 kibibytes.
+BIN_FILE_NAME = 'mebibyte.bin'
+BIN_FILE_SIZE = 2**20
 
-    # Otherwise revert to original hook.
-    sys.__excepthook__(type, value, tb)
+def dummy_byte_op(b):
+    x = b
 
+def test_byte_by_byte():
+    with open(BIN_FILE_NAME, "rb") as f:
+        while (b := f.read(1)):
+            dummy_byte_op(b)
 
-#-----------------------------------------------------------------------------------
-# Write to dump file.
-def _dump(txt):
-    fn = os.path.join(os.path.dirname(__file__), 'out', 'dump.log')
-    with open(fn, 'a') as f:
-        f.write(txt + '\n')
-        f.flush()
+def test_line_by_line():
+    with open(BIN_FILE_NAME, "rb") as f:
+        while (bs := f.read(LINE_SIZE)):
+            for b in bs:
+                dummy_byte_op(b)
 
+def test_by_buff():
+    with open(BIN_FILE_NAME, "rb") as f:
+        while (bs := f.read(BUFF_SIZE)):
+            for b in bs:
+                dummy_byte_op(b)
 
-#----------------------- Finish initialization -------------------------------------
+def test_by_whole():
+    with open(BIN_FILE_NAME, "rb") as f:
+        bs = f.read()
+        for b in bs:
+            dummy_byte_op(b)
 
-# Connect the last chance hook.
-sys.excepthook = excepthook
+def file_byte_iterator(path):
+    ''' Return an iterator over the path/file that lazily loads the file.'''
+    with open(BIN_FILE_NAME, "rb") as f:
+        reader = partial(f.read1, BUFF_SIZE)
+        file_iterator = iter(reader, bytes())
+        for chunk in file_iterator:
+            yield from chunk
+
+def test_by_read1_list():
+    # Load into list.
+    l = list(file_byte_iterator(BIN_FILE_NAME))
+    for b in l:
+        dummy_byte_op(b)
+
+def test_by_read1_iterator():
+    # Direct iterator access.
+    for b in file_byte_iterator(BIN_FILE_NAME):
+        dummy_byte_op(b)
+
+def test_by_mmap():
+    with open(BIN_FILE_NAME, "rb") as f, mmap(f.fileno(), 0, access=ACCESS_READ) as s:
+        for b in s: # length is equal to the current file size
+            dummy_byte_op(b)
+
+def create_test_file():
+    path = BIN_FILE_NAME
+    pathobj = pathlib.Path(path)
+    pathobj.write_bytes(bytes(random.randint(0, 255) for _ in range(BIN_FILE_SIZE)))
+
+def do_test(func, func_name):
+    start_time = time.perf_counter_ns()
+    func()
+    print(f'{func_name}: {(time.perf_counter_ns() - start_time) / 1000000}')
+
+def do_tests():
+    do_test(test_by_buff, 'test_by_buff')
+    do_test(test_by_read1_iterator, 'test_by_read1_iterator')
+    do_test(test_by_read1_list, 'test_by_read1_list')
+    do_test(test_by_whole, 'test_by_whole')
+    do_test(test_by_mmap, 'test_by_mmap')
+    do_test(test_byte_by_byte, 'test_byte_by_byte')
+    do_test(test_line_by_line, 'test_line_by_line')
+
+    # test_by_buff: 22.7209
+    # test_by_read1_iterator: 32.4184
+    # test_by_read1_list: 53.5
+    # test_by_whole: 23.4898
+    # test_by_mmap: 28.689
+    # test_byte_by_byte: 43.8904
+    # test_line_by_line: 31.3826
+
+# do_tests()

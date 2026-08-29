@@ -1,4 +1,4 @@
-# Sublime Text Plugin Incubator and Playground
+# Sublime Text Plugin Incubator and Playground TODO1 clean up all + plugin_dev_notes.md
 
 `Just a big messy area. These are not the codes you are looking for.`
 
@@ -38,8 +38,8 @@ https://github.com/cepthomas/example_plugin.git contains a lot of structural inf
 
 ## Error Handling
 
-Because ST takes ownership of the python module loading and execution, it just dumps any load/parse and runtime exceptions
-to the console. This can be annoying because it means you have to have the console open pretty much all the time.
+Because ST takes ownership of the python module loading and execution, it just dumps any load/parse and runtime
+exceptions to the console. This can be annoying because it means you have to have the console open pretty much all the time.
 First attempt was to hook the console stdout but it was not very cooperative. So now there are try/except around all the
 ST callback functions and this works to catch runtime errors and pop up a message box. Import/parse errors still go to the
 console so you have to keep an eye open there while developing but they should resolve quickly.

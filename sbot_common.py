@@ -30,7 +30,6 @@ pathlib.Path(_store_path).mkdir(parents=True, exist_ok=True)
 #---------------------------- Public utility functions ----------------------------
 #-----------------------------------------------------------------------------------
 
-
 #-----------------------------------------------------------------------------------
 def read_store():
     ''' Where to keep the module's stuff.'''
@@ -44,7 +43,6 @@ def read_store():
             return json.load(fp)
     except Exception as e:
         error(f'Error reading {fn}: {e}', e.__traceback__)
-
 
 #-----------------------------------------------------------------------------------
 def write_store(store):
@@ -61,7 +59,6 @@ def get_settings_fn():
     ''' Get the settings fn suitable for ST.'''
     return os.path.join(f'{_plugin_name}.sublime-settings')
 
-
 #-----------------------------------------------------------------------------------
 def get_single_caret(view):
     '''Get current caret position for one only region. If multiples, return None.'''
@@ -73,7 +70,6 @@ def get_single_caret(view):
     else:  # multi sel
         return None
 
-
 #-----------------------------------------------------------------------------------
 def get_sel_regions(view):
     '''Function to get user selection or the whole view if no selection.'''
@@ -83,7 +79,6 @@ def get_sel_regions(view):
     else:
         regions = [sublime.Region(0, view.size())]
     return regions
-
 
 #-----------------------------------------------------------------------------------
 def create_new_view(window, text, reuse=True):
@@ -113,7 +108,6 @@ def create_new_view(window, text, reuse=True):
 
     return view
 
-
 #-----------------------------------------------------------------------------------
 def wait_load_file(window, fpath, line):
     '''Open file asynchronously then position at line. Returns the new View or None if failed.'''
@@ -135,7 +129,6 @@ def wait_load_file(window, fpath, line):
 
     return vnew
 
-
 #-----------------------------------------------------------------------------------
 def get_highlight_info(which='all'):
     '''Get list of builtin scope names and corresponding region names as list of HighlightInfo.'''
@@ -147,7 +140,6 @@ def get_highlight_info(which='all'):
         for i in range(3):  # magic number of markup.fixed_hl* count.
             hl_info.append(HighlightInfo(f'markup.fixed_hl{i + 1}', f'region_fixed_hl{i + 1}', 'fixed'))
     return hl_info
-
 
 #-----------------------------------------------------------------------------------
 def expand_vars(s):
@@ -175,7 +167,6 @@ def expand_vars(s):
                 done = True
                 s = None
     return s
-
 
 #-----------------------------------------------------------------------------------
 def get_path_parts(window, paths):
@@ -214,7 +205,6 @@ def get_path_parts(window, paths):
 
     return (dir, fn, path)
 
-
 #-----------------------------------------------------------------------------------
 def open_path(path):
     '''Acts as if you had clicked the path in the UI. Honors your file associations.'''
@@ -228,7 +218,6 @@ def open_path(path):
         return True
     except:
         return False
-
 
 #-----------------------------------------------------------------------------------
 def open_terminal(where):
@@ -263,7 +252,6 @@ if os.path.exists(_log_fn) and os.path.getsize(_log_fn) > 50000:
     with open(_log_fn, 'w'):
         pass
 
-
 #-----------------------------------------------------------------------------------
 def error(message, tb=None):
     '''Client logger function.'''
@@ -276,26 +264,16 @@ def error(message, tb=None):
             info.append(s[:-1])
     sublime.error_message('\n'.join(info))  # This goes to console too.
 
-
-#-----------------------------------------------------------------------------------
-def warn(message):
-    '''Client logger function.'''
-    _write_log('WRN', message)
-    sublime.message_dialog(f'Warning!\n{message}')
-
-
 #-----------------------------------------------------------------------------------
 def info(message):
     '''Client logger function.'''
     _write_log('INF', message)
     sublime.status_message(message)
 
-
 #-----------------------------------------------------------------------------------
 def debug(message):
     '''Client logger function.'''
     _write_log('DBG', message)
-
 
 #-----------------------------------------------------------------------------------
 def _write_log(level, message, tb=None):

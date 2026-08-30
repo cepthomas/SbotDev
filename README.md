@@ -1,6 +1,6 @@
 # Sublime Text Plugin Incubator and Playground
 
-`Just a big messy area. These are not the codes you are looking for.`
+Just a big messy area. These are not the codes you are looking for.
 
 ![owk](owk.jpg)
 
@@ -21,6 +21,26 @@ Project collections, variables, functions, etc use:
     - `internal` is the plugin format.
 
 [Really, python is a hot mess.](https://xkcd.com/1987)
+
+
+# Debugging
+Debugging ST plugins historically relies on print statements. Alternatively you can use
+[remote debugger](https://github.com/cepthomas/PyBagOfTricks/blob/main/pbot_pdb.py)
+The instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md)
+generally apply here. The code under test is of course the plugin.
+
+See `SbotDebugCommand()` for an example. Copy `pbot_pdb.py` to the target dir and add
+`from pbot_pdb import breakpoint`.
+
+It's usually handy to add a command like this in one of your menus
+(e.g. `Main.sublime-menu`): `{ "caption": "Do Debug", "command": "sbot_debug" }`
+
+Note that ST is blocked while running the debugger so you can't edit files using it. You may have to
+resort to _another editor!_
+
+Also if you run `c` after breaking, ST will lock up. `q` exits cleanly. In locked, ST has to be
+brutally stopped using `taskkill /f /im sublime.exe` for windows or `pkill -f sublime` for nx/osx.
+
 
 # Tech Notes
 
@@ -59,10 +79,12 @@ These are the categories of exceptions in the Sublime python implementation:
 - If you pass a dict as value in View.settings().set(name, value), it seems that the dict key must be a string.
 - In views, find results fail until the focus is lost and regained. This is a bug in Sublime,
   so work around it by changing the focus.
-'''
+
+```text
 window.focus_view(prev_view)
 window.focus_view(view)
-'''
+```
+
 
 ## Commands
 If you are going to interact with the current view, use TextCommand, otherwise use WindowCommand.

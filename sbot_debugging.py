@@ -14,32 +14,9 @@ import sublime_plugin
 from . import sbot_common as sc
 
 
-'''
-TODO some doc on using pbot_pdb in debugging ST plugins.
-
-- The instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md)
-  generally apply here. The code under test is of course the plugin.
-
-- See `SbotDebugCommand()` for an example. It's usually handy to add a command like this in
-  one of your menus (e.g. `Main.sublime-menu`): `{ "caption": "Do Debug", "command": "sbot_debug" }`
-
-- Note that ST is blocked while running the debugger so you can't edit files using it. You may have to
-  resort to _another editor!_
-
-- Note: 'c' or 'n' (1 or more) after break keeps running and locks up ST. 'q' exits cleanly.
-
-- Setup for running pbot_pdb in this file
-    This way:
-     - Copy pbot_pdb.py to this dir and edit to taste.
-       from . import pbot_pdb
-    That way:
-     - Clone PyBagOfTricks and add its path to sys.path.
-
-'''
-
 pbot_path = R'C:\Dev\Libs\PyBagOfTricks'
 if pbot_path not in sys.path: sys.path.append(pbot_path)
-import pbot_pdb
+from pbot_pdb import breakpoint
 
 sc.info('---------- module loaded -------------')
 
@@ -59,7 +36,7 @@ class SbotDebugCommand(sublime_plugin.TextCommand):
         try: os.remove(log_fn)
         except: pass
 
-        pbot_pdb.breakpoint(59120, log_fn=log_fn, use_color=True) # turn off color for unit test
+        breakpoint(59120, log_fn=log_fn, use_color=True) # turn off color for unit test
 
         sc.info('function1 done breakpoint')
 

@@ -10,6 +10,7 @@ import sublime_plugin
 # Someone said: I almost exclusively use custom Build System with custom exec command tailored for my use,
 # and I set it in the project file to be sure it is the one that is used for the matching selector.
 
+#------------------------------------------------------------------------------
 class MyExampleBuildCommand(sublime_plugin.WindowCommand):
     encoding = 'utf-8'
     panel = None
@@ -37,8 +38,7 @@ class MyExampleBuildCommand(sublime_plugin.WindowCommand):
 
         self.window.run_command('show_panel', {'panel': 'output.exec'} )
 
-
-
+#------------------------------------------------------------------------------
 class MyExampleBuildCommand_original(sublime_plugin.WindowCommand):
     encoding = 'utf-8'
     killed = False

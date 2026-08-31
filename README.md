@@ -25,7 +25,7 @@ Project collections, variables, functions, etc use:
 
 # Debugging
 Debugging ST plugins historically relies on print statements. Alternatively you can use
-[remote debugger](https://github.com/cepthomas/PyBagOfTricks/blob/main/pbot_pdb.py)
+[my remote debugger](https://github.com/cepthomas/PyBagOfTricks/blob/main/pbot_pdb.py).
 The instructions in [PyBagOfTricks](https://github.com/cepthomas/PyBagOfTricks/blob/main/README.md)
 generally apply here. The code under test is of course the plugin.
 
@@ -38,7 +38,7 @@ It's usually handy to add a command like this in one of your menus
 Note that ST is blocked while running the debugger so you can't edit files using it. You may have to
 resort to _another editor!_
 
-Also if you run `c` after breaking, ST will lock up. `q` exits cleanly. In locked, ST has to be
+Also if you run `c` after breaking, ST will lock up. `q` exits cleanly. If locked, ST has to be
 brutally stopped using `taskkill /f /im sublime.exe` for windows or `pkill -f sublime` for nx/osx.
 
 

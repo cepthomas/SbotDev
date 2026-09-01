@@ -4,7 +4,6 @@ import traceback
 import collections
 import datetime
 import pathlib
-import shutil
 import subprocess
 import json
 from ntpath import exists
@@ -246,11 +245,7 @@ _log_name = _plugin_name[0:4].upper()
 #-----------------------------------------------------------------------------------
 # Initialize logging. Maybe roll over log now.
 if os.path.exists(_log_fn) and os.path.getsize(_log_fn) > 50000:
-    bup = _log_fn.replace('.log', '_old.log')
-    shutil.copyfile(_log_fn, bup)
-    # Clear current log file.
-    with open(_log_fn, 'w'):
-        pass
+    os.replace(_log_fn, _log_fn.replace('.log', '_old.log'))
 
 #-----------------------------------------------------------------------------------
 def error(message, tb=None):
